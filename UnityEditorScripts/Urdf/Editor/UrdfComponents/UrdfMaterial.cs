@@ -1,19 +1,4 @@
-﻿/*
-© Siemens AG, 2018
-Author: Suzannah Smith (suzannah.smith@siemens.com)
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-<http://www.apache.org/licenses/LICENSE-2.0>.
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+﻿  
 
 using System;
 using System.Collections.Generic;
@@ -42,9 +27,10 @@ namespace RosSharp.Urdf.Editor
                 return material;
 
             material = InitializeMaterial();
-
             if (urdfMaterial.color != null)
+            {
                 material.color = CreateColor(urdfMaterial.color);
+            }
             else if (urdfMaterial.texture != null)
                 material.mainTexture = LoadTexture(urdfMaterial.texture.filename);
 
@@ -145,8 +131,8 @@ namespace RosSharp.Urdf.Editor
 
         public static Link.Visual.Material ExportMaterialData(Material material)
         {
-            if (material == null) return null;
 
+            if (material == null) return null;
             if (!Materials.ContainsKey(material.name))
             {
                 if (material.mainTexture != null)
@@ -163,7 +149,7 @@ namespace RosSharp.Urdf.Editor
                     return null;
             }
 
-            return new Link.Visual.Material(material.name);
+            return Materials[material.name];
         }
 
         private static double[] ExportRgbaData(Material material)

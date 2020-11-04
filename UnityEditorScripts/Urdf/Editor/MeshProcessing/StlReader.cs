@@ -1,19 +1,4 @@
-﻿/*
-© Siemens AG, 2018
-Author: Suzannah Smith (suzannah.smith@siemens.com)
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-<http://www.apache.org/licenses/LICENSE-2.0>.
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+﻿  
 
 using System.Collections.Generic;
 using System.IO;
@@ -24,8 +9,6 @@ namespace RosSharp.Urdf
 {
     public static class StlReader
     {
-        private static readonly System.Globalization.NumberStyles numberStyle = System.Globalization.NumberStyles.Float;
-        private static readonly System.Globalization.CultureInfo format = System.Globalization.CultureInfo.InvariantCulture;
 
         #region Binary
 
@@ -131,10 +114,10 @@ namespace RosSharp.Urdf
             string[] strings = _string.Trim().Split();
 
             Vector3 vector3 = new Vector3();
-            
-            float.TryParse(strings[0], numberStyle, format, out vector3.x);
-            float.TryParse(strings[1], numberStyle, format, out vector3.y);
-            float.TryParse(strings[2], numberStyle, format, out vector3.z);
+
+            float.TryParse(strings[0], out vector3.x);
+            float.TryParse(strings[1], out vector3.y);
+            float.TryParse(strings[2], out vector3.z);
 
             return vector3.Ros2Unity();
         }

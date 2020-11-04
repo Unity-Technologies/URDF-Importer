@@ -1,22 +1,4 @@
-﻿/*
-© Siemens AG, 2018
-Author: Berkay Alp Cakal (berkay_alp.cakal.ct@siemens.com)
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-<http://www.apache.org/licenses/LICENSE-2.0>.
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
-// Added vector(1x3) * (3x3)Matrix and vector(3x1) * vector(1x3)
-// UoK , 2019, Odysseas Doumas (od79@kent.ac.uk / odydoum@gmail.com) 
+﻿
 
 using System.Collections.Generic;
 using UnityEngine;
@@ -137,24 +119,6 @@ namespace RosSharp
             return new Vector3(Vector3.Dot(row0, B), Vector3.Dot(row1, B), Vector3.Dot(row2, B));
         }
 
-        public static Matrix3x3 operator *(Vector3 A, Matrix3x3 B)
-        {
-            Matrix3x3 result = new Matrix3x3();
-            for (int i = 0; i < 3; i++)
-                for (int j = 0; j < 3; j++)
-                        result[i][j] += A[i] * B[i][j];
-            return result;
-        }
-
-        public static Matrix3x3 VectorMult(Vector3 A, Vector3 B)
-        {
-            Matrix3x3 result = new Matrix3x3();
-            for (int i = 0; i < 3; i++)
-                for (int j = 0; j < 3; j++)
-                        result[i][j] += A[j] * B[i];
-            return result;
-        }
-
         public float Determinant()
         {
             float result = 0.0f;
@@ -189,13 +153,13 @@ namespace RosSharp
         {
             if (IsDiagonal())
             {
+                
                 EigenvaluesOut = new Vector3(elements[0][0], elements[1][1], elements[2][2]);
                 EigenvectorsOut = new Vector3[] { new Vector3(1, 0, 0 ),
                                                   new Vector3(0, 1, 0 ),
                                                   new Vector3(0, 0, 1 ) };
                 return;
             }
-
             EigenvaluesOut = Eigenvalues();
             EigenvectorsOut = Eigenvectors(new float[] { EigenvaluesOut[0], EigenvaluesOut[1], EigenvaluesOut[2] });
 

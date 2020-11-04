@@ -1,19 +1,4 @@
-﻿/*
-© Siemens AG, 2018-2019
-Author: Suzannah Smith (suzannah.smith@siemens.com)
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-<http://www.apache.org/licenses/LICENSE-2.0>.
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+﻿
 
 using UnityEngine;
 using UnityEditor;
@@ -25,7 +10,7 @@ namespace RosSharp.Urdf.Editor
         public static void Create(Transform parent, GeometryTypes geometryType, Link.Geometry geometry = null)
         {
             GameObject geometryGameObject = null;
-
+            
             switch (geometryType)
             {
                 case GeometryTypes.Box:
@@ -41,12 +26,16 @@ namespace RosSharp.Urdf.Editor
                     break;
                 case GeometryTypes.Mesh:
                     if (geometry != null)
+                    {
                         geometryGameObject = CreateMeshCollider(geometry.mesh);
+                    }
                     else
                     {
                         geometryGameObject = new GameObject(geometryType.ToString());
                         geometryGameObject.AddComponent<MeshCollider>();
                     }
+                    //var collider = geometryGameObject.GetComponent<MeshCollider>();
+                    //collider.convex = true;
                     break;
             }
 
@@ -61,7 +50,6 @@ namespace RosSharp.Urdf.Editor
         private static GameObject CreateMeshCollider(Link.Geometry.Mesh mesh)
         {
             GameObject prefabObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
-
             if (prefabObject == null)
                 return null;
 
@@ -103,7 +91,7 @@ namespace RosSharp.Urdf.Editor
             collisionObject.transform.SetParentAndAlign(parent);
         }
 
-        private static void ConvertMeshToColliders(GameObject gameObject, bool setConvex = false)
+        private static void ConvertMeshToColliders(GameObject gameObject, bool setConvex = true)
         {
             MeshFilter[] meshFilters = gameObject.GetComponentsInChildren<MeshFilter>();
             foreach (MeshFilter meshFilter in meshFilters)
