@@ -1,6 +1,7 @@
 ﻿  
 
 using UnityEngine;
+using RosSharp.Urdf;
 
 namespace RosSharp.Urdf.Editor
 {
