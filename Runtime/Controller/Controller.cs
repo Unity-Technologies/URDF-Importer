@@ -19,6 +19,7 @@ namespace RosSharp.Control
         public string jointName;
         public float stiffness;
         public float damping;
+        public float forceLimit;
         public float R, G, B, Alpha;
         public float speed = 5f; // Units: degree/s
         public float torque = 100f; // Units: Nm or N
@@ -35,6 +36,9 @@ namespace RosSharp.Control
                 joint.gameObject.AddComponent<JointControl>();
                 joint.jointFriction = 10;
                 joint.angularDamping = 10;
+                ArticulationDrive currentDrive = joint.xDrive;
+                currentDrive.forceLimit = forceLimit;
+                joint.xDrive = currentDrive;
             }
             jointName = articulationChain[selectedIndex].name;
             StoreColors(selectedIndex);

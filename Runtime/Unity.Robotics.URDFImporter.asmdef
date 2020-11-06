@@ -1,7 +1,9 @@
 {
     "name": "Unity.Robotics.URDFImporter",
     "rootNamespace": "RosSharp.Urdf",
-    "references": [],
+    "references": [
+        "GUID:6a697808d7c80a549b57420070d6c4f3"
+    ],
     "includePlatforms": [
         "Editor",
         "LinuxStandalone64",
@@ -9,10 +11,10 @@
         "WindowsStandalone64"
     ],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
-    "autoReferenced": false,
+    "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false

@@ -1,0 +1,3 @@
+[submodule "VHACD"]
+	path = VHACD
+	url = https://github.com/Unity-Technologies/VHACD
