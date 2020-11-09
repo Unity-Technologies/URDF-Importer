@@ -1,0 +1,18 @@
+{
+    "name": "Unity.Robotics.URDFImporter.Editor",
+    "rootNamespace": "RosSharp.Urdf.Editor",
+    "references": [
+        "GUID:b1ef917f7a8a86a4eb639ec2352edbf8"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

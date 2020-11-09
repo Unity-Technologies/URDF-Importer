@@ -1,0 +1,10 @@
+{
+  "name": "com.unity.robotics.urdf-importer",
+  "version": "0.0.2",
+  "displayName": "URDF Importer",
+  "description": "Facilitates importing configurations from the Universal Robot Description Format",
+  "unity": "2020.2",
+  "unityRelease": "0b9",
+  "dependencies": {
+ }
+}
