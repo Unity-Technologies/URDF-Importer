@@ -1,6 +1,4 @@
-﻿ 
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RosSharp.Urdf
 {
