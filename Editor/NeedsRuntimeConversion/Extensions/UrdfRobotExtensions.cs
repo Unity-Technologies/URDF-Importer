@@ -1,6 +1,4 @@
-﻿  
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -12,7 +10,7 @@ namespace RosSharp.Urdf.Editor
     public static class UrdfRobotExtensions
     {
         static string tagName = "robot";
-        static public Urdf.axisType robotAxis;
+        public static ImportSettings importsettings;
 
         public static void Create()
         {
@@ -32,9 +30,10 @@ namespace RosSharp.Urdf.Editor
 
         #region Import
 
-        public static void Create(string filename, Urdf.axisType meshAxis = axisType.yAxis)
+        public static void Create(string filename, ImportSettings settings)
         {
             CreateTag();
+            importsettings = settings;
             Robot robot = new Robot(filename);
 
             if (!UrdfAssetPathHandler.IsValidAssetPath(robot.filename))
@@ -51,7 +50,7 @@ namespace RosSharp.Urdf.Editor
 
             robotGameObject.AddComponent<RosSharp.Control.Controller>();
 
-            robotGameObject.GetComponent<UrdfRobot>().SetAxis(meshAxis);
+            robotGameObject.GetComponent<UrdfRobot>().SetAxis(settings.choosenAxis);
 
             UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(robot.filename));
             UrdfMaterial.InitializeRobotMaterials(robot);
@@ -63,10 +62,10 @@ namespace RosSharp.Urdf.Editor
             Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);
             Selection.activeObject = robotGameObject;
 
-            CorrectAxis(robotGameObject, meshAxis);
+            CorrectAxis(robotGameObject, settings.choosenAxis);
         }
 
-        public static void CorrectAxis(GameObject robot, Urdf.axisType axis = axisType.yAxis)
+        public static void CorrectAxis(GameObject robot, ImportSettings.axisType axis = ImportSettings.axisType.yAxis)
         {
             UrdfVisual[] visualMeshList = robot.GetComponentsInChildren<UrdfVisual>();
             UrdfCollision[] collisionMeshList = robot.GetComponentsInChildren<UrdfCollision>();
@@ -76,7 +75,7 @@ namespace RosSharp.Urdf.Editor
             Quaternion correctZtoY = Quaternion.Euler(-90, 0, 90);
             Quaternion correction = Quaternion.identity;
 
-            if (axis == Urdf.axisType.zAxis)
+            if (axis == ImportSettings.axisType.zAxis)
                 correction = correctZtoY;
 
 

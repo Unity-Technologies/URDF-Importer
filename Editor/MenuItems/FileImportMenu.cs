@@ -8,17 +8,19 @@ namespace RosSharp.Urdf.Editor
     public class FileImportMenu : EditorWindow
     {
         public string urdfFile;
-        public axisType choosenAxis = axisType.yAxis;
+        public ImportSettings settings = new ImportSettings();
         private static string[] windowOptions = { };
 
         private void OnGUI()
         {
             //Styles definitions
+
             GUIStyle titleStyle = new GUIStyle(EditorStyles.boldLabel)
             {
-                alignment = TextAnchor.MiddleCenter,
+                alignment = TextAnchor.MiddleLeft,
                 fontSize = 13
             };
+
             GUIStyle buttonStyle = new GUIStyle(EditorStyles.miniButtonRight) { fixedWidth = 75 };
 
             //Window title
@@ -28,17 +30,27 @@ namespace RosSharp.Urdf.Editor
             //Select the original up axis of the imported mesh
             GUILayout.Space(5);
             EditorGUILayout.BeginHorizontal();
-            choosenAxis = (axisType)EditorGUILayout.EnumPopup(
-                "Select Axis Type" , choosenAxis);
+            settings.choosenAxis = (ImportSettings.axisType)EditorGUILayout.EnumPopup(
+                "Select Axis Type" , settings.choosenAxis);
             EditorGUILayout.EndHorizontal();
 
+            //Window title
+            GUILayout.Space(10);
+            GUILayout.Label("Select Convex Decomposer", titleStyle);
+
+            //Select the mesh decomposer
+            GUILayout.Space(5);
+            EditorGUILayout.BeginHorizontal();
+            settings.convexMethod = (ImportSettings.convexDecomposer)EditorGUILayout.EnumPopup(
+                "Mesh Decomposer", settings.convexMethod);
+            EditorGUILayout.EndHorizontal();
 
             //Import Robot button
             GUILayout.Space(10);
             if (GUILayout.Button("Import URDF"))
             {
                 if (urdfFile != "")
-                    UrdfRobotExtensions.Create(urdfFile,choosenAxis);
+                    UrdfRobotExtensions.Create(urdfFile,settings);
                 Close();
             }
 

@@ -19,6 +19,7 @@ namespace RosSharp.Control
         public string jointName;
         public float stiffness;
         public float damping;
+        public float forceLimit;
         public float R, G, B, Alpha;
         public float speed = 5f; // Units: degree/s
         public float torque = 100f; // Units: Nm or N
@@ -29,12 +30,15 @@ namespace RosSharp.Control
             previousIndex = selectedIndex = 1;
             this.gameObject.AddComponent<FKRobot>();
             articulationChain = this.GetComponentsInChildren<ArticulationBody>();
-
+            int defDyanmicVal = 10;
             foreach (ArticulationBody joint in articulationChain)
             {
                 joint.gameObject.AddComponent<JointControl>();
-                joint.jointFriction = 10;
-                joint.angularDamping = 10;
+                joint.jointFriction = defDyanmicVal;
+                joint.angularDamping = defDyanmicVal;
+                ArticulationDrive currentDrive = joint.xDrive;
+                currentDrive.forceLimit = forceLimit;
+                joint.xDrive = currentDrive;
             }
             jointName = articulationChain[selectedIndex].name;
             StoreColors(selectedIndex);

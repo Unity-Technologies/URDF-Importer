@@ -2,6 +2,8 @@
 
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
+using MeshProcess;
 
 namespace RosSharp.Urdf.Editor
 {
@@ -94,16 +96,37 @@ namespace RosSharp.Urdf.Editor
         private static void ConvertMeshToColliders(GameObject gameObject, bool setConvex = true)
         {
             MeshFilter[] meshFilters = gameObject.GetComponentsInChildren<MeshFilter>();
-            foreach (MeshFilter meshFilter in meshFilters)
+            if (UrdfRobotExtensions.importsettings.convexMethod == ImportSettings.convexDecomposer.unity)
             {
-                GameObject child = meshFilter.gameObject;
-                MeshCollider meshCollider = child.AddComponent<MeshCollider>();
-                meshCollider.sharedMesh = meshFilter.sharedMesh;
+                foreach (MeshFilter meshFilter in meshFilters)
+                {
+                    GameObject child = meshFilter.gameObject;
+                    MeshCollider meshCollider = child.AddComponent<MeshCollider>();
+                    meshCollider.sharedMesh = meshFilter.sharedMesh;
 
-                meshCollider.convex = setConvex;
+                    meshCollider.convex = setConvex;
 
-                Object.DestroyImmediate(child.GetComponent<MeshRenderer>());
-                Object.DestroyImmediate(meshFilter);
+                    Object.DestroyImmediate(child.GetComponent<MeshRenderer>());
+                    Object.DestroyImmediate(meshFilter);
+                }
+            }
+            else
+            {
+                foreach (MeshFilter meshFilter in meshFilters)
+                {                   
+                    GameObject child = meshFilter.gameObject;
+                    VHACD decomposer = child.AddComponent<VHACD>();
+                    List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);
+                    foreach (Mesh collider in colliderMeshes)
+                    {
+                        MeshCollider current = child.AddComponent<MeshCollider>();
+                        current.sharedMesh = collider;
+                        current.convex = setConvex;
+                    }
+                    Component.DestroyImmediate(child.GetComponent<VHACD>());
+                    Object.DestroyImmediate(child.GetComponent<MeshRenderer>());
+                    Object.DestroyImmediate(meshFilter);
+                }
             }
         }
     }
