@@ -21,6 +21,7 @@ namespace RosSharp.Urdf
         public List<Link> links;
         public List<Joint> joints;
         public List<Plugin> plugins;
+        public List<Tuple<string, string>> ignoreCollisionPair;
 
         public Robot(string filename)
         {
@@ -35,6 +36,7 @@ namespace RosSharp.Urdf
             links = ReadLinks(node);
             joints = ReadJoints(node);
             plugins = ReadPlugins(node);
+            ignoreCollisionPair = ReadDisableCollision(node);
             
 
             // build tree structure from link and joint lists:
@@ -90,6 +92,14 @@ namespace RosSharp.Urdf
                 where child.Name != "link" && child.Name != "joint" && child.Name != "material"
                 select new Plugin(child.ToString());
             return plugins.ToList();
+        }
+
+        private List<Tuple<string,string>> ReadDisableCollision(XElement node)
+        {
+            var disable_collisions =
+                from child in node.Elements("disable_collision")
+                select new Tuple<string,string>(child.Attribute("joint1").Value,child.Attribute("joint2").Value);
+            return disable_collisions.ToList();
         }
 
         private static Link FindRootLink(List<Link> links, List<Joint> joints)
