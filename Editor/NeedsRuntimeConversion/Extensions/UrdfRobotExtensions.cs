@@ -63,6 +63,7 @@ namespace RosSharp.Urdf.Editor
             Selection.activeObject = robotGameObject;
 
             CorrectAxis(robotGameObject, settings.choosenAxis);
+            CreateCollisionExceptions(robot, robotGameObject);
         }
 
         public static void CorrectAxis(GameObject robot, ImportSettings.axisType axis = ImportSettings.axisType.yAxis)
@@ -90,6 +91,31 @@ namespace RosSharp.Urdf.Editor
             }
 
         }
+
+        private static void CreateCollisionExceptions(Robot robot, GameObject robotGameObject)
+        {
+            string collisionObjectName = "Collisions";
+            if (robot.ignoreCollisionPair.Count > 0)
+            {
+                foreach (var ignoreCollision in robot.ignoreCollisionPair)
+                {
+                    Transform colliisonObject1 = GameObject.Find(ignoreCollision.Item1).transform.Find(collisionObjectName);
+                    Transform collisionObject2 = GameObject.Find(ignoreCollision.Item2).transform.Find(collisionObjectName);
+
+                    Collider[] collidersObject1 = colliisonObject1.GetComponentsInChildren<Collider>();
+                    Collider[] collidersObject2 = collisionObject2.GetComponentsInChildren<Collider>();
+
+                    foreach (Collider colliderMesh1 in collidersObject1)
+                    {
+                        foreach (Collider colliderMesh2 in collidersObject2)
+                        {
+                            Physics.IgnoreCollision(colliderMesh1, colliderMesh2);
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region Export
