@@ -3,11 +3,16 @@
 namespace RosSharp.Urdf
 {
     public enum GeometryTypes { Box, Cylinder, Sphere, Mesh }
+    public enum axisType
+    {
+        zAxis,
+        yAxis,
+    }
 
     public class UrdfRobot : MonoBehaviour
     {
         public string FilePath;
-        public ImportSettings.axisType choosenAxis;
+        public axisType choosenAxis;
         #region Configure Robot
 
         public void SetCollidersConvex(bool convex)
@@ -74,7 +79,7 @@ namespace RosSharp.Urdf
             }
         }
 
-        public void SetAxis(ImportSettings.axisType setAxis)
+        public void SetAxis(Urdf.axisType setAxis)
         {
             this.choosenAxis = setAxis;
         }

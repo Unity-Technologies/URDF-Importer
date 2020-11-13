@@ -10,7 +10,7 @@ namespace RosSharp.Urdf.Editor
     public static class UrdfRobotExtensions
     {
         static string tagName = "robot";
-        public static ImportSettings importsettings;
+        static public Urdf.axisType robotAxis;
 
         public static void Create()
         {
@@ -30,10 +30,9 @@ namespace RosSharp.Urdf.Editor
 
         #region Import
 
-        public static void Create(string filename, ImportSettings settings)
+        public static void Create(string filename, Urdf.axisType meshAxis = axisType.yAxis)
         {
             CreateTag();
-            importsettings = settings;
             Robot robot = new Robot(filename);
 
             if (!UrdfAssetPathHandler.IsValidAssetPath(robot.filename))
@@ -50,7 +49,7 @@ namespace RosSharp.Urdf.Editor
 
             robotGameObject.AddComponent<RosSharp.Control.Controller>();
 
-            robotGameObject.GetComponent<UrdfRobot>().SetAxis(settings.choosenAxis);
+            robotGameObject.GetComponent<UrdfRobot>().SetAxis(meshAxis);
 
             UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(robot.filename));
             UrdfMaterial.InitializeRobotMaterials(robot);
@@ -62,10 +61,10 @@ namespace RosSharp.Urdf.Editor
             Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);
             Selection.activeObject = robotGameObject;
 
-            CorrectAxis(robotGameObject, settings.choosenAxis);
+            CorrectAxis(robotGameObject, meshAxis);
         }
 
-        public static void CorrectAxis(GameObject robot, ImportSettings.axisType axis = ImportSettings.axisType.yAxis)
+        public static void CorrectAxis(GameObject robot, Urdf.axisType axis = axisType.yAxis)
         {
             UrdfVisual[] visualMeshList = robot.GetComponentsInChildren<UrdfVisual>();
             UrdfCollision[] collisionMeshList = robot.GetComponentsInChildren<UrdfCollision>();
@@ -75,7 +74,7 @@ namespace RosSharp.Urdf.Editor
             Quaternion correctZtoY = Quaternion.Euler(-90, 0, 90);
             Quaternion correction = Quaternion.identity;
 
-            if (axis == ImportSettings.axisType.zAxis)
+            if (axis == Urdf.axisType.zAxis)
                 correction = correctZtoY;
 
 
