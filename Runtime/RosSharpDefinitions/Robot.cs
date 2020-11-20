@@ -21,6 +21,7 @@ namespace RosSharp.Urdf
         public List<Link> links;
         public List<Joint> joints;
         public List<Plugin> plugins;
+        public List<Tuple<string, string>> ignoreCollisionPair;
 
         public Robot(string filename)
         {
@@ -35,6 +36,7 @@ namespace RosSharp.Urdf
             links = ReadLinks(node);
             joints = ReadJoints(node);
             plugins = ReadPlugins(node);
+            ignoreCollisionPair = ReadDisableCollision(node);
             
 
             // build tree structure from link and joint lists:
@@ -69,10 +71,20 @@ namespace RosSharp.Urdf
 
         private static List<Link> ReadLinks(XElement node)
         {
-            var links =
-                from child in node.Elements("link")
-                select new Link(child);
-            return links.ToList();
+            List<String> importedLinks = new List<String>();
+            List<Link> links = new List<Link>();
+            foreach (XElement child in node.Elements("link"))
+            {
+                string name = (String)child.Attribute("name");
+                if (importedLinks.Find(p => name == p ? true : false) == null)
+                {
+                    links.Add(new Link(child));
+                    importedLinks.Add(name);
+                }
+                else
+                    throw new InvalidNameException("Two links cannot have the same name");
+            }
+            return links;
         }
 
         private static List<Joint> ReadJoints(XElement node)
@@ -90,6 +102,14 @@ namespace RosSharp.Urdf
                 where child.Name != "link" && child.Name != "joint" && child.Name != "material"
                 select new Plugin(child.ToString());
             return plugins.ToList();
+        }
+
+        private List<Tuple<string,string>> ReadDisableCollision(XElement node)
+        {
+            var disable_collisions =
+                from child in node.Elements("disable_collision")
+                select new Tuple<string,string>(child.Attribute("joint1").Value,child.Attribute("joint2").Value);
+            return disable_collisions.ToList();
         }
 
         private static Link FindRootLink(List<Link> links, List<Joint> joints)
@@ -142,5 +162,16 @@ namespace RosSharp.Urdf
                 writer.Close();
             }
         }
+    }
+    public class InvalidNameException : System.Exception
+    {
+        public InvalidNameException() : base() { }
+        public InvalidNameException(string message) : base(message) { }
+        public InvalidNameException(string message, System.Exception inner) : base(message, inner) { }
+
+        // A constructor is needed for serialization when an
+        // exception propagates from a remoting server to the client.
+        protected InvalidNameException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

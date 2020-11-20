@@ -10,6 +10,7 @@ namespace RosSharp.Urdf.Editor
     public static class UrdfRobotExtensions
     {
         static string tagName = "robot";
+        static string collisionObjectName = "Collisions";
         public static ImportSettings importsettings;
 
         public static void Create()
@@ -63,6 +64,7 @@ namespace RosSharp.Urdf.Editor
             Selection.activeObject = robotGameObject;
 
             CorrectAxis(robotGameObject, settings.choosenAxis);
+            //CreateCollisionExceptions(robot, robotGameObject);
         }
 
         public static void CorrectAxis(GameObject robot, ImportSettings.axisType axis = ImportSettings.axisType.yAxis)
@@ -90,6 +92,23 @@ namespace RosSharp.Urdf.Editor
             }
 
         }
+
+        private static void CreateCollisionExceptions(Robot robot, GameObject robotGameObject)
+        {
+            List<CollisionIgnore> ColliisonList = new List<CollisionIgnore>();
+            if (robot.ignoreCollisionPair.Count > 0)
+            {
+                foreach(System.Tuple<string,string> ignoreCollision in robot.ignoreCollisionPair)
+                {
+                    Transform colliisonObject1 = GameObject.Find(ignoreCollision.Item1).transform.Find(collisionObjectName);
+                    Transform collisionObject2 = GameObject.Find(ignoreCollision.Item2).transform.Find(collisionObjectName);
+
+                    ColliisonList.Add(new CollisionIgnore(colliisonObject1, collisionObject2));
+                }
+            }
+            robotGameObject.GetComponent<UrdfRobot>().collisionExceptions = ColliisonList;
+        }
+        
         #endregion
 
         #region Export
