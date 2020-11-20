@@ -89,10 +89,9 @@ namespace RosSharp.Urdf
 
         public void CreateCollisionExceptions()
         {
-            int j = 0;
             if (collisionExceptions != null)
             {
-                foreach (var ignoreCollision in collisionExceptions)
+                foreach (CollisionIgnore ignoreCollision in collisionExceptions)
                 {
                     Collider[] collidersObject1 = ignoreCollision.Link1.GetComponentsInChildren<Collider>();
                     Collider[] collidersObject2 = ignoreCollision.Link2.GetComponentsInChildren<Collider>();
@@ -101,7 +100,6 @@ namespace RosSharp.Urdf
                         foreach (Collider colliderMesh2 in collidersObject2)
                         {
                             Physics.IgnoreCollision(colliderMesh1, colliderMesh2);
-                            j++;
                         }
                     }
                 }

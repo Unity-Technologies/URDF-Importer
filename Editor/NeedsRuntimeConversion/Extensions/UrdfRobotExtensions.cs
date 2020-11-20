@@ -10,6 +10,7 @@ namespace RosSharp.Urdf.Editor
     public static class UrdfRobotExtensions
     {
         static string tagName = "robot";
+        static string collisionObjectName = "Collisions";
         public static ImportSettings importsettings;
 
         public static void Create()
@@ -94,11 +95,10 @@ namespace RosSharp.Urdf.Editor
 
         private static void CreateCollisionExceptions(Robot robot, GameObject robotGameObject)
         {
-            string collisionObjectName = "Collisions";
-            var ColliisonList = new List<CollisionIgnore>();
+            List<CollisionIgnore> ColliisonList = new List<CollisionIgnore>();
             if (robot.ignoreCollisionPair.Count > 0)
             {
-                foreach (var ignoreCollision in robot.ignoreCollisionPair)
+                foreach(System.Tuple<string,string> ignoreCollision in robot.ignoreCollisionPair)
                 {
                     Transform colliisonObject1 = GameObject.Find(ignoreCollision.Item1).transform.Find(collisionObjectName);
                     Transform collisionObject2 = GameObject.Find(ignoreCollision.Item2).transform.Find(collisionObjectName);
