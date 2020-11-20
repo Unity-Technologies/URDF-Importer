@@ -92,7 +92,6 @@ namespace RosSharp.Urdf.Editor
 
         }
 
-        
         private static void CreateCollisionExceptions(Robot robot, GameObject robotGameObject)
         {
             string collisionObjectName = "Collisions";
