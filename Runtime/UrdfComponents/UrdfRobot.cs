@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 namespace RosSharp.Urdf
 {
@@ -8,6 +10,7 @@ namespace RosSharp.Urdf
     {
         public string FilePath;
         public ImportSettings.axisType choosenAxis;
+        public List<CollisionIgnore> collisionExceptions;
         #region Configure Robot
 
         public void SetCollidersConvex(bool convex)
@@ -79,6 +82,31 @@ namespace RosSharp.Urdf
             this.choosenAxis = setAxis;
         }
 
+        void Start()
+        {
+            CreateCollisionExceptions();
+        }
+
+        public void CreateCollisionExceptions()
+        {
+            int j = 0;
+            if (collisionExceptions != null)
+            {
+                foreach (var ignoreCollision in collisionExceptions)
+                {
+                    Collider[] collidersObject1 = ignoreCollision.Link1.GetComponentsInChildren<Collider>();
+                    Collider[] collidersObject2 = ignoreCollision.Link2.GetComponentsInChildren<Collider>();
+                    foreach (Collider colliderMesh1 in collidersObject1)
+                    {
+                        foreach (Collider colliderMesh2 in collidersObject2)
+                        {
+                            Physics.IgnoreCollision(colliderMesh1, colliderMesh2);
+                            j++;
+                        }
+                    }
+                }
+            }
+        }
         #endregion
     }
 }

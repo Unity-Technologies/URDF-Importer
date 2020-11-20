@@ -92,9 +92,11 @@ namespace RosSharp.Urdf.Editor
 
         }
 
+        
         private static void CreateCollisionExceptions(Robot robot, GameObject robotGameObject)
         {
             string collisionObjectName = "Collisions";
+            var ColliisonList = new List<CollisionIgnore>();
             if (robot.ignoreCollisionPair.Count > 0)
             {
                 foreach (var ignoreCollision in robot.ignoreCollisionPair)
@@ -102,20 +104,12 @@ namespace RosSharp.Urdf.Editor
                     Transform colliisonObject1 = GameObject.Find(ignoreCollision.Item1).transform.Find(collisionObjectName);
                     Transform collisionObject2 = GameObject.Find(ignoreCollision.Item2).transform.Find(collisionObjectName);
 
-                    Collider[] collidersObject1 = colliisonObject1.GetComponentsInChildren<Collider>();
-                    Collider[] collidersObject2 = collisionObject2.GetComponentsInChildren<Collider>();
-
-                    foreach (Collider colliderMesh1 in collidersObject1)
-                    {
-                        foreach (Collider colliderMesh2 in collidersObject2)
-                        {
-                            Physics.IgnoreCollision(colliderMesh1, colliderMesh2);
-                        }
-                    }
+                    ColliisonList.Add(new CollisionIgnore(colliisonObject1, collisionObject2));
                 }
             }
+            robotGameObject.GetComponent<UrdfRobot>().collisionExceptions = ColliisonList;
         }
-
+        
         #endregion
 
         #region Export
