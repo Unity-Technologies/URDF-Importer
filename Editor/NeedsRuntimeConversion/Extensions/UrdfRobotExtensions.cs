@@ -64,7 +64,7 @@ namespace RosSharp.Urdf.Editor
             Selection.activeObject = robotGameObject;
 
             CorrectAxis(robotGameObject, settings.choosenAxis);
-            CreateCollisionExceptions(robot, robotGameObject);
+            //CreateCollisionExceptions(robot, robotGameObject);
         }
 
         public static void CorrectAxis(GameObject robot, ImportSettings.axisType axis = ImportSettings.axisType.yAxis)
