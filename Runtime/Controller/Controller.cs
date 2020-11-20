@@ -166,7 +166,7 @@ namespace RosSharp.Control
             {
                 ArticulationDrive drive = joint.joint.xDrive;
                 drive.stiffness = stiffness;
-                drive.damping = 0;
+                drive.damping = damping;
                 joint.joint.xDrive = drive;
             }
         }
