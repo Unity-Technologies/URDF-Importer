@@ -38,11 +38,21 @@ public class JointControl : MonoBehaviour
             if (controltype == RosSharp.Control.ControlType.PositionControl)
             {
                 ArticulationDrive currentDrive = joint.xDrive;
-                float newTargetDelta = (int)direction * Time.fixedDeltaTime * speed;
-                if (newTargetDelta + currentDrive.target <= currentDrive.upperLimit && newTargetDelta + currentDrive.target >= currentDrive.lowerLimit){
-                    currentDrive.target += newTargetDelta;
-                } 
-                joint.xDrive = currentDrive;
+                if((int)direction != 0)
+                {
+                    float newTargetDelta = (int)direction * Time.fixedDeltaTime * speed;
+                    if(currentDrive.upperLimit == 0 && currentDrive.lowerLimit == 0)//Motion is free
+                    {
+                        currentDrive.target += newTargetDelta;
+                    }
+                    else//Motion is limits
+                    {
+                        if (newTargetDelta + currentDrive.target <= currentDrive.upperLimit && newTargetDelta + currentDrive.target >= currentDrive.lowerLimit){
+                            currentDrive.target += newTargetDelta;
+                        }
+                    }
+                    joint.xDrive = currentDrive;
+                }
             }
             
         }
