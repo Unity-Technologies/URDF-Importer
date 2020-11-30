@@ -22,6 +22,9 @@ namespace RosSharp.Urdf
     {
 
         private ArticulationDrive drive;
+#if UNITY_2020_1
+        private float maxLinearVelocity;
+#endif
 
         public override JointTypes JointType => JointTypes.Prismatic;
 
@@ -30,7 +33,7 @@ namespace RosSharp.Urdf
             UrdfJointPrismatic urdfJoint = linkObject.AddComponent<UrdfJointPrismatic>();
 #if UNITY_2020_1_OR_NEWER
             linkObject.AddComponent<ArticulationBody>();
-            urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>(); 
+            urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.PrismaticJoint;
 #else
             urdfJoint.unityJoint = linkObject.AddComponent<ConfigurableJoint>();
@@ -94,7 +97,7 @@ namespace RosSharp.Urdf
         }
 
         /// <summary>
-        /// Rotates the joint by deltaState m 
+        /// Rotates the joint by deltaState m
         /// </summary>
         /// <param name="deltaState">amount in m by which joint needs to be rotated</param>
         protected override void OnUpdateJointState(float deltaState)
@@ -164,7 +167,11 @@ namespace RosSharp.Urdf
                 drive.upperLimit = (float)joint.limit.upper;
                 drive.lowerLimit = (float)joint.limit.lower;
                 drive.forceLimit = (float)joint.limit.effort;
+#if UNITY_2020_2_OR_NEWER
                 unityJoint.maxLinearVelocity = (float)joint.limit.velocity;
+#elif UNITY_2020_1
+                maxLinearVelocity = (float)joint.limit.velocity;
+#endif
                 unityJoint.xDrive = drive;
             }
         }
@@ -192,7 +199,7 @@ namespace RosSharp.Urdf
 
         public override bool AreLimitsCorrect()
         {
-#if UNITY_2020_1_OR_NEWER 
+#if UNITY_2020_1_OR_NEWER
             ArticulationBody joint = GetComponent<ArticulationBody>();
             return joint.linearLockX == ArticulationDofLock.LimitedMotion && joint.xDrive.lowerLimit < joint.xDrive.upperLimit;
 #else
@@ -205,7 +212,11 @@ namespace RosSharp.Urdf
         {
 #if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = GetComponent<ArticulationBody>().xDrive;
+            #if UNITY_2020_2_OR_NEWER
             return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, unityJoint.maxLinearVelocity);
+            #elif UNITY_2020_1
+            return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, maxLinearVelocity);
+            #endif
 #else
             PrismaticJointLimitsManager prismaticLimits = GetComponent<PrismaticJointLimitsManager>();
             return new Joint.Limit(
