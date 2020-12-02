@@ -8,6 +8,10 @@ namespace RosSharp.Urdf
 {
     public class UrdfJointPrismatic : UrdfJoint
     {
+#if !UNITY_2020_1_OR_NEWER
+#error A Unity version of 2020.1 or newer is required to use UrdfJointPrismatic.cs
+#endif
+
 
         private ArticulationDrive drive;
 #if UNITY_2020_1
