@@ -20,7 +20,7 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 1. Copy the URDF and the associated files in the assets folder in the Project window. Make sure the [location](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/tutorials/urdf_importer/urdf_appendix.md#file-hierarchy) of the mesh files is correct.
 
-2 Right Click on the URDF file and click `Import Robot from URDF`.
+2. Right Click on the URDF file and click `Import Robot from URDF`.
 
 3. A window will appear with the Import settings for the Robot. First setting mentions the orietation of the mesh files. The second setting is used to select the algorithm to be used in Collisson mesh Decomposition. For more informaiton click [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/tutorials/urdf_importer/urdf_appendix.md#convex-mesh-collider)
 
