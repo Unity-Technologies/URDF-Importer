@@ -63,34 +63,36 @@ namespace RosSharp.Urdf.Editor
             Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);
             Selection.activeObject = robotGameObject;
 
-            CorrectAxis(robotGameObject, settings.choosenAxis);
+            CorrectAxis(robotGameObject);
             CreateCollisionExceptions(robot, robotGameObject);
         }
 
-        public static void CorrectAxis(GameObject robot, ImportSettings.axisType axis = ImportSettings.axisType.yAxis)
+        public static void CorrectAxis(GameObject robot)
         {
+            UrdfRobot robotScript = robot.GetComponent<UrdfRobot>();
+            if (robotScript.CheckOrientation())
+                return;
+            Quaternion correctYtoZ = Quaternion.Euler(-90, 0, 90);
+            Quaternion correctionZtoY = Quaternion.Inverse((correctYtoZ));
+            Quaternion correction = new Quaternion();
+
+            if (robotScript.choosenAxis == ImportSettings.axisType.zAxis)
+                correction = correctYtoZ;
+            else
+                correction = correctionZtoY;
+
             UrdfVisual[] visualMeshList = robot.GetComponentsInChildren<UrdfVisual>();
             UrdfCollision[] collisionMeshList = robot.GetComponentsInChildren<UrdfCollision>();
-            UrdfRobot robotScript = robot.GetComponent<UrdfRobot>();
-
-            robotScript.choosenAxis = axis;
-            Quaternion correctZtoY = Quaternion.Euler(-90, 0, 90);
-            Quaternion correction = Quaternion.identity;
-
-            if (axis == ImportSettings.axisType.zAxis)
-                correction = correctZtoY;
-
-
             foreach (UrdfVisual visual in visualMeshList)
             {
-                visual.transform.localRotation = correction;
+                visual.transform.localRotation = visual.transform.localRotation * correction;
             }
 
             foreach (UrdfCollision collision in collisionMeshList)
             {
-                collision.transform.localRotation = correction;
+                collision.transform.localRotation = collision.transform.localRotation * correction;
             }
-
+            robotScript.SetOrientation();
         }
 
         private static void CreateCollisionExceptions(Robot robot, GameObject robotGameObject)
