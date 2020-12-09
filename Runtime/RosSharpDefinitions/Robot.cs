@@ -108,7 +108,7 @@ namespace RosSharp.Urdf
         {
             var disable_collisions =
                 from child in node.Elements("disable_collision")
-                select new Tuple<string,string>(child.Attribute("joint1").Value,child.Attribute("joint2").Value);
+                select new Tuple<string,string>(child.Attribute("link1").Value,child.Attribute("link2").Value);
             return disable_collisions.ToList();
         }
 
