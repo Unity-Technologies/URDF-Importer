@@ -6,13 +6,17 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 ## Adding the URDF package
 
-1. Create a new Project in your Unity Hin and open the Unity Editor.
+1. Create a new Project in your Unity Hub and open the Unity Editor.
 
-2. Open the Package Manager from Unity Menu. Click `Window -> Package Manager`. A new package manager window should appear.
+2. Open the Package Manager from Unity Menu. Click `Window -> Package Manager`. A new package manager window will appear.
 
-3. Click on the `+` sign on the top left corner of the package manager window and click on `Add Package from Git URL`. A text box should appear below the `+` sign.
+3. Click on the `+` sign on the top left corner of the package manager window and click on `Add Package from Git URL`. 
 
-4. Paste the link to the URDF github repository in the text box and press `Enter`. This should add the URDF Importer package in your project.
+![](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/images/Package_manager_add.png)
+
+4. Paste the link to the URDF github, https://github.com/Unity-Technologies/URDF-Importer repository in the text box and press `Enter`. 
+
+4. Paste the link to the URDF github repository,  in the text box and press `Enter`. 
 
 5. Click `Import URDF`.
 
@@ -22,7 +26,13 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 2. Right Click on the URDF file and click `Import Robot from URDF`.
 
-3. A window will appear with the Import settings for the Robot. First setting mentions the orietation of the mesh files. The second setting is used to select the algorithm to be used in Collisson mesh Decomposition. For more informaiton click [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/tutorials/urdf_importer/urdf_appendix.md#convex-mesh-collider)
+![](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/images/URDF%20Menu.png)
+
+3. A window will appear with the Import settings for the Robot. First setting mentions the orientation of the mesh files. The second setting is used to select the algorithm to be used in Collision mesh Decomposition. For more information click [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/tutorials/urdf_importer/urdf_appendix.md#convex-mesh-collider)
+
+![](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/vidur/URDF-Tutorial-addidtions/images/URDF%20Menu.png)
+
+4. Click `Import URDF`
 
 
 # Tutorials
