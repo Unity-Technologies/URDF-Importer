@@ -73,13 +73,13 @@ namespace RosSharp.Urdf.Editor
             if (robotScript.CheckOrientation())
                 return;
             Quaternion correctYtoZ = Quaternion.Euler(-90, 0, 90);
-            Quaternion correctionZtoY = Quaternion.Inverse((correctYtoZ));
+            Quaternion correctZtoY = Quaternion.Inverse((correctYtoZ));
             Quaternion correction = new Quaternion();
 
             if (robotScript.choosenAxis == ImportSettings.axisType.zAxis)
                 correction = correctYtoZ;
             else
-                correction = correctionZtoY;
+                correction = correctZtoY;
 
             UrdfVisual[] visualMeshList = robot.GetComponentsInChildren<UrdfVisual>();
             UrdfCollision[] collisionMeshList = robot.GetComponentsInChildren<UrdfCollision>();
