@@ -6,19 +6,15 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 ## Adding the URDF package
 
-1. Create a new Project in your Unity Hub and open the Unity Editor.
+1. Open the Package Manager from Unity Menu. Click `Window -> Package Manager`. A new package manager window will appear.
 
-2. Open the Package Manager from Unity Menu. Click `Window -> Package Manager`. A new package manager window will appear.
-
-3. Click on the `+` sign on the top left corner of the package manager window and click on `Add Package from Git URL`. 
+2. Click on the `+` sign on the top left corner of the package manager window and click on `Add Package from Git URL`. 
 
 ![](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/images/Package_manager_add.png)
 
-4. Paste the link to the URDF github, https://github.com/Unity-Technologies/URDF-Importer repository in the text box and press `Enter`. 
+3. Paste the link to the URDF github, https://github.com/Unity-Technologies/URDF-Importer.git repository in the text box and press `Enter`. 
 
-4. Paste the link to the URDF github repository,  in the text box and press `Enter`. 
-
-5. Click `Import URDF`.
+4. Click `Import URDF`.
 
 ## Importing the robot using URDF file
 
