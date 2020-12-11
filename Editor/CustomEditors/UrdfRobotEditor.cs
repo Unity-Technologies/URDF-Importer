@@ -45,7 +45,7 @@ namespace RosSharp.Urdf.Editor
             GUILayout.Space(5);
             EditorGUILayout.PropertyField(axisType, new GUIContent("Axis Type"));
             serializedObject.ApplyModifiedProperties();
-            UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject, urdfRobot.choosenAxis);
+            UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
             GUILayout.Label("Helper Scripts", EditorStyles.boldLabel);
             DisplaySettingsToggle(new GUIContent("Controller Script"), urdfRobot.AddController);
             DisplaySettingsToggle(new GUIContent("Forward Kinematics Script"), urdfRobot.AddFkRobot);

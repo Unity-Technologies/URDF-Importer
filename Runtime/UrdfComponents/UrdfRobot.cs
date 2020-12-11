@@ -9,7 +9,8 @@ namespace RosSharp.Urdf
     public class UrdfRobot : MonoBehaviour
     {
         public string FilePath;
-        public ImportSettings.axisType choosenAxis;
+        public ImportSettings.axisType choosenAxis ;
+        private ImportSettings.axisType currentOrientation = ImportSettings.axisType.yAxis;
         public List<CollisionIgnore> collisionExceptions;
         #region Configure Robot
 
@@ -47,6 +48,16 @@ namespace RosSharp.Urdf
         public void ChangeToCorrectedSpace(bool rosSpace)
         {
             this.transform.Rotate(0, 180, 0);
+        }
+
+        public bool CheckOrientation()
+        {
+            return currentOrientation == choosenAxis;
+        }
+
+        public void SetOrientation()
+        {
+            currentOrientation = choosenAxis;
         }
 
         public void AddController(bool controller)
