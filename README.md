@@ -10,7 +10,7 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 2. Click on the `+` sign on the top left corner of the package manager window and click on `Add Package from Git URL`. 
 
-![](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/images/Package_manager_add.png)
+![](images~/Package_manager_add.png)
 
 3. Paste the link to the URDF github, https://github.com/Unity-Technologies/URDF-Importer.git repository in the text box and press `Enter`. 
 
@@ -22,11 +22,11 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 2. Right Click on the URDF file and click `Import Robot from URDF`.
 
-![](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/images/URDF%20Menu.png)
+![](images~/URDF%20Menu.png)
 
 3. A window will appear with the Import settings for the Robot. First setting mentions the orientation of the mesh files. The second setting is used to select the algorithm to be used in Collision mesh Decomposition. For more information click [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/tutorials/urdf_importer/urdf_appendix.md#convex-mesh-collider)
 
-![](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/vidur/URDF-Tutorial-addidtions/images/URDF%20Menu.png)
+![](images~/URDF%20Menu.png)
 
 4. Click `Import URDF`
 
