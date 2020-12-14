@@ -8,6 +8,14 @@ namespace RosSharp.Urdf.Editor
 {
     public static class UrdfImporterContextMenuItem
     {
+        [MenuItem("Assets/Import Robot from URDF", true, 0)]
+        public static bool CreateUrdfObject_IsValid()
+        {
+            string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
+
+            return (Path.GetExtension(assetPath)?.ToLower() == ".urdf");
+        }
+
         [MenuItem("Assets/Import Robot from URDF")]
         private static void CreateUrdfObject()
         {   
