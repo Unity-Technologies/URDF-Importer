@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace RosSharp.Control
 {
@@ -11,6 +12,7 @@ namespace RosSharp.Control
     {
 
         private ArticulationBody[] articulationChain;
+        // Stores original colors of the part being highlighted
         private Color[] prevColor;
         private int previousIndex;
 
@@ -20,10 +22,12 @@ namespace RosSharp.Control
         public float stiffness;
         public float damping;
         public float forceLimit;
-        public float R, G, B, Alpha;
         public float speed = 5f; // Units: degree/s
         public float torque = 100f; // Units: Nm or N
         public float acceleration = 5f;// Units: m/s^2 / degree/s^2
+
+        [Tooltip("Color to highlight the currently selected join")]
+        public Color highLightColor = new Color(255, 0, 0, 255);
 
         void Start()
         {
@@ -41,9 +45,7 @@ namespace RosSharp.Control
                 joint.xDrive = currentDrive;
             }
             jointName = articulationChain[selectedIndex].name;
-            StoreColors(selectedIndex);
-            B = G = 0;
-            Alpha = R = 1;
+            StoreJointColors(selectedIndex);
         }
 
         void Update()
@@ -92,21 +94,24 @@ namespace RosSharp.Control
                 return;
             }
 
-            Renderer[] previousMaterialList = articulationChain[previousIndex].transform.GetChild(0).GetComponentsInChildren<Renderer>();
+            // reset colors for the previously selected joint
+            ResetJointColors(previousIndex);
 
-            for (int counter = 0; counter < previousMaterialList.Length; counter++)
-            {
-                previousMaterialList[counter].material.color = prevColor[counter];
-            }
+            // store colors for the current selected joint
+            StoreJointColors(selectedIndex);
+
             jointName = articulationChain[selectedIndex].name;
-            Renderer[] materialList = articulationChain[selectedIndex].transform.GetChild(0).GetComponentsInChildren<Renderer>();
+            Renderer[] rendererList = articulationChain[selectedIndex].transform.GetChild(0).GetComponentsInChildren<Renderer>();
 
-            StoreColors(selectedIndex);
-
-            foreach (var mesh in materialList)
+            // set the color of the selected join meshes to the highlight color
+            foreach (var mesh in rendererList)
             {
-                Color tempColor = new Color(R, G, B, Alpha);
-                mesh.material.color = tempColor;
+                if (IsHDR()) {
+                    mesh.material.SetColor("_BaseColor", highLightColor);
+                } 
+                else {
+                    mesh.material.color = highLightColor;
+                }
             }
 
         }
@@ -141,21 +146,40 @@ namespace RosSharp.Control
             {
                 current.direction = RotationDirection.None;
             }
-
-
         }
 
         /// <summary>
         /// Stores original color of the part being highlighted
         /// </summary>
         /// <param name="index">Index of the part in the Articulation chain</param>
-        private void StoreColors(int index)
+        private void StoreJointColors(int index)
         {
             Renderer[] materialLists = articulationChain[index].transform.GetChild(0).GetComponentsInChildren<Renderer>();
             prevColor = new Color[materialLists.Length];
             for (int counter = 0; counter < materialLists.Length; counter++)
             {
+                if (IsHDR()) {
+                    prevColor[counter] = materialLists[counter].material.GetColor("_BaseColor");
+                } else {
                 prevColor[counter] = materialLists[counter].sharedMaterial.GetColor("_Color");
+            }
+        }
+        }
+
+        /// <summary>
+        /// Resets original color of the part being highlighted
+        /// </summary>
+        /// <param name="index">Index of the part in the Articulation chain</param>
+        private void ResetJointColors(int index) {
+            Renderer[] previousRendererList = articulationChain[index].transform.GetChild(0).GetComponentsInChildren<Renderer>();
+            for (int counter = 0; counter < previousRendererList.Length; counter++)
+            {
+                if (IsHDR()) {
+                    previousRendererList[counter].material.SetColor("_BaseColor", prevColor[counter]);
+                } 
+                else {
+                    previousRendererList[counter].material.color = prevColor[counter];
+                }
             }
         }
 
@@ -169,6 +193,13 @@ namespace RosSharp.Control
                 drive.damping = damping;
                 joint.joint.xDrive = drive;
             }
+        }
+
+        /// Checks if current render pipeline is HDR 
+        /// Used for setting the color of highlighted joint
+        private bool IsHDR() {
+            //TODO: should we also return true for Universal Render pipeline?
+            return GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition");
         }
     }
 }
