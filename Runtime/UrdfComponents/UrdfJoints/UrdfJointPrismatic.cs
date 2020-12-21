@@ -60,7 +60,7 @@ namespace RosSharp.Urdf
         public override float GetPosition()
         {
             #if UNITY_2020_1_OR_NEWER
-                return unityJoint.jointPosition[0];
+                return unityJoint.jointPosition[xAxis];
             #else
             return Vector3.Dot(unityJoint.transform.localPosition - unityJoint.connectedAnchor, unityJoint.axis);
             #endif
@@ -73,7 +73,7 @@ namespace RosSharp.Urdf
         public override float GetVelocity()
         {
 #if UNITY_2020_1_OR_NEWER
-            return unityJoint.velocity[0];
+            return unityJoint.velocity[xAxis];
 #else
             return float.NaN;
 #endif
@@ -86,7 +86,7 @@ namespace RosSharp.Urdf
         public override float GetEffort()
         {
 #if UNITY_2020_1_OR_NEWER
-            return unityJoint.jointForce[0];
+            return unityJoint.jointForce[xAxis];
 #else
                 return float.NaN;
 #endif
