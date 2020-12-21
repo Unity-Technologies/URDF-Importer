@@ -34,7 +34,7 @@ namespace RosSharp.Urdf
             Planar
         }
 
-    public int xAxis;
+    public int xAxis = 0;
     
 #if UNITY_2020_1_OR_NEWER
         protected UnityEngine.ArticulationBody unityJoint;
