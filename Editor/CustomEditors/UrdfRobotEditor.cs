@@ -37,14 +37,14 @@ namespace RosSharp.Urdf.Editor
 
             GUILayout.Space(5);
             GUILayout.Label("All Rigidbodies", EditorStyles.boldLabel);
-            DisplaySettingsToggle(new GUIContent("Use Gravity"), urdfRobot.SetRigidbodiesUseGravity);
-            DisplaySettingsToggle(new GUIContent("Use Inertia from URDF", "If disabled, Unity will generate new inertia tensor values automatically."),
-                urdfRobot.SetUseUrdfInertiaData);
-            DisplaySettingsToggle(new GUIContent("Default Space"), urdfRobot.ChangeToCorrectedSpace);
+            DisplaySettingsToggle(new GUIContent("Use Gravity"), urdfRobot.SetRigidbodiesUseGravity, UrdfRobot.useGravity);
+            DisplaySettingsToggle(new GUIContent("Use Inertia from URDF", "If disabled, Unity will generate new inertia tensor values automatically."),urdfRobot.SetUseUrdfInertiaData,
+                UrdfRobot.useUrdfInertiaData);
+            DisplaySettingsToggle(new GUIContent("Default Space"), urdfRobot.ChangeToCorrectedSpace,UrdfRobot.changetoCorrectedSpace);
 
             GUILayout.Space(5);
             GUILayout.Label("All Colliders", EditorStyles.boldLabel);
-            DisplaySettingsToggle(new GUIContent("Convex"), urdfRobot.SetCollidersConvex);
+            DisplaySettingsToggle(new GUIContent("Convex"), urdfRobot.SetCollidersConvex,UrdfRobot.collidersConvex);
 
             GUILayout.Space(5);
             GUILayout.Label("All Joints", EditorStyles.boldLabel);
@@ -59,8 +59,8 @@ namespace RosSharp.Urdf.Editor
             serializedObject.ApplyModifiedProperties();
             UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
             GUILayout.Label("Helper Scripts", EditorStyles.boldLabel);
-            DisplaySettingsToggle(new GUIContent("Controller Script"), urdfRobot.AddController);
-            DisplaySettingsToggle(new GUIContent("Forward Kinematics Script"), urdfRobot.AddFkRobot);
+            DisplaySettingsToggle(new GUIContent("Controller Script"), urdfRobot.AddController, UrdfRobot.addController);
+            DisplaySettingsToggle(new GUIContent("Forward Kinematics Script"), urdfRobot.AddFkRobot, UrdfRobot.addFkRobot);
 
             GUILayout.Space(5);
             if (GUILayout.Button("Export robot to URDF file"))
@@ -83,16 +83,15 @@ namespace RosSharp.Urdf.Editor
             }
         }
 
-        private delegate void SettingsHandler(bool enable);
+        private delegate void SettingsHandler();
 
-        private static void DisplaySettingsToggle(GUIContent label, SettingsHandler handler)
+        private static void DisplaySettingsToggle(GUIContent label, SettingsHandler handler, bool currentState)
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel(label);
-            if (GUILayout.Button("Enable", buttonStyle))
-                handler(true);
-            if (GUILayout.Button("Disable", buttonStyle))
-                handler(false);
+            string buttonName = currentState ? "Disable" : "Enable";
+            if (GUILayout.Button(buttonName, buttonStyle))
+                handler();
             EditorGUILayout.EndHorizontal();
         }
 

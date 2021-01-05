@@ -44,7 +44,7 @@ namespace RosSharp.Urdf.Editor
             }
             else
                 EditorUtility.DisplayDialog("URDF Import",
-                    "The file you selected was not a URDF file. A robot can only be imported from a valid URDF file.", "Ok");
+                    "The file you selected was not a URDF file. Please select a valid URDF file.", "Ok");
         }
     }
 }
