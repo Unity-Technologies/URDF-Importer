@@ -11,6 +11,11 @@ namespace RosSharp.Urdf.Editor
         public ImportSettings settings = new ImportSettings();
         private static string[] windowOptions = { };
 
+        private void Awake()
+        {
+            this.titleContent = new GUIContent("URDF Import Settings");
+        }
+
         private void OnGUI()
         {
             //Styles definitions

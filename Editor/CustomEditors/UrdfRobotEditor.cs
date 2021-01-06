@@ -37,7 +37,7 @@ namespace RosSharp.Urdf.Editor
 
             GUILayout.Space(5);
             GUILayout.Label("All Rigidbodies", EditorStyles.boldLabel);
-            DisplaySettingsToggle(new GUIContent("Use Gravity"), urdfRobot.SetRigidbodiesUseGravity, UrdfRobot.useGravity);
+            DisplaySettingsToggle(new GUIContent("Use Gravity", "If disabled, robot is not affected by gravity."), urdfRobot.SetRigidbodiesUseGravity, UrdfRobot.useGravity);
             DisplaySettingsToggle(new GUIContent("Use Inertia from URDF", "If disabled, Unity will generate new inertia tensor values automatically."),urdfRobot.SetUseUrdfInertiaData,
                 UrdfRobot.useUrdfInertiaData);
             DisplaySettingsToggle(new GUIContent("Default Space"), urdfRobot.ChangeToCorrectedSpace,UrdfRobot.changetoCorrectedSpace);
@@ -55,15 +55,32 @@ namespace RosSharp.Urdf.Editor
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(5);
-            EditorGUILayout.PropertyField(axisType, new GUIContent("Axis Type"));
+            EditorGUILayout.PropertyField(axisType, new GUIContent("Axis Type", "Adjust this if the models that make up your robot are facing the wrong direction."));
             serializedObject.ApplyModifiedProperties();
             UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
-            GUILayout.Label("Helper Scripts", EditorStyles.boldLabel);
-            DisplaySettingsToggle(new GUIContent("Controller Script"), urdfRobot.AddController, UrdfRobot.addController);
-            DisplaySettingsToggle(new GUIContent("Forward Kinematics Script"), urdfRobot.AddFkRobot, UrdfRobot.addFkRobot);
+
+            if (urdfRobot.GetComponent<RosSharp.Control.Controller>() == null || urdfRobot.GetComponent<RosSharp.Control.FKRobot>() == null)
+            {
+                GUILayout.Label("Components", EditorStyles.boldLabel);
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button(urdfRobot.GetComponent<RosSharp.Control.Controller>() == null? "Add Controller": "Remove Controller"))
+                {
+                    urdfRobot.AddController();
+                }
+                if (urdfRobot.GetComponent<RosSharp.Control.FKRobot>() == null)
+                {
+                    if (GUILayout.Button("Add Forward Kinematics"))
+                    {
+                        urdfRobot.gameObject.AddComponent<RosSharp.Control.FKRobot>();
+                    }
+                }
+                GUILayout.EndHorizontal();
+            }
 
             GUILayout.Space(5);
-            if (GUILayout.Button("Export robot to URDF file"))
+            GUILayout.Label("URDF Files", EditorStyles.boldLabel);
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Export robot to URDF"))
             {
                 // Get existing open window or if none, make a new one:
                 UrdfExportEditorWindow window = (UrdfExportEditorWindow)EditorWindow.GetWindow(typeof(UrdfExportEditorWindow));
@@ -81,6 +98,7 @@ namespace RosSharp.Urdf.Editor
                 window.GetEditorPrefs();
                 window.Show();
             }
+            GUILayout.EndHorizontal();
         }
 
         private delegate void SettingsHandler();
