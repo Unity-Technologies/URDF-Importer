@@ -9,14 +9,16 @@ namespace RosSharp.Control
 
     public class Controller : MonoBehaviour
     {
-
         private ArticulationBody[] articulationChain;
         private Color[] prevColor;
         private int previousIndex;
 
-        public ControlType control = ControlType.PositionControl;
+        [InspectorReadOnly(hideInEditMode:true)]
+        public string selectedJoint;
+        [HideInInspector]
         public int selectedIndex;
-        public string jointName;
+
+        public ControlType control = ControlType.PositionControl;
         public float stiffness;
         public float damping;
         public float forceLimit;
@@ -40,7 +42,7 @@ namespace RosSharp.Control
                 currentDrive.forceLimit = forceLimit;
                 joint.xDrive = currentDrive;
             }
-            jointName = articulationChain[selectedIndex].name;
+            UpdateSelectedJoint(selectedIndex);
             StoreColors(selectedIndex);
             B = G = 0;
             Alpha = R = 1;
@@ -98,7 +100,7 @@ namespace RosSharp.Control
             {
                 previousMaterialList[counter].material.color = prevColor[counter];
             }
-            jointName = articulationChain[selectedIndex].name;
+            UpdateSelectedJoint(selectedIndex);
             Renderer[] materialList = articulationChain[selectedIndex].transform.GetChild(0).GetComponentsInChildren<Renderer>();
 
             StoreColors(selectedIndex);
@@ -108,7 +110,11 @@ namespace RosSharp.Control
                 Color tempColor = new Color(R, G, B, Alpha);
                 mesh.material.color = tempColor;
             }
+        }
 
+        void UpdateSelectedJoint(int selectedIndex)
+        {
+            selectedJoint = articulationChain[selectedIndex].name + "(" + selectedIndex + ")";
         }
 
         /// <summary>
