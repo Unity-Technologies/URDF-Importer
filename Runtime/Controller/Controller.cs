@@ -10,15 +10,17 @@ namespace RosSharp.Control
 
     public class Controller : MonoBehaviour
     {
-
         private ArticulationBody[] articulationChain;
         // Stores original colors of the part being highlighted
         private Color[] prevColor;
         private int previousIndex;
 
-        public ControlType control = ControlType.PositionControl;
+        [InspectorReadOnly(hideInEditMode:true)]
+        public string selectedJoint;
+        [HideInInspector]
         public int selectedIndex;
-        public string jointName;
+
+        public ControlType control = ControlType.PositionControl;
         public float stiffness;
         public float damping;
         public float forceLimit;
@@ -44,7 +46,7 @@ namespace RosSharp.Control
                 currentDrive.forceLimit = forceLimit;
                 joint.xDrive = currentDrive;
             }
-            jointName = articulationChain[selectedIndex].name;
+            DisplaySelectedJoint(selectedIndex);
             StoreJointColors(selectedIndex);
         }
 
@@ -100,7 +102,7 @@ namespace RosSharp.Control
             // store colors for the current selected joint
             StoreJointColors(selectedIndex);
 
-            jointName = articulationChain[selectedIndex].name;
+            DisplaySelectedJoint(selectedIndex);
             Renderer[] rendererList = articulationChain[selectedIndex].transform.GetChild(0).GetComponentsInChildren<Renderer>();
 
             // set the color of the selected join meshes to the highlight color
@@ -113,7 +115,11 @@ namespace RosSharp.Control
                     mesh.material.color = highLightColor;
                 }
             }
+        }
 
+        void DisplaySelectedJoint(int selectedIndex)
+        {
+            selectedJoint = articulationChain[selectedIndex].name + " (" + selectedIndex + ")";
         }
 
         /// <summary>
