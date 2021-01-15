@@ -80,11 +80,13 @@ namespace RosSharp.Urdf.Editor
             {
                 exportRoot = EditorUtility.OpenFolderPanel("Select export directory", exportRoot, "");
 
-                if (exportRoot == "" || !Directory.Exists(exportRoot))
+                if (exportRoot.Length == 0)
+                    return;
+                else if (!Directory.Exists(exportRoot))
                     EditorUtility.DisplayDialog("Export Error", "Export root folder must be defined and folder must exist.", "Ok");
                 else
                 {
-                    urdfRobot.ExportRobotToUrdf(exportRoot, exportRoot);
+                    urdfRobot.ExportRobotToUrdf(exportRoot);
                     SetEditorPrefs();
                 }
             }
