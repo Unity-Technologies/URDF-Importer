@@ -207,5 +207,13 @@ namespace RosSharp.Control
             //TODO: should we also return true for Universal Render pipeline?
             return GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition");
         }
+
+        public void OnGUI()
+        {
+            GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
+            centeredStyle.alignment = TextAnchor.UpperCenter;
+            GUI.Label(new Rect(Screen.width / 2 - 200, 10, 400, 20), "Press left/right arrow keys to select a robot joint.", centeredStyle);
+            GUI.Label(new Rect(Screen.width / 2 - 200, 30, 400, 20), "Press up/down arrow keys to move " + jointName + ".", centeredStyle);
+        }
     }
 }
