@@ -214,7 +214,7 @@ namespace RosSharp.Control
         private bool IsHDR()
         {
             //TODO: should we also return true for Universal Render pipeline?
-            return GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition");
+            return GraphicsSettings.renderPipelineAsset != null && GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition");
         }
 
         public void OnGUI()
