@@ -11,7 +11,7 @@ namespace RosSharp.Urdf.Editor
         public string originalFile = "";
         public string exportedFile = "";
         public string logFileLocation = ""; // Defaults to the location of exported file location
-        private static string[] windowOptions = { "originalFile","exportedFile","logFileLocation" };
+        private static string[] windowOptions = { "originalFile", "exportedFile", "logFileLocation" };
 
         private void Awake()
         {
@@ -94,7 +94,7 @@ namespace RosSharp.Urdf.Editor
         /// <returns></returns>
         private bool FileCheck(string filePath)
         {
-            if(filePath == " ")
+            if (filePath == " ")
             {
                 return false;
             }
