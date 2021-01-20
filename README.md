@@ -20,7 +20,7 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 1. Copy the URDF and the associated files in the assets folder in the Project window. Make sure the [location](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/tutorials/urdf_importer/urdf_appendix.md#file-hierarchy) of the mesh files is correct.
 
-2. Right Click on the URDF file and click `Import Robot from URDF`.
+2. Right Click on the URDF file and click `Import Robot from Selected URDF file`.
 
 <img src = "images~/URDF%20Menu.png" width = 40% height = 40%>
 
