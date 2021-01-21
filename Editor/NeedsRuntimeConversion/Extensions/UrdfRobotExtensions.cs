@@ -129,7 +129,7 @@ namespace RosSharp.Urdf.Editor
 
         #region Export
 
-        public static void ExportRobotToUrdf(this UrdfRobot urdfRobot, string exportRootFolder, string exportDestination)
+        public static void ExportRobotToUrdf(this UrdfRobot urdfRobot, string exportRootFolder, string exportDestination="")
         {
             UrdfExportPathHandler.SetExportPath(exportRootFolder, exportDestination);
 

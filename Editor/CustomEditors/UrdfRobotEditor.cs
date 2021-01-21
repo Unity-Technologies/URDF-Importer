@@ -12,6 +12,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */  
 
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ namespace RosSharp.Urdf.Editor
     {
         private UrdfRobot urdfRobot;
         private static GUIStyle buttonStyle;
+        private string exportRoot = "";
         SerializedProperty axisType;
 
         public void OnEnable()
@@ -34,6 +36,10 @@ namespace RosSharp.Urdf.Editor
                 buttonStyle = new GUIStyle(EditorStyles.miniButtonRight) { fixedWidth = 75 };
 
             urdfRobot = (UrdfRobot) target;
+
+            EditorGUILayout.PropertyField(axisType, new GUIContent("Axis Type"));
+            serializedObject.ApplyModifiedProperties();
+            UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
 
             GUILayout.Space(5);
             GUILayout.Label("All Rigidbodies", EditorStyles.boldLabel);
@@ -82,12 +88,17 @@ namespace RosSharp.Urdf.Editor
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Export robot to URDF"))
             {
-                // Get existing open window or if none, make a new one:
-                UrdfExportEditorWindow window = (UrdfExportEditorWindow)EditorWindow.GetWindow(typeof(UrdfExportEditorWindow));
-                window.urdfRobot = urdfRobot;
-                window.minSize = new Vector2(500, 200);
-                window.GetEditorPrefs();
-                window.Show();
+                exportRoot = EditorUtility.OpenFolderPanel("Select export directory", exportRoot, "");
+
+                if (exportRoot.Length == 0)
+                    return;
+                else if (!Directory.Exists(exportRoot))
+                    EditorUtility.DisplayDialog("Export Error", "Export root folder must be defined and folder must exist.", "Ok");
+                else
+                {
+                    urdfRobot.ExportRobotToUrdf(exportRoot);
+                    SetEditorPrefs();
+                }
             }
 
             GUILayout.Space(5);
@@ -111,6 +122,11 @@ namespace RosSharp.Urdf.Editor
             if (GUILayout.Button(buttonName, buttonStyle))
                 handler();
             EditorGUILayout.EndHorizontal();
+        }
+
+        private void SetEditorPrefs()
+        {
+            EditorPrefs.SetString("UrdfExportRoot", exportRoot);
         }
 
     }
