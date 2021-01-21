@@ -20,7 +20,7 @@ namespace RosSharp.Urdf.Editor
 {
     public static class UrdfImporterContextMenuItem
     {
-        [MenuItem("Assets/Robotics/Import Robot from Selected URDF file", true, 0)]
+        [MenuItem("Robotics/Import Robot from Selected URDF file", true, 0)]
         public static bool CreateUrdfObject_IsValid()
         {
             string assetPath = AssetDatabase.GetAssetPath(Selection.activeObject);
@@ -28,7 +28,7 @@ namespace RosSharp.Urdf.Editor
             return (Path.GetExtension(assetPath)?.ToLower() == ".urdf");
         }
 
-        [MenuItem("Assets/Robotics/Import Robot from Selected URDF file")]
+        [MenuItem("Robotics/Import Robot from Selected URDF file")]
         private static void CreateUrdfObject()
         {
             //Get path to asset, check if it's a urdf file
