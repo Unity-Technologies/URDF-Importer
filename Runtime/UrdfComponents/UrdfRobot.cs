@@ -24,6 +24,7 @@ namespace RosSharp.Urdf
     {
         public string FilePath;
         public ImportSettings.axisType choosenAxis ;
+        [SerializeField]
         private ImportSettings.axisType currentOrientation = ImportSettings.axisType.yAxis;
         public List<CollisionIgnore> collisionExceptions;
         #region Configure Robot
