@@ -23,33 +23,41 @@ namespace RosSharp.Urdf
     public class UrdfRobot : MonoBehaviour
     {
         public string FilePath;
-        public ImportSettings.axisType choosenAxis ;
+        public ImportSettings.axisType choosenAxis;
         private ImportSettings.axisType currentOrientation = ImportSettings.axisType.yAxis;
         public List<CollisionIgnore> collisionExceptions;
+
+        //Current Settings
+        public static bool collidersConvex = true;
+        public static bool useUrdfInertiaData = false;
+        public static bool useGravity = true;
+        public static bool addController = true;
+        public static bool addFkRobot = true;
+        public static bool changetoCorrectedSpace = false;
+
         #region Configure Robot
 
-        public void SetCollidersConvex(bool convex)
+        public void SetCollidersConvex()
         {
             foreach (MeshCollider meshCollider in GetComponentsInChildren<MeshCollider>())
-                meshCollider.convex = convex;
+                meshCollider.convex = !collidersConvex;
+            collidersConvex = !collidersConvex;
         }
 
 
-        public void SetUseUrdfInertiaData(bool useUrdfData)
+        public void SetUseUrdfInertiaData()
         {
             foreach (UrdfInertial urdfInertial in GetComponentsInChildren<UrdfInertial>())
-                urdfInertial.useUrdfData = useUrdfData;
+                urdfInertial.useUrdfData = !useUrdfInertiaData;
+            useUrdfInertiaData = !useUrdfInertiaData;
         }
 
-        public void SetRigidbodiesUseGravity(bool useGravity)
+        public void SetRigidbodiesUseGravity()
         {
-#if UNITY_2020_1_OR_NEWER
             foreach (ArticulationBody ar in GetComponentsInChildren<ArticulationBody>())
-                ar.useGravity = useGravity;
-#else
-            foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>())
-                rb.useGravity = useGravity;
-#endif
+                ar.useGravity = !useGravity;
+            useGravity = !useGravity;
+
         }
 
         public void GenerateUniqueJointNames()
@@ -59,9 +67,10 @@ namespace RosSharp.Urdf
         }
 
         // Add a rotation in the model which gives the correct correspondence between UnitySpace and RosSpace
-        public void ChangeToCorrectedSpace(bool rosSpace)
+        public void ChangeToCorrectedSpace()
         {
             this.transform.Rotate(0, 180, 0);
+            changetoCorrectedSpace = !changetoCorrectedSpace;
         }
 
         public bool CheckOrientation()
@@ -74,9 +83,9 @@ namespace RosSharp.Urdf
             currentOrientation = choosenAxis;
         }
 
-        public void AddController(bool controller)
+        public void AddController()
         {
-            if (controller && this.gameObject.GetComponent< RosSharp.Control.Controller>() == null)
+            if (!addController && this.gameObject.GetComponent< RosSharp.Control.Controller>() == null)
             {
                 this.gameObject.AddComponent<RosSharp.Control.Controller>();
             }
@@ -88,11 +97,12 @@ namespace RosSharp.Urdf
                 foreach (JointControl script in scriptList)
                     DestroyImmediate(script);
             }
+            addController = !addController;
         }
 
-        public void AddFkRobot(bool fkRobot)
+        public void AddFkRobot()
         {
-            if (fkRobot && this.gameObject.GetComponent<RosSharp.Control.FKRobot>() == null)
+            if (!addFkRobot && this.gameObject.GetComponent<RosSharp.Control.FKRobot>() == null)
             {
                 this.gameObject.AddComponent<RosSharp.Control.FKRobot>();
             }
@@ -100,6 +110,7 @@ namespace RosSharp.Urdf
             {
                 DestroyImmediate(this.gameObject.GetComponent<RosSharp.Control.FKRobot>());
             }
+            addFkRobot = !addFkRobot;
         }
 
         public void SetAxis(ImportSettings.axisType setAxis)
