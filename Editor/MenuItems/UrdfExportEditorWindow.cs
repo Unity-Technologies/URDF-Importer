@@ -26,7 +26,12 @@ namespace RosSharp.Urdf.Editor
         public int selectedSubfolder;
 
         private static string[] subfolderOptions = { "Export URDF to root folder", "Export URDF to the following subfolder:" };
-        
+
+        private void Awake()
+        {
+            this.titleContent = new GUIContent("Export URDF");
+        }
+
         private void OnGUI()
         {
             //Styles definitions
@@ -47,7 +52,7 @@ namespace RosSharp.Urdf.Editor
             exportRoot = EditorGUILayout.TextField(
                 new GUIContent("Export root folder", "Corresponds to ROS package root folder."),
                 exportRoot);
-            if (GUILayout.Button("Select", buttonStyle))
+            if (GUILayout.Button("Browse", buttonStyle))
             {
                 exportRoot = EditorUtility.OpenFolderPanel("Select export root folder", exportRoot, "");
             }
@@ -67,7 +72,7 @@ namespace RosSharp.Urdf.Editor
             subfolder = EditorGUILayout.TextField(
                 new GUIContent("Subfolder", "Corresponds to URDF subfolder in ROS package."),
                 subfolder);
-            if (GUILayout.Button("Select", buttonStyle))
+            if (GUILayout.Button("Browse", buttonStyle))
             {
                 string subfolderPath = EditorUtility.OpenFolderPanel(
                     "Select export destination for robot asset files (such as meshes, images, etc)",

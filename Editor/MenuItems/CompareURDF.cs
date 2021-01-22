@@ -11,7 +11,12 @@ namespace RosSharp.Urdf.Editor
         public string originalFile = "";
         public string exportedFile = "";
         public string logFileLocation = ""; // Defaults to the location of exported file location
-        private static string[] windowOptions = { "originalFile","exportedFile","logFileLocation" };
+        private static string[] windowOptions = { "originalFile", "exportedFile", "logFileLocation" };
+
+        private void Awake()
+        {
+            this.titleContent = new GUIContent("Compare URDF Files");
+        }
 
         private void OnGUI()
         {
@@ -23,17 +28,13 @@ namespace RosSharp.Urdf.Editor
             };
             GUIStyle buttonStyle = new GUIStyle(EditorStyles.miniButtonRight) { fixedWidth = 75 };
 
-            //Window title
-            GUILayout.Space(10);
-            GUILayout.Label("Compare URDF files", titleStyle);
-
             //Select imported URDF file
             GUILayout.Space(5);
             EditorGUILayout.BeginHorizontal();
             originalFile = EditorGUILayout.TextField(
                 new GUIContent("Source URDF file : ", "The original robot URDF file"),
                 originalFile);
-            if (GUILayout.Button("Select", buttonStyle))
+            if (GUILayout.Button("Browse", buttonStyle))
             {
                 originalFile = EditorUtility.OpenFilePanel("Select source URDF file", originalFile, "");
             }
@@ -47,7 +48,7 @@ namespace RosSharp.Urdf.Editor
             exportedFile = EditorGUILayout.TextField(
                 new GUIContent("Exported URDF file : ", "The exported robot URDF file"),
                 exportedFile);
-            if (GUILayout.Button("Select", buttonStyle))
+            if (GUILayout.Button("Browse", buttonStyle))
             {
                 exportedFile = EditorUtility.OpenFilePanel("Select exported URDF file", exportedFile, "");
                 logFileLocation = Path.GetDirectoryName(exportedFile);
@@ -61,7 +62,7 @@ namespace RosSharp.Urdf.Editor
             logFileLocation = EditorGUILayout.TextField(
                 new GUIContent("Log File Save Location : ", "Log File Location "),
                 logFileLocation);
-            if (GUILayout.Button("Select", buttonStyle))
+            if (GUILayout.Button("Browse", buttonStyle))
             {
                 logFileLocation = EditorUtility.OpenFolderPanel("Log File Save Location Folder", exportedFile, "");
             }
@@ -93,7 +94,7 @@ namespace RosSharp.Urdf.Editor
         /// <returns></returns>
         private bool FileCheck(string filePath)
         {
-            if(filePath == " ")
+            if (filePath == " ")
             {
                 return false;
             }
