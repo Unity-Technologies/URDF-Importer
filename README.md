@@ -34,3 +34,10 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 # Tutorials
 
 Instructions for using URDF importer can be found [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/master/tutorials/urdf_importer/urdf_tutorial.md).
+
+
+## [ROS#](https://github.com/siemens/ros-sharp)
+
+Special thanks to the Siemens [ROS# Project Team]( https://github.com/siemens/ros-sharp/wiki/Info_Acknowledgements) for driving the ROS-Unity Integration Open Source since 2017.
+
+This repo is a fork of [ROS#](https://github.com/siemens/ros-sharp) and was a great starting point for our development.
