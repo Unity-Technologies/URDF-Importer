@@ -13,6 +13,8 @@ limitations under the License.
 */
 
 using System.Collections.Generic;
+using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -27,34 +29,36 @@ namespace RosSharp.Urdf.Editor
         static string collisionObjectName = "Collisions";
         public static ImportSettings importsettings;
 
-        public static void Create()
-        {
-            CreateTag();
-            GameObject robotGameObject = new GameObject("Robot");
+        //public static void Create()
+        //{
+        //    CreateTag();
+        //    GameObject robotGameObject = new GameObject("Robot");
             
-            robotGameObject.tag = tagName;
-            robotGameObject.AddComponent<UrdfRobot>();
-            robotGameObject.AddComponent<RosSharp.Control.Controller>();
+        //    robotGameObject.tag = tagName;
+        //    robotGameObject.AddComponent<UrdfRobot>();
+        //    robotGameObject.AddComponent<RosSharp.Control.Controller>();
 
-            UrdfPlugins.Create(robotGameObject.transform);
+        //    UrdfPlugins.Create(robotGameObject.transform);
 
-            UrdfLink urdfLink = UrdfLinkExtensions.Create(robotGameObject.transform);
-            urdfLink.name = "base_link";
-            urdfLink.IsBaseLink = true;
-        }
+        //    UrdfLink urdfLink = UrdfLinkExtensions.Create(robotGameObject.transform);
+        //    urdfLink.name = "base_link";
+        //    urdfLink.IsBaseLink = true;
+        //}
 
         #region Import
 
-        public static void Create(string filename, ImportSettings settings)
+        public static IEnumerator Create(string filename, ImportSettings settings, bool loadStatus = false)
         {
             CreateTag();
             importsettings = settings;
             Robot robot = new Robot(filename);
 
+            settings.totalLinks = robot.links.Count;
+
             if (!UrdfAssetPathHandler.IsValidAssetPath(robot.filename))
             {
                 Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
-                return;
+                yield break;
             }
 
             GameObject robotGameObject = new GameObject(robot.name);
@@ -71,7 +75,20 @@ namespace RosSharp.Urdf.Editor
             UrdfMaterial.InitializeRobotMaterials(robot);
             UrdfPlugins.Create(robotGameObject.transform, robot.plugins);
 
-            UrdfLinkExtensions.Create(robotGameObject.transform, robot.root);
+            Stack<Tuple<Link,Transform,Joint>> importStack = new Stack<Tuple<Link, Transform,Joint>>();
+            importStack.Push(new Tuple<Link, Transform,Joint>(robot.root, robotGameObject.transform,null));
+            while(importStack.Count != 0)
+            {
+                Tuple<Link, Transform,Joint> currentLink = importStack.Pop();
+                GameObject importedLink = UrdfLinkExtensions.Create(currentLink.Item2, currentLink.Item1, currentLink.Item3);
+                settings.linksLoaded++;
+                foreach (Joint childJoint in currentLink.Item1.joints)
+                {
+                    Link child = childJoint.ChildLink;
+                    importStack.Push(new Tuple<Link, Transform, Joint>(child, importedLink.transform, childJoint));
+                }
+                yield return null;
+            }
 
             GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);
             Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);

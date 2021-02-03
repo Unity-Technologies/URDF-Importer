@@ -1,5 +1,6 @@
 using System.IO;
 using System;
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,7 +10,10 @@ namespace RosSharp.Urdf.Editor
     {
         public string urdfFile;
         public ImportSettings settings = new ImportSettings();
+
         private static string[] windowOptions = { };
+        private bool showLoadBar = false;
+        IEnumerator robotImporter = null;
 
         private void Awake()
         {
@@ -55,10 +59,23 @@ namespace RosSharp.Urdf.Editor
             if (GUILayout.Button("Import URDF"))
             {
                 if (urdfFile != "")
-                    UrdfRobotExtensions.Create(urdfFile,settings);
-                Close();
+                {
+                    robotImporter = UrdfRobotExtensions.Create(urdfFile, settings);
+                    EditorApplication.CallbackFunction import = robotImporter.MoveNext;
+                    EditorApplication.update += robotImporter.MoveNext();
+                    showLoadBar = true;
+                }
+                //Close();
             }
 
+            //Debug.Log("lol1");
+            //if (robotImporter != null)
+            //    if (!robotImporter.MoveNext())
+            //        Debug.Log("Done");
+
+            Debug.Log("lol2" + settings.linksLoaded);
+            if (showLoadBar)
+                EditorGUI.ProgressBar(new Rect(3, 100, position.width - 6, 20), settings.linksLoaded/settings.totalLinks, "Links Loaded");
         }
 
     }

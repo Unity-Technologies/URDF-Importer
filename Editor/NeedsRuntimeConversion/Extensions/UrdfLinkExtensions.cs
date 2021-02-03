@@ -13,12 +13,15 @@ limitations under the License.
 */  
 
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
+
 
 namespace RosSharp.Urdf.Editor
 {
     public static class UrdfLinkExtensions
     { 
-        public static UrdfLink Create(Transform parent, Link link = null, Joint joint = null)
+        public static GameObject Create(Transform parent, Link link = null, Joint joint = null)
         {
             GameObject linkObject = new GameObject("link");
             linkObject.transform.SetParentAndAlign(parent);
@@ -36,7 +39,7 @@ namespace RosSharp.Urdf.Editor
                 UnityEditor.EditorGUIUtility.PingObject(linkObject);
             }
 
-            return urdfLink;
+            return linkObject;
         }
 
         private static void ImportLinkData(this UrdfLink urdfLink, Link link, Joint joint)
@@ -59,11 +62,11 @@ namespace RosSharp.Urdf.Editor
             else if (joint != null)
                 UrdfJoint.Create(urdfLink.gameObject, UrdfJoint.GetJointType(joint.type), joint);
 
-            foreach (Joint childJoint in link.joints)
-            {
-                Link child = childJoint.ChildLink;
-                UrdfLinkExtensions.Create(urdfLink.transform, child, childJoint);
-            }
+            //foreach (Joint childJoint in link.joints)
+            //{
+            //    Link child = childJoint.ChildLink;
+            //    UrdfLinkExtensions.Create(urdfLink.transform, child, childJoint);
+            //}
         } 
         
         public static Link ExportLinkData(this UrdfLink urdfLink)

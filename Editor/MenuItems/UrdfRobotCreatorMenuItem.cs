@@ -22,7 +22,7 @@ namespace RosSharp.Urdf.Editor
         private static void CreateUrdfObject()
         {
 
-            UrdfRobotExtensions.Create();
+            //UrdfRobotExtensions.Create();
         }
     }
 }
