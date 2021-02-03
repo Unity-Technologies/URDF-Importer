@@ -6,5 +6,6 @@
   "unity": "2020.2",
   "unityRelease": "0b9",
   "dependencies": {
+      "com.unity.editorcoroutines": "1.0.0"
  }
 }
