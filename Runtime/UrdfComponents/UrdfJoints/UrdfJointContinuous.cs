@@ -44,7 +44,7 @@ namespace RosSharp.Urdf
 #if UNITY_2020_1_OR_NEWER
             return unityJoint.jointPosition[xAxis];
 #else
-                return -((HingeJoint)unityJoint).angle * Mathf.Deg2Rad;
+                return -((HingeJoint)unityJoint).angle;
 #endif
         }
 
@@ -57,7 +57,7 @@ namespace RosSharp.Urdf
             #if UNITY_2020_1_OR_NEWER
                 return unityJoint.velocity[xAxis];
             #else
-            return -((HingeJoint)unityJoint).velocity * Mathf.Deg2Rad;
+            return -((HingeJoint)unityJoint).velocity;
             #endif
         }
 
