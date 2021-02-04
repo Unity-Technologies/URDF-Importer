@@ -87,7 +87,9 @@ namespace RosSharp.Urdf.Editor
                     Link child = childJoint.ChildLink;
                     importStack.Push(new Tuple<Link, Transform, Joint>(child, importedLink.transform, childJoint));
                 }
-                yield return null;
+                
+                if(loadStatus)
+                    yield return null;
             }
 
             GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);

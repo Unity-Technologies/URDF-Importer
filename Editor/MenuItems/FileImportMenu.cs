@@ -14,8 +14,6 @@ namespace RosSharp.Urdf.Editor
 
         private static string[] windowOptions = { };
         private bool showLoadBar = false;
-        IEnumerator robotImporter = null;
-
         private void Awake()
         {
             this.titleContent = new GUIContent("URDF Import Settings");
@@ -61,21 +59,23 @@ namespace RosSharp.Urdf.Editor
             {
                 if (urdfFile != "")
                 {
-                    // robotImporter = UrdfRobotExtensions.Create(urdfFile, settings);
-                    EditorCoroutineUtility.StartCoroutine(UrdfRobotExtensions.Create(urdfFile, settings), this);
                     showLoadBar = true;
+                    EditorCoroutineUtility.StartCoroutine(UrdfRobotExtensions.Create(urdfFile, settings,showLoadBar), this);
                 }
-                //Close();
             }
 
-            //Debug.Log("lol1");
-            //if (robotImporter != null)
-            //    if (!robotImporter.MoveNext())
-            //        Debug.Log("Done");
-
-            Debug.Log("lol2" + settings.linksLoaded);
             if (showLoadBar)
-                EditorGUI.ProgressBar(new Rect(3, 100, position.width - 6, 20), settings.linksLoaded/settings.totalLinks, "Links Loaded");
+            {
+                float progress = (settings.totalLinks == 0) ? 0 : ((float)settings.linksLoaded / (float)settings.totalLinks);
+                EditorGUI.ProgressBar(new Rect(3, 400, position.width - 6, 20), progress, String.Format("{0}/{1} Links Loaded",settings.linksLoaded,settings.totalLinks));
+                if (progress == 1)
+                    Close();
+            }
+        }
+
+        private void OnInspectorUpdate()
+        {
+            Repaint();
         }
 
     }
