@@ -47,7 +47,7 @@ namespace RosSharp.Urdf
         public override float GetPosition()
         {
             #if UNITY_2020_1_OR_NEWER
-            return ((ArticulationBody)unityJoint).jointPosition[xAxis] * Mathf.Deg2Rad;
+            return ((ArticulationBody)unityJoint).jointPosition[xAxis];
 #else
                         return -((HingeJoint)unityJoint).angle * Mathf.Deg2Rad;
 #endif
@@ -60,7 +60,7 @@ namespace RosSharp.Urdf
         public override float GetVelocity()
         {
             #if UNITY_2020_1_OR_NEWER
-                return ((ArticulationBody)unityJoint).jointVelocity[xAxis] * Mathf.Deg2Rad;
+                return ((ArticulationBody)unityJoint).jointVelocity[xAxis];
             #else
                         return -((HingeJoint)unityJoint).velocity * Mathf.Deg2Rad;
             #endif
