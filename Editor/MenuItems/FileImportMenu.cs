@@ -1,6 +1,7 @@
 using System.IO;
 using System;
 using System.Collections;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -60,9 +61,8 @@ namespace RosSharp.Urdf.Editor
             {
                 if (urdfFile != "")
                 {
-                    robotImporter = UrdfRobotExtensions.Create(urdfFile, settings);
-                    EditorApplication.CallbackFunction import = robotImporter.MoveNext;
-                    EditorApplication.update += robotImporter.MoveNext();
+                    // robotImporter = UrdfRobotExtensions.Create(urdfFile, settings);
+                    EditorCoroutineUtility.StartCoroutine(UrdfRobotExtensions.Create(urdfFile, settings), this);
                     showLoadBar = true;
                 }
                 //Close();
