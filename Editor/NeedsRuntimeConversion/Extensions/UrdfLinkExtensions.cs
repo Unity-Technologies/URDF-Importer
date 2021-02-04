@@ -62,11 +62,6 @@ namespace RosSharp.Urdf.Editor
             else if (joint != null)
                 UrdfJoint.Create(urdfLink.gameObject, UrdfJoint.GetJointType(joint.type), joint);
 
-            //foreach (Joint childJoint in link.joints)
-            //{
-            //    Link child = childJoint.ChildLink;
-            //    UrdfLinkExtensions.Create(urdfLink.transform, child, childJoint);
-            //}
         } 
         
         public static Link ExportLinkData(this UrdfLink urdfLink)

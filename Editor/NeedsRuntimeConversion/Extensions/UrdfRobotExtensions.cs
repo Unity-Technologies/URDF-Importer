@@ -29,21 +29,21 @@ namespace RosSharp.Urdf.Editor
         static string collisionObjectName = "Collisions";
         public static ImportSettings importsettings;
 
-        //public static void Create()
-        //{
-        //    CreateTag();
-        //    GameObject robotGameObject = new GameObject("Robot");
+        public static void Create()
+        {
+           CreateTag();
+           GameObject robotGameObject = new GameObject("Robot");
             
-        //    robotGameObject.tag = tagName;
-        //    robotGameObject.AddComponent<UrdfRobot>();
-        //    robotGameObject.AddComponent<RosSharp.Control.Controller>();
+           robotGameObject.tag = tagName;
+           robotGameObject.AddComponent<UrdfRobot>();
+           robotGameObject.AddComponent<RosSharp.Control.Controller>();
 
-        //    UrdfPlugins.Create(robotGameObject.transform);
+           UrdfPlugins.Create(robotGameObject.transform);
 
-        //    UrdfLink urdfLink = UrdfLinkExtensions.Create(robotGameObject.transform);
-        //    urdfLink.name = "base_link";
-        //    urdfLink.IsBaseLink = true;
-        //}
+           UrdfLink urdfLink = UrdfLinkExtensions.Create(robotGameObject.transform).GetComponent<UrdfLink>();
+           urdfLink.name = "base_link";
+           urdfLink.IsBaseLink = true;
+        }
 
         #region Import
 
