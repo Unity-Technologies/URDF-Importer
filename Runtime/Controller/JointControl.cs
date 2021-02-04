@@ -39,7 +39,8 @@ public class JointControl : MonoBehaviour
             {
                 ArticulationDrive currentDrive = joint.xDrive;
                 float newTargetDelta = (int)direction * Time.fixedDeltaTime * speed;
-                if (newTargetDelta + currentDrive.target <= currentDrive.upperLimit && newTargetDelta + currentDrive.target >= currentDrive.lowerLimit){
+                if (((joint.linearLockX == ArticulationDofLock.LimitedMotion) && (newTargetDelta + currentDrive.target <= currentDrive.upperLimit && newTargetDelta + currentDrive.target >= currentDrive.lowerLimit)) || 
+                (joint.linearLockX == ArticulationDofLock.FreeMotion)){
                     currentDrive.target += newTargetDelta;
                 } 
                 joint.xDrive = currentDrive;
