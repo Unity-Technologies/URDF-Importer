@@ -42,7 +42,11 @@ public class JointControl : MonoBehaviour
                 if (((joint.linearLockX == ArticulationDofLock.LimitedMotion) && (newTargetDelta + currentDrive.target <= currentDrive.upperLimit && newTargetDelta + currentDrive.target >= currentDrive.lowerLimit)) || 
                 (joint.linearLockX == ArticulationDofLock.FreeMotion)){
                     currentDrive.target += newTargetDelta;
-                } 
+                }
+                else
+                {
+                    currentDrive.target += newTargetDelta;
+                }
                 joint.xDrive = currentDrive;
             }
             
