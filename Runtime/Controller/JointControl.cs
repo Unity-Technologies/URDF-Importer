@@ -43,10 +43,6 @@ public class JointControl : MonoBehaviour
                 (joint.linearLockX == ArticulationDofLock.FreeMotion)){
                     currentDrive.target += newTargetDelta;
                 }
-                else
-                {
-                    currentDrive.target += newTargetDelta;
-                }
                 joint.xDrive = currentDrive;
             }
             
