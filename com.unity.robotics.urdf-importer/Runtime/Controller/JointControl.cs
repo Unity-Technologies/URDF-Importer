@@ -33,64 +33,18 @@ public class JointControl : MonoBehaviour
         acceleration = controller.acceleration;
 
 
-        if (joint.jointType != ArticulationJointType.FixedJoint)
+        if(joint.jointType != ArticulationJointType.FixedJoint)
         {
             if (controltype == RosSharp.Control.ControlType.PositionControl)
             {
                 ArticulationDrive currentDrive = joint.xDrive;
                 float newTargetDelta = (int)direction * Time.fixedDeltaTime * speed;
-
-                if (joint.jointType == ArticulationJointType.RevoluteJoint)
-                {
-                    if (joint.twistLock == ArticulationDofLock.LimitedMotion)
-                    {
-                        if (newTargetDelta + currentDrive.target > currentDrive.upperLimit)
-                        {
-                            currentDrive.target = currentDrive.upperLimit;
-                        }
-                        else if (newTargetDelta + currentDrive.target < currentDrive.lowerLimit)
-                        {
-                            currentDrive.target = currentDrive.lowerLimit;
-                        }
-                        else
-                        {
-                            currentDrive.target += newTargetDelta;
-                        }
-                    }
-                    else
-                    {
-                        currentDrive.target += newTargetDelta;
-   
-                    }
-                }
-
-                else if (joint.jointType == ArticulationJointType.PrismaticJoint)
-                {
-                    if (joint.linearLockX == ArticulationDofLock.LimitedMotion)
-                    {
-                        if (newTargetDelta + currentDrive.target > currentDrive.upperLimit)
-                        {
-                            currentDrive.target = currentDrive.upperLimit;
-                        }
-                        else if (newTargetDelta + currentDrive.target < currentDrive.lowerLimit)
-                        {
-                            currentDrive.target = currentDrive.lowerLimit;
-                        }
-                        else
-                        {
-                            currentDrive.target += newTargetDelta;
-                        }
-                    }
-                    else
-                    {
-                        currentDrive.target += newTargetDelta;
-   
-                    }
-                }
-
+                if (newTargetDelta + currentDrive.target <= currentDrive.upperLimit && newTargetDelta + currentDrive.target >= currentDrive.lowerLimit){
+                    currentDrive.target += newTargetDelta;
+                } 
                 joint.xDrive = currentDrive;
-
             }
+            
         }
     }
 }
