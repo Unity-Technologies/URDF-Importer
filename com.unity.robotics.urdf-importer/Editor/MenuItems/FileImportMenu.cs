@@ -1,5 +1,7 @@
 using System.IO;
 using System;
+using System.Collections;
+using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,8 +11,9 @@ namespace RosSharp.Urdf.Editor
     {
         public string urdfFile;
         public ImportSettings settings = new ImportSettings();
-        private static string[] windowOptions = { };
 
+        private static string[] windowOptions = { };
+        private bool showLoadBar = false;
         private void Awake()
         {
             this.titleContent = new GUIContent("URDF Import Settings");
@@ -55,10 +58,24 @@ namespace RosSharp.Urdf.Editor
             if (GUILayout.Button("Import URDF"))
             {
                 if (urdfFile != "")
-                    UrdfRobotExtensions.Create(urdfFile,settings);
-                Close();
+                {
+                    showLoadBar = true;
+                    EditorCoroutineUtility.StartCoroutine(UrdfRobotExtensions.Create(urdfFile, settings,showLoadBar), this);
+                }
             }
 
+            if (showLoadBar)
+            {
+                float progress = (settings.totalLinks == 0) ? 0 : ((float)settings.linksLoaded / (float)settings.totalLinks);
+                EditorGUI.ProgressBar(new Rect(3, 400, position.width - 6, 20), progress, String.Format("{0}/{1} Links Loaded",settings.linksLoaded,settings.totalLinks));
+                if (progress == 1)
+                    Close();
+            }
+        }
+
+        private void OnInspectorUpdate()
+        {
+            Repaint();
         }
 
     }
