@@ -1,9 +1,9 @@
 {
-    "name": "Unity.Robotics.RosTcpConnector.Runtime.Tests",
+    "name": "Unity.Robotics.UrdfImporter.Runtime.Tests",
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
-        "Unity.Robotics.ROSTCPConnector"
+        "Unity.Robotics.URDFImporter"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
