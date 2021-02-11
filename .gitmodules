@@ -1,3 +1,0 @@
-[submodule "VHACD"]
-	path = com.unity.robotics.urdf-importer/Runtime/VHACD
-	url = https://github.com/Unity-Technologies/VHACD
