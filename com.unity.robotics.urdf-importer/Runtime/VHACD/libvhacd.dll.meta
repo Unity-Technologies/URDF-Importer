@@ -21,7 +21,7 @@ PluginImporter:
         Exclude OSXUniversal: 0
         Exclude WebGL: 1
         Exclude Win: 0
-        Exclude Win64: 0
+        Exclude Win64: 1
         Exclude WindowsStoreApps: 1
   - first:
       Any: 
@@ -57,9 +57,9 @@ PluginImporter:
   - first:
       Standalone: Win64
     second:
-      enabled: 1
+      enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       Windows Store Apps: WindowsStoreApps
     second:
