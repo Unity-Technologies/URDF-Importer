@@ -1,0 +1,144 @@
+* text=auto eol=lf
+
+# EOL
+
+*.py eol=lf
+*.pl eol=lf
+*.pm eol=lf
+*.t eol=lf
+*.it eol=lf
+*.h eol=lf
+*.cpp eol=lf
+*.cs eol=lf
+*.c eol=lf
+*.txt eol=lf
+*.bindings eol=lf
+*.sh eol=lf
+*.jam eol=lf
+*.as eol=lf
+*.boo eol=lf
+*.java eol=lf
+*.js eol=lf
+Makefile eol=lf
+*.shader eol=lf
+*.cginc eol=lf
+*.glslinc eol=lf
+*.meta eol=lf
+*.mm eol=lf
+*.md eol=lf
+Runtime/Export/common_* eol=lf
+Repositories.ini eol=lf
+.hgignore eol=lf
+
+# vs can handle these as lf, but really wants them as crlf
+*.vcproj eol=crlf
+*.vcxproj eol=crlf
+*.vcxproj.filters eol=crlf
+*.csproj eol=crlf
+*.props eol=crlf
+*.targets eol=crlf
+*.sln eol=crlf
+*.sln.template eol=crlf
+*.bat eol=crlf
+*.cmd eol=crlf
+*.xaml eol=crlf
+
+# the templating parser will actually fail on lf, inexplicably setting every #line directive as '1'
+*.tt eol=crlf
+*.t4 eol=crlf
+*.ttinclude eol=crlf
+
+# LFS
+
+# archives and well-known binary formats
+*.[zZ][iI][pP] filter=lfs diff=lfs merge=lfs -text
+*.7[zZ] filter=lfs diff=lfs merge=lfs -text
+*.[zZ]7 filter=lfs diff=lfs merge=lfs -text
+*.[tT][gG][zZ] filter=lfs diff=lfs merge=lfs -text
+*.[gG][zZ] filter=lfs diff=lfs merge=lfs -text
+*.[jJ][aA][rR] filter=lfs diff=lfs merge=lfs -text
+*.[nN][uU][pP][kK][gG] filter=lfs diff=lfs merge=lfs -text
+*.[eE][gG][gG] filter=lfs diff=lfs merge=lfs -text
+*.[aA][pP][kK] filter=lfs diff=lfs merge=lfs -text
+*.[mM][sS][iI] filter=lfs diff=lfs merge=lfs -text
+*.[aA][rR][cC] filter=lfs diff=lfs merge=lfs -text
+
+# executables and libraries
+*.[aA] filter=lfs diff=lfs merge=lfs -text
+*.[oO] filter=lfs diff=lfs merge=lfs -text
+#*.[sS][oO] filter=lfs diff=lfs merge=lfs -text
+*.[bB][iI][nN] filter=lfs diff=lfs merge=lfs -text
+#*.[dD][lL][lL] filter=lfs diff=lfs merge=lfs -text
+*.[oO][bB][jJ] filter=lfs diff=lfs merge=lfs -text
+*.[dD][yY][lL][iI][bB] filter=lfs diff=lfs merge=lfs -text
+*.[lL][iI][bB] filter=lfs diff=lfs merge=lfs -text
+*.[eE][xX][eE] filter=lfs diff=lfs merge=lfs -text
+
+# specific binaries in the unity codebase
+js filter=lfs diff=lfs merge=lfs -text
+p4 filter=lfs diff=lfs merge=lfs -text
+p4d filter=lfs diff=lfs merge=lfs -text
+flex filter=lfs diff=lfs merge=lfs -text
+bison filter=lfs diff=lfs merge=lfs -text
+distcc filter=lfs diff=lfs merge=lfs -text
+distccd filter=lfs diff=lfs merge=lfs -text
+gdbserver filter=lfs diff=lfs merge=lfs -text
+fastzip_darwin filter=lfs diff=lfs merge=lfs -text
+ProxyServer filter=lfs diff=lfs merge=lfs -text
+node filter=lfs diff=lfs merge=lfs -text
+usymtool filter=lfs diff=lfs merge=lfs -text
+libtool filter=lfs diff=lfs merge=lfs -text
+optool filter=lfs diff=lfs merge=lfs -text
+Cg filter=lfs diff=lfs merge=lfs -text
+PVRTexTool filter=lfs diff=lfs merge=lfs -text
+PVRTexToolCL filter=lfs diff=lfs merge=lfs -text
+PVRTexToolCLI filter=lfs diff=lfs merge=lfs -text
+iproxy filter=lfs diff=lfs merge=lfs -text
+7za filter=lfs diff=lfs merge=lfs -text
+yasm filter=lfs diff=lfs merge=lfs -text
+nasm filter=lfs diff=lfs merge=lfs -text
+lzma filter=lfs diff=lfs merge=lfs -text
+lzma-linux32 filter=lfs diff=lfs merge=lfs -text
+unity_web_d3d filter=lfs diff=lfs merge=lfs -text
+unity_web_gl filter=lfs diff=lfs merge=lfs -text
+Everyplay filter=lfs diff=lfs merge=lfs -text
+UnityAds filter=lfs diff=lfs merge=lfs -text
+usym_upload filter=lfs diff=lfs merge=lfs -text
+eng.cube.size filter=lfs diff=lfs merge=lfs -text
+eng.cube.nn filter=lfs diff=lfs merge=lfs -text
+ispc_osx filter=lfs diff=lfs merge=lfs -text
+dump_syms filter=lfs diff=lfs merge=lfs -text
+astcenc_linux filter=lfs diff=lfs merge=lfs -text
+astcenc_osx filter=lfs diff=lfs merge=lfs -text
+convert filter=lfs diff=lfs merge=lfs -text
+convert_linux filter=lfs diff=lfs merge=lfs -text
+etcpack2_linux filter=lfs diff=lfs merge=lfs -text
+arm-eabi-gdb.dist filter=lfs diff=lfs merge=lfs -text
+arm-eabi-gdb filter=lfs diff=lfs merge=lfs -text
+build-wrapper-linux-x86-64 filter=lfs diff=lfs merge=lfs -text
+build-wrapper-linux-x86-32 filter=lfs diff=lfs merge=lfs -text
+build-wrapper-macosx-x86 filter=lfs diff=lfs merge=lfs -text
+AudioPluginDemo filter=lfs diff=lfs merge=lfs -text
+re2c filter=lfs diff=lfs merge=lfs -text
+ios-deploy filter=lfs diff=lfs merge=lfs -text
+mobiledevice filter=lfs diff=lfs merge=lfs -text
+AssetBundles filter=lfs diff=lfs merge=lfs -text
+Unity4XC filter=lfs diff=lfs merge=lfs -text
+lemon filter=lfs diff=lfs merge=lfs -text
+etcpack filter=lfs diff=lfs merge=lfs -text
+etcpack2 filter=lfs diff=lfs merge=lfs -text
+enabundle filter=lfs diff=lfs merge=lfs -text
+assetDatabase3 filter=lfs diff=lfs merge=lfs -text
+MasterServer filter=lfs diff=lfs merge=lfs -text
+Facilitator filter=lfs diff=lfs merge=lfs -text
+RenderingPlugin filter=lfs diff=lfs merge=lfs -text
+Unitron filter=lfs diff=lfs merge=lfs -text
+DotMacKit filter=lfs diff=lfs merge=lfs -text
+ImageComparer filter=lfs diff=lfs merge=lfs -text
+GameKit filter=lfs diff=lfs merge=lfs -text
+OgreKit filter=lfs diff=lfs merge=lfs -text
+*.test-cache filter=lfs diff=lfs merge=lfs -text
+*.unitypackage filter=lfs diff=lfs merge=lfs -text
+Projects/VisualStudio/ipch/middleman-2afd44a3/unitywebpluginax-eba8f4d1.ipch filter=lfs diff=lfs merge=lfs -text
+Editor/Resources/Common/unity[[:space:]]editor[[:space:]]resources filter=lfs diff=lfs merge=lfs -text
+Editor/Resources/unity[[:space:]]editor[[:space:]]resources filter=lfs diff=lfs merge=lfs -text
