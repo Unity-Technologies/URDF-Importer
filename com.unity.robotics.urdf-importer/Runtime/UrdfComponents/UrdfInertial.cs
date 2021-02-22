@@ -46,7 +46,7 @@ namespace RosSharp.Urdf
 #endif
             if (inertial != null)
             {
-                robotLink.mass = ((float)inertial.mass > 0)?((float)inertial.mass):0.1;
+                robotLink.mass = ((float)inertial.mass > 0)?((float)inertial.mass):(float)0.1;
                 if (inertial.origin != null) {
                     
                     robotLink.centerOfMass = UrdfOrigin.GetPositionFromUrdf(inertial.origin);
