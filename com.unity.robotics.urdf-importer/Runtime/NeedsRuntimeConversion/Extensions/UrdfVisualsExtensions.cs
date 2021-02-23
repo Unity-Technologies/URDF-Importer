@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace RosSharp.Urdf.Editor
+namespace RosSharp.Urdf//.Editor
 {
     public static class UrdfVisualsExtensions
     {

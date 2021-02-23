@@ -13,11 +13,11 @@ limitations under the License.
 */
 
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 using System.Collections.Generic;
 using MeshProcess;
 
-namespace RosSharp.Urdf.Editor
+namespace RosSharp.Urdf//.Editor
 {
     public class UrdfGeometryCollision : UrdfGeometry
     {

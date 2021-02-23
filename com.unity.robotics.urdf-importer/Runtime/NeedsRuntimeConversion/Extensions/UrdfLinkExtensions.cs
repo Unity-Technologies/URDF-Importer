@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Collections;
 
 
-namespace RosSharp.Urdf.Editor
+namespace RosSharp.Urdf//.Editor
 {
     public static class UrdfLinkExtensions
     { 

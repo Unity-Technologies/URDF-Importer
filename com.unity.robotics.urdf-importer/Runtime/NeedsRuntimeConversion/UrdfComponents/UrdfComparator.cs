@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace RosSharp.Urdf.Testing
+namespace RosSharp.Urdf//.Testing
 {
     public class UrdfComparator
     {

@@ -17,11 +17,11 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine;
 using RosSharp;
 
-namespace RosSharp.Urdf.Editor
+namespace RosSharp.Urdf//.Editor
 {
     public static class UrdfRobotExtensions
     {

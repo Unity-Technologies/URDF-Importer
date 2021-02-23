@@ -15,7 +15,7 @@ limitations under the License.
 using UnityEngine;
 using RosSharp.Urdf;
 
-namespace RosSharp.Urdf.Editor
+namespace RosSharp.Urdf//.Editor
 {
     public static class UrdfCollisionExtensions
     {
