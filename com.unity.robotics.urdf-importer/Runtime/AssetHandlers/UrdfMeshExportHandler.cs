@@ -16,7 +16,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace RosSharp.Urdf.Editor
+namespace RosSharp.Urdf//.Editor
 {
     public static class UrdfMeshExportHandler
     {

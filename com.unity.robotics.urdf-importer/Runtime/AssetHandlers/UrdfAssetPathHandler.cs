@@ -13,10 +13,10 @@ limitations under the License.
 */
 
 using System.IO;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine;
 
-namespace RosSharp.Urdf.Editor
+namespace RosSharp.Urdf//.Editor
 {
     public static class UrdfAssetPathHandler
     {

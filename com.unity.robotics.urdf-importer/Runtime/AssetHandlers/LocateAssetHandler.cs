@@ -15,9 +15,9 @@ limitations under the License.
 using System.IO;
 using System;
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 
-namespace RosSharp.Urdf.Editor
+namespace RosSharp.Urdf//.Editor
 {
     public static class LocateAssetHandler
     {
