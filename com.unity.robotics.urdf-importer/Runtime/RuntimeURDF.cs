@@ -92,7 +92,7 @@ public static class RuntimeURDF
 #if UNITY_EDITOR
         return AssetDatabase.FindAssets(filter, searchInFolders);
 #else
-    return [];
+        return new string[0];
 #endif        
     }
 

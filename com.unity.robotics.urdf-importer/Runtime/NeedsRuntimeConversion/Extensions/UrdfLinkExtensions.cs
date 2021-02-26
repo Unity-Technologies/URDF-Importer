@@ -16,7 +16,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
-
 namespace RosSharp.Urdf//.Editor
 {
     public static class UrdfLinkExtensions
@@ -36,7 +35,9 @@ namespace RosSharp.Urdf//.Editor
             else
             {
                 UrdfInertial.Create(linkObject);
+#if UNITY_EDITOR
                 UnityEditor.EditorGUIUtility.PingObject(linkObject);
+#endif
             }
 
             return linkObject;

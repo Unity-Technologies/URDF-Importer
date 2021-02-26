@@ -101,6 +101,8 @@ namespace RosSharp.Urdf//.Editor
 
             CorrectAxis(robotGameObject);
             CreateCollisionExceptions(robot, robotGameObject);
+#else
+            yield return null;
 #endif
         }
 
@@ -206,14 +208,16 @@ namespace RosSharp.Urdf//.Editor
             robot.plugins = urdfRobot.GetComponentInChildren<UrdfPlugins>().ExportPluginsData();
 
             return robot;
+#else
+            return null;
 #endif
         }
 
         #endregion
 
-#if UNITY_EDITOR
         public static void CreateTag()
         {
+#if UNITY_EDITOR
             // Open tag manager
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
             SerializedProperty tagsProp = tagManager.FindProperty("tags");
@@ -236,7 +240,7 @@ namespace RosSharp.Urdf//.Editor
             }
 
             tagManager.ApplyModifiedProperties();
-        }
 #endif
+        }
     }
 }

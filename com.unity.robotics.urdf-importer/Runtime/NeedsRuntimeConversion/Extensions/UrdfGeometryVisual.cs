@@ -54,7 +54,7 @@ namespace RosSharp.Urdf//.Editor
         private static GameObject CreateMeshVisual(Link.Geometry.Mesh mesh)
         {
             GameObject meshObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
-            return meshObject == null ? null : (GameObject)UnityEditor.PrefabUtility.InstantiatePrefab(meshObject);
-        }
+            return meshObject == null ? null : (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(meshObject);
+        } 
     }
 }
