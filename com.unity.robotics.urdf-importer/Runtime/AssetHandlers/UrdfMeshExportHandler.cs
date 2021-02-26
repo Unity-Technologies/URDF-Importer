@@ -13,7 +13,7 @@ limitations under the License.
 */ 
 
 using System.IO;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine;
 
 namespace RosSharp.Urdf//.Editor
@@ -34,9 +34,9 @@ namespace RosSharp.Urdf//.Editor
                     string[] foldersToSearch = {Path.GetDirectoryName(prefabPath)};
                     string prefabName = Path.GetFileNameWithoutExtension(prefabPath);
 
-                    foreach (string guid2 in AssetDatabase.FindAssets(prefabName, foldersToSearch))
+                    foreach (string guid2 in RuntimeURDF.AssetDatabase_FindAssets(prefabName, foldersToSearch))
                     {
-                        string possiblePath = AssetDatabase.GUIDToAssetPath(guid2);
+                        string possiblePath = RuntimeURDF.AssetDatabase_GUIDToAssetPath(guid2);
                         if (possiblePath.ToLower().Contains(".stl"))
                         {
                             prefabPath = possiblePath;
@@ -70,12 +70,12 @@ namespace RosSharp.Urdf//.Editor
         private static void CopyDaeTextureToExportDestination(string prefabPath, string newFolderLocation)
         {
             //Get material from Collada prefab
-            Material material = AssetDatabase.LoadAssetAtPath<Material>(prefabPath);
+            Material material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(prefabPath);
             if (material.mainTexture == null) return;
             
             //Get relative subfolder where texture is, compared to the DAE file.
             string commonFolder = Path.GetDirectoryName(prefabPath).SetSeparatorChar();
-            string texturePath = AssetDatabase.GetAssetPath(material.mainTexture).SetSeparatorChar();
+            string texturePath = RuntimeURDF.AssetDatabase_GetAssetPath(material.mainTexture).SetSeparatorChar();
             string relativeLocation = "";
             if (texturePath.Contains(commonFolder))
                 relativeLocation = texturePath.Substring(commonFolder.Length + 1);
@@ -108,7 +108,7 @@ namespace RosSharp.Urdf//.Editor
 
         private static string GetPrefabPath(GameObject gameObject)
         {
-            return AssetDatabase.GetAssetPath(PrefabUtility.GetCorrespondingObjectFromSource(gameObject));
+            return RuntimeURDF.AssetDatabase_GetAssetPath(RuntimeURDF.PrefabUtility_GetCorrespondingObjectFromSource(gameObject));
         } 
     }
 }

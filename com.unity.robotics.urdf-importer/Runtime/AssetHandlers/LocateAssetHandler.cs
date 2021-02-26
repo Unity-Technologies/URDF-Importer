@@ -24,7 +24,7 @@ namespace RosSharp.Urdf//.Editor
         public static T FindUrdfAsset<T>(string urdfFileName) where T : UnityEngine.Object
         {
             string fileAssetPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName);
-            T assetObject = AssetDatabase.LoadAssetAtPath<T>(fileAssetPath);
+            T assetObject = RuntimeURDF.AssetDatabase_LoadAssetAtPath<T>(fileAssetPath);
 
             if (assetObject != null)
                 return assetObject;
@@ -32,7 +32,7 @@ namespace RosSharp.Urdf//.Editor
             //If asset was not found, let user choose whether to search for
             //or ignore the missing asset.
             string invalidPath = fileAssetPath ?? urdfFileName;
-            int option = EditorUtility.DisplayDialogComplex("Urdf Importer: Asset Not Found",
+            int option = RuntimeURDF.EditorUtility_DisplayDialogComplex("Urdf Importer: Asset Not Found",
                 "Current root folder: " + UrdfAssetPathHandler.GetPackageRoot() +
                 "\n\nExpected asset path: " + invalidPath,
                 "Locate Asset",
@@ -50,7 +50,7 @@ namespace RosSharp.Urdf//.Editor
                     break;
             }
 
-            assetObject = (T) AssetDatabase.LoadAssetAtPath(fileAssetPath, typeof(T));
+            assetObject = (T) RuntimeURDF.AssetDatabase_LoadAssetAtPath(fileAssetPath, typeof(T));
             if (assetObject != null)
                 return assetObject;
 
@@ -60,7 +60,7 @@ namespace RosSharp.Urdf//.Editor
 
         private static string LocateRootAssetFolder<T>(string urdfFileName) where T : UnityEngine.Object
         {
-            string newAssetPath = EditorUtility.OpenFolderPanel(
+            string newAssetPath = RuntimeURDF.EditorUtility_OpenFolderPanel(
                 "Locate package root folder",
                 Path.Combine(Path.GetDirectoryName(Application.dataPath), "Assets"),
                 "");
@@ -77,7 +77,7 @@ namespace RosSharp.Urdf//.Editor
         {
             string fileExtension = Path.GetExtension(invalidPath)?.Replace(".", "");
 
-            string newPath = EditorUtility.OpenFilePanel(
+            string newPath = RuntimeURDF.EditorUtility_OpenFilePanel(
                 "Couldn't find asset at " + invalidPath + ". Select correct file.",
                 UrdfAssetPathHandler.GetPackageRoot(),
                 fileExtension);
@@ -87,7 +87,7 @@ namespace RosSharp.Urdf//.Editor
 
         private static void ChooseFailureOption(string urdfFilePath)
         {
-            if (!EditorUtility.DisplayDialog(
+            if (!RuntimeURDF.EditorUtility_DisplayDialog(
                 "Urdf Importer: Missing Asset",
                 "Missing asset " + Path.GetFileName(urdfFilePath) +
                 " was ignored or could not be found.\n\nContinue URDF Import?",

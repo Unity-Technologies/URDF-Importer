@@ -14,19 +14,24 @@ limitations under the License.
 
 using System.Xml.Linq;
 using System.Globalization;
-//using UnityEditor;
 using UnityEngine;
 using System.IO;
 
 namespace RosSharp
 {
+#if UNITY_EDITOR
+    using UnityEditor;
     public class ColladaAssetPostProcessor : AssetPostprocessor
+#else
+    public class ColladaAssetPostProcessor
+#endif
     {
         private bool isCollada;
         private string orientation;
 
         public void OnPreprocessModel()
         {
+#if UNITY_EDITOR            
             ModelImporter modelImporter = (ModelImporter)assetImporter;
             isCollada = Path.GetExtension(modelImporter.assetPath).ToLowerInvariant() == ".dae";
 
@@ -39,6 +44,7 @@ namespace RosSharp
             modelImporter.importCameras = false;
             modelImporter.importLights = false;
             orientation = readColladaOrientation(getAbsolutePath(modelImporter.assetPath));
+#endif
         }
 
         public void OnPostprocessModel(GameObject gameObject)

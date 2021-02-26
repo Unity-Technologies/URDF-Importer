@@ -31,8 +31,8 @@ namespace RosSharp.Urdf//.Editor
 
             packageRoot = GetRelativeAssetPath(newPath);
 
-            if(!AssetDatabase.IsValidFolder(Path.Combine(packageRoot, MaterialFolderName)))
-                AssetDatabase.CreateFolder(packageRoot, MaterialFolderName);
+            if(!RuntimeURDF.AssetDatabase_IsValidFolder(Path.Combine(packageRoot, MaterialFolderName)))
+                RuntimeURDF.AssetDatabase_CreateFolder(packageRoot, MaterialFolderName);
 
             if (correctingIncorrectPackageRoot)
                 MoveMaterialsToNewLocation(oldPackagePath);
@@ -90,12 +90,12 @@ namespace RosSharp.Urdf//.Editor
 
         private static void MoveMaterialsToNewLocation(string oldPackageRoot)
         {
-            if (AssetDatabase.IsValidFolder(Path.Combine(oldPackageRoot, MaterialFolderName)))
-                AssetDatabase.MoveAsset(
+            if (RuntimeURDF.AssetDatabase_IsValidFolder(Path.Combine(oldPackageRoot, MaterialFolderName)))
+                RuntimeURDF.AssetDatabase_MoveAsset(
                     Path.Combine(oldPackageRoot, MaterialFolderName),
                     Path.Combine(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName));
             else
-                AssetDatabase.CreateFolder(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName);
+                RuntimeURDF.AssetDatabase_CreateFolder(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName);
         }
 
         public static string GetMaterialAssetPath(string materialName)

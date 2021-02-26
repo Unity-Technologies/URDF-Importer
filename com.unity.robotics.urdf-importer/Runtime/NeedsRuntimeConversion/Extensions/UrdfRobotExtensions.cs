@@ -17,7 +17,9 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
-//using UnityEditor;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using RosSharp;
 
@@ -31,24 +33,25 @@ namespace RosSharp.Urdf//.Editor
 
         public static void Create()
         {
-           CreateTag();
-           GameObject robotGameObject = new GameObject("Robot");
-            
-           robotGameObject.tag = tagName;
-           robotGameObject.AddComponent<UrdfRobot>();
-           robotGameObject.AddComponent<RosSharp.Control.Controller>();
+            CreateTag();
+            GameObject robotGameObject = new GameObject("Robot");
 
-           UrdfPlugins.Create(robotGameObject.transform);
+            robotGameObject.tag = tagName;
+            robotGameObject.AddComponent<UrdfRobot>();
+            robotGameObject.AddComponent<RosSharp.Control.Controller>();
 
-           UrdfLink urdfLink = UrdfLinkExtensions.Create(robotGameObject.transform).GetComponent<UrdfLink>();
-           urdfLink.name = "base_link";
-           urdfLink.IsBaseLink = true;
+            UrdfPlugins.Create(robotGameObject.transform);
+
+            UrdfLink urdfLink = UrdfLinkExtensions.Create(robotGameObject.transform).GetComponent<UrdfLink>();
+            urdfLink.name = "base_link";
+            urdfLink.IsBaseLink = true;
         }
 
         #region Import
 
         public static IEnumerator Create(string filename, ImportSettings settings, bool loadStatus = false)
         {
+#if UNITY_EDITOR
             CreateTag();
             importsettings = settings;
             Robot robot = new Robot(filename);
@@ -75,11 +78,11 @@ namespace RosSharp.Urdf//.Editor
             UrdfMaterial.InitializeRobotMaterials(robot);
             UrdfPlugins.Create(robotGameObject.transform, robot.plugins);
 
-            Stack<Tuple<Link,Transform,Joint>> importStack = new Stack<Tuple<Link, Transform,Joint>>();
-            importStack.Push(new Tuple<Link, Transform,Joint>(robot.root, robotGameObject.transform,null));
-            while(importStack.Count != 0)
+            Stack<Tuple<Link, Transform, Joint>> importStack = new Stack<Tuple<Link, Transform, Joint>>();
+            importStack.Push(new Tuple<Link, Transform, Joint>(robot.root, robotGameObject.transform, null));
+            while (importStack.Count != 0)
             {
-                Tuple<Link, Transform,Joint> currentLink = importStack.Pop();
+                Tuple<Link, Transform, Joint> currentLink = importStack.Pop();
                 GameObject importedLink = UrdfLinkExtensions.Create(currentLink.Item2, currentLink.Item1, currentLink.Item3);
                 settings.linksLoaded++;
                 foreach (Joint childJoint in currentLink.Item1.joints)
@@ -87,8 +90,8 @@ namespace RosSharp.Urdf//.Editor
                     Link child = childJoint.ChildLink;
                     importStack.Push(new Tuple<Link, Transform, Joint>(child, importedLink.transform, childJoint));
                 }
-                
-                if(loadStatus)
+
+                if (loadStatus)
                     yield return null;
             }
 
@@ -98,6 +101,7 @@ namespace RosSharp.Urdf//.Editor
 
             CorrectAxis(robotGameObject);
             CreateCollisionExceptions(robot, robotGameObject);
+#endif
         }
 
         public static void CorrectAxis(GameObject robot)
@@ -133,7 +137,7 @@ namespace RosSharp.Urdf//.Editor
             List<CollisionIgnore> ColliisonList = new List<CollisionIgnore>();
             if (robot.ignoreCollisionPair.Count > 0)
             {
-                foreach(System.Tuple<string,string> ignoreCollision in robot.ignoreCollisionPair)
+                foreach (System.Tuple<string, string> ignoreCollision in robot.ignoreCollisionPair)
                 {
                     Transform colliisonObject1 = GameObject.Find(ignoreCollision.Item1).transform.Find(collisionObjectName);
                     Transform collisionObject2 = GameObject.Find(ignoreCollision.Item2).transform.Find(collisionObjectName);
@@ -143,17 +147,18 @@ namespace RosSharp.Urdf//.Editor
             }
             robotGameObject.GetComponent<UrdfRobot>().collisionExceptions = ColliisonList;
         }
-        
+
         #endregion
 
         #region Export
 
-        public static void ExportRobotToUrdf(this UrdfRobot urdfRobot, string exportRootFolder, string exportDestination="")
+        public static void ExportRobotToUrdf(this UrdfRobot urdfRobot, string exportRootFolder, string exportDestination = "")
         {
+#if UNITY_EDITOR
             UrdfExportPathHandler.SetExportPath(exportRootFolder, exportDestination);
 
             urdfRobot.FilePath = Path.Combine(UrdfExportPathHandler.GetExportDestination(), urdfRobot.name + ".urdf");
-    
+
             Robot robot = urdfRobot.ExportRobotData();
             if (robot == null) return;
 
@@ -164,10 +169,12 @@ namespace RosSharp.Urdf//.Editor
             UrdfMaterial.Materials.Clear();
             UrdfExportPathHandler.Clear();
             AssetDatabase.Refresh();
+#endif
         }
 
         private static Robot ExportRobotData(this UrdfRobot urdfRobot)
         {
+#if UNITY_EDITOR
             Robot robot = new Robot(urdfRobot.FilePath, urdfRobot.gameObject.name);
 
             List<string> linkNames = new List<string>();
@@ -190,7 +197,7 @@ namespace RosSharp.Urdf//.Editor
                 UrdfJoint urdfJoint = urdfLink.gameObject.GetComponent<UrdfJoint>();
                 if (urdfJoint != null)
                     robot.joints.Add(urdfJoint.ExportJointData());
-                else if (!urdfLink.IsBaseLink) 
+                else if (!urdfLink.IsBaseLink)
                     //Make sure that links with no rigidbodies are still connected to the robot by a default joint
                     robot.joints.Add(UrdfJoint.ExportDefaultJoint(urdfLink.transform));
             }
@@ -199,10 +206,12 @@ namespace RosSharp.Urdf//.Editor
             robot.plugins = urdfRobot.GetComponentInChildren<UrdfPlugins>().ExportPluginsData();
 
             return robot;
+#endif
         }
 
         #endregion
 
+#if UNITY_EDITOR
         public static void CreateTag()
         {
             // Open tag manager
@@ -228,5 +237,6 @@ namespace RosSharp.Urdf//.Editor
 
             tagManager.ApplyModifiedProperties();
         }
+#endif
     }
 }
