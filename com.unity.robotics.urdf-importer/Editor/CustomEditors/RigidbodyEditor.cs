@@ -13,25 +13,26 @@ namespace RosSharp.Urdf.Editor
             base.OnInspectorGUI();
 
             Rigidbody rigidbody = (Rigidbody)target;
-            if (EditorApplication.isPlaying)
-            {
-                EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.Vector3Field("Center Of Mass", rigidbody.centerOfMass);
-                EditorGUILayout.Vector3Field("Inertia Tensor", rigidbody.inertiaTensor);
-                EditorGUILayout.Vector3Field("Inertia Tensor Rotation", rigidbody.inertiaTensorRotation.eulerAngles);
-                EditorGUI.EndDisabledGroup();
-            }
-            else
-            {
-                rigidbody.centerOfMass = EditorGUILayout.Vector3Field("Center Of Mass", rigidbody.centerOfMass);
-                rigidbody.inertiaTensor = EditorGUILayout.Vector3Field("Inertia Tensor", rigidbody.inertiaTensor);
 
-                Vector3 inertiaTensorEuler = rigidbody.inertiaTensorRotation.eulerAngles;
-                Vector3 newEuler = EditorGUILayout.Vector3Field("Inertia Tensor Rotation", inertiaTensorEuler);
-                if (inertiaTensorEuler != newEuler)
-                {
-                    rigidbody.inertiaTensorRotation = Quaternion.Euler(newEuler);
-                }
+            EditorGUI.BeginChangeCheck();
+            Vector3 centerOfMass = EditorGUILayout.Vector3Field("Center Of Mass", rigidbody.centerOfMass);
+            if (EditorGUI.EndChangeCheck())
+            {
+                rigidbody.centerOfMass = centerOfMass;
+            }
+
+            EditorGUI.BeginChangeCheck();
+            Vector3 inertiaTensor = EditorGUILayout.Vector3Field("Inertia Tensor", rigidbody.inertiaTensor);
+            if (EditorGUI.EndChangeCheck())
+            {
+                rigidbody.inertiaTensor = inertiaTensor;
+            }
+
+            EditorGUI.BeginChangeCheck();
+            Vector3 inertiaTensorRotation = EditorGUILayout.Vector3Field("Inertia Tensor Rotation", rigidbody.inertiaTensorRotation.eulerAngles);
+            if (EditorGUI.EndChangeCheck())
+            {
+                rigidbody.inertiaTensorRotation = Quaternion.Euler(inertiaTensorRotation);
             }
         }
     }
