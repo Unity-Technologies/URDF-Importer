@@ -34,7 +34,7 @@ namespace RosSharp.Urdf
 
         private const int RoundDigits = 10;
         private const float MinInertia = 1e-6f;
-        private const float minMass = 0.1;
+        private const float minMass = 0.1f;
 
         public static void Create(GameObject linkObject, Link.Inertial inertial = null)
         {

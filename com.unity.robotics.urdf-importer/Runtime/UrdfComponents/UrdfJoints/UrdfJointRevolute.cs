@@ -100,27 +100,17 @@ namespace RosSharp.Urdf
 
         protected override void ImportJointData(Joint joint)
         {
-#if UNITY_2020_1_OR_NEWER
             AdjustMovement(joint);
             if (joint.dynamics != null)
             {
-                unityJoint.angularDamping = (float)joint.dynamics.damping; 
-                unityJoint.jointFriction = (float)joint.dynamics.friction;
+                unityJoint.angularDamping = (double.IsNaN(joint.dynamics.damping)) ? 0 : (float)joint.dynamics.damping;
+                unityJoint.jointFriction = (double.IsNaN(joint.dynamics.friction)) ? 0 : (float)joint.dynamics.friction;
             }
             else
             {
                 unityJoint.angularDamping = 0;
                 unityJoint.jointFriction = 0;
             }
-#else
-                        unityJoint.axis = (joint.axis != null) ? GetAxis(joint.axis) : GetDefaultAxis();
-
-                        if (joint.dynamics != null)
-                            ((HingeJoint)unityJoint).spring = GetJointSpring(joint.dynamics);
-
-                        if (joint.limit != null)
-                            GetComponent<HingeJointLimitsManager>().InitializeLimits(joint.limit, (HingeJoint)unityJoint);
-#endif
         }
 
         protected override Joint ExportSpecificJointData(Joint joint)

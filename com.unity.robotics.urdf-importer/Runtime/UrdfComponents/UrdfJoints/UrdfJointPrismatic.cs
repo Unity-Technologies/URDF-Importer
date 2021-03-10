@@ -31,7 +31,6 @@ namespace RosSharp.Urdf
         {
             UrdfJointPrismatic urdfJoint = linkObject.AddComponent<UrdfJointPrismatic>();
 #if UNITY_2020_1_OR_NEWER
-            linkObject.AddComponent<ArticulationBody>();
             urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.PrismaticJoint;
 #else
@@ -116,32 +115,17 @@ namespace RosSharp.Urdf
 
         protected override void ImportJointData(Joint joint)
         {
-#if UNITY_2020_1_OR_NEWER
             AdjustMovement(joint);
-
             if (joint.dynamics != null)
             {
-                unityJoint.linearDamping = (float)joint.dynamics.damping;
-                unityJoint.jointFriction = (float)joint.dynamics.friction;
+                unityJoint.angularDamping = (double.IsNaN(joint.dynamics.damping)) ? 0 : (float)joint.dynamics.damping;
+                unityJoint.jointFriction = (double.IsNaN(joint.dynamics.friction)) ? 0 : (float)joint.dynamics.friction;
             }
             else
             {
                 unityJoint.angularDamping = 0;
                 unityJoint.jointFriction = 0;
             }
-#else
-            ArticulationBody prismaticJoint = (ArticulationBody) unityJoint;
-            prismaticJoint.axis = (joint.axis != null) ? GetAxis(joint.axis) : GetDefaultAxis();
-
-            if (joint.dynamics != null)
-                prismaticJoint.xDrive = GetJointDrive(joint.dynamics);
-
-            if (joint.limit != null)
-            {
-                PrismaticJointLimitsManager prismaticLimits = GetComponent<PrismaticJointLimitsManager>();
-                prismaticLimits.InitializeLimits(joint.limit);
-            }
-#endif
         }
 
         /// <summary>
