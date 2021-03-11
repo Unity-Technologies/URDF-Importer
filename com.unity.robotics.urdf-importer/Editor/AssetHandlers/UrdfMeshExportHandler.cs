@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/ 
+*/
 
 using System.IO;
 using UnityEditor;
@@ -46,7 +46,7 @@ namespace RosSharp.Urdf.Editor
                     }
                 }
             }
-            
+
             if (foundExistingColladaOrStl)
                 return CopyMeshToExportDestination(prefabPath);
 
@@ -61,7 +61,7 @@ namespace RosSharp.Urdf.Editor
                 CopyDaeTextureToExportDestination(prefabPath, Path.GetDirectoryName(newPrefabPath));
 
             prefabPath = UrdfAssetPathHandler.GetFullAssetPath(prefabPath);
-            
+
             CopyFileToNewLocation(prefabPath, newPrefabPath);
 
             return newPrefabPath;
@@ -71,8 +71,8 @@ namespace RosSharp.Urdf.Editor
         {
             //Get material from Collada prefab
             Material material = AssetDatabase.LoadAssetAtPath<Material>(prefabPath);
-            if (material.mainTexture == null) return;
-            
+            if (material == null || material.mainTexture == null) return;
+
             //Get relative subfolder where texture is, compared to the DAE file.
             string commonFolder = Path.GetDirectoryName(prefabPath).SetSeparatorChar();
             string texturePath = AssetDatabase.GetAssetPath(material.mainTexture).SetSeparatorChar();
@@ -82,7 +82,7 @@ namespace RosSharp.Urdf.Editor
             string newTexturePath = Path.Combine(newFolderLocation, relativeLocation);
 
             Directory.CreateDirectory(Path.GetDirectoryName(newTexturePath));
-            
+
             CopyFileToNewLocation(UrdfAssetPathHandler.GetFullAssetPath(texturePath), newTexturePath);
         }
 
@@ -109,6 +109,6 @@ namespace RosSharp.Urdf.Editor
         private static string GetPrefabPath(GameObject gameObject)
         {
             return AssetDatabase.GetAssetPath(PrefabUtility.GetCorrespondingObjectFromSource(gameObject));
-        } 
+        }
     }
 }
