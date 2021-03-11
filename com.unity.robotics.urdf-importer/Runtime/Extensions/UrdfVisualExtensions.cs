@@ -14,7 +14,7 @@ limitations under the License.
 
 using UnityEngine;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public static class UrdfVisualExtensions
     {

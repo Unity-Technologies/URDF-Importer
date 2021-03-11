@@ -13,10 +13,9 @@ limitations under the License.
 */ 
 
 using System.IO;
-//using UnityEditor;
 using UnityEngine;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public static class UrdfMeshExportHandler
     {

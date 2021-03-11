@@ -15,7 +15,7 @@ limitations under the License.
 using System;
 using UnityEngine;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public class UrdfGeometry
     {

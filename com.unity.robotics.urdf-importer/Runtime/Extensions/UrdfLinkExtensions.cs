@@ -13,10 +13,8 @@ limitations under the License.
 */  
 
 using UnityEngine;
-using System.Collections.Generic;
-using System.Collections;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public static class UrdfLinkExtensions
     { 

@@ -10,9 +10,11 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
+using System;
 using UnityEngine;
+using UnityMeshImporter;
 
 namespace RosSharp.Urdf
 {
@@ -49,7 +51,9 @@ namespace RosSharp.Urdf
             {
                 geometryGameObject.transform.SetParentAndAlign(parent);
                 if (geometry != null)
+                {
                     SetScale(parent, geometry, geometryType);
+                }
             }
         }
 
@@ -68,18 +72,31 @@ namespace RosSharp.Urdf
         private static GameObject CreateMeshVisualRuntime(Link.Geometry.Mesh mesh)
         {
             GameObject meshObject = null;
-            if (mesh.filename.ToLower().EndsWith(".stl"))
+            if (!string.IsNullOrEmpty(mesh.filename))
             {
-                string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(mesh.filename, false);
-                meshObject = StlAssetPostProcessor.CreateStlGameObjectRuntime(meshFilePath);
-            }
-            else if (mesh.filename.ToLower().EndsWith(".dae"))
-            {
-                //TODO
-            }
-            else 
-            {
-                Debug.LogError("Unable to load mesh file: " + mesh.filename);
+                try 
+                {
+                    string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(mesh.filename, false);
+                    if (meshFilePath.ToLower().EndsWith(".stl"))
+                    {
+                        meshObject = StlAssetPostProcessor.CreateStlGameObjectRuntime(meshFilePath);
+                    }
+                    else if (meshFilePath.ToLower().EndsWith(".dae"))
+                    {
+                        float globalScale = ColladaAssetPostProcessor.ReadGlobalScale(meshFilePath);
+                        meshObject = MeshImporter.Load(meshFilePath, globalScale, globalScale, globalScale);
+                        ColladaAssetPostProcessor.ApplyColladaOrientation(meshObject, meshFilePath);
+                    }
+                }
+                catch (Exception ex) 
+                {
+                    Debug.LogAssertion(ex);
+                }
+                
+                if (meshObject == null) 
+                {
+                    Debug.LogError("Unable to load visual mesh: " + mesh.filename);
+                }
             }
             return meshObject;
         }

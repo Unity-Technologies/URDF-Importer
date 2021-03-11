@@ -37,7 +37,7 @@ namespace Assimp
     /// </summary>
     public class AssimpUnity
     {
-        private const string packageName = "com.donghok.meshimporter";
+        private const string packageName = "com.unity.robotics.urdf-importer";
         
         private static bool s_triedLoading = false;
         private static bool s_assimpAvailable = false;
@@ -72,7 +72,7 @@ namespace Assimp
 
             //First time initialization, need to set a probing path (at least in editor) to resolve the native dependencies
             string pluginsFolder = Path.Combine(Application.dataPath, "Plugins");
-            string editorPluginNativeFolder = Path.Combine(Path.GetFullPath(string.Format($"Packages/{packageName}")), "Runtime", "Plugins", "AssimpNet", "Native");
+            string editorPluginNativeFolder = Path.Combine(Path.GetFullPath(string.Format($"Packages/{packageName}")), "Runtime", "UnityMeshImporter", "Plugins", "AssimpNet", "Native");
             string native64LibPath = null;
             string native32LibPath = null;
 

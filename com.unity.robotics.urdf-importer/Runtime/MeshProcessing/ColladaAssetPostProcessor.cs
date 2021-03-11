@@ -42,7 +42,7 @@ namespace RosSharp
 
                 if (modelImporter.useFileScale)
                 {
-                    modelImporter.globalScale = readGlobalScale(getAbsolutePath(modelImporter.assetPath));
+                    modelImporter.globalScale = ReadGlobalScale(getAbsolutePath(modelImporter.assetPath));
                 }
                 modelImporter.animationType = ModelImporterAnimationType.None;
                 modelImporter.importCameras = false;
@@ -55,7 +55,9 @@ namespace RosSharp
         public void OnPostprocessModel(GameObject gameObject)
         {
             if (!isCollada)
+            {
                 return;
+            }
 
             gameObject.transform.SetPositionAndRotation(
                 getColladaPositionFix(gameObject.transform.position, orientation),
@@ -67,7 +69,7 @@ namespace RosSharp
             return Path.Combine(Path.GetDirectoryName(Application.dataPath), relativeAssetPath);
         }
 
-        private Vector3 getColladaPositionFix(Vector3 position, string orientation)
+        private static Vector3 getColladaPositionFix(Vector3 position, string orientation)
         { 
             switch (orientation)
             {
@@ -89,7 +91,7 @@ namespace RosSharp
             }
         }
 
-        private string readColladaOrientation(string absolutePath)
+        private static string readColladaOrientation(string absolutePath)
         {
             try
             {
@@ -103,7 +105,7 @@ namespace RosSharp
             }
         }
 
-        private float readGlobalScale(string absolutePath)
+        public static float ReadGlobalScale(string absolutePath)
         {
             try
             {
@@ -116,6 +118,14 @@ namespace RosSharp
             {
                 return 1.0f;
             }
+        }
+
+        static public void ApplyColladaOrientation(GameObject gameObject, string absolutePath) 
+        {
+            string orientation = readColladaOrientation(absolutePath);
+            gameObject.transform.SetPositionAndRotation(
+                getColladaPositionFix(gameObject.transform.position, orientation),
+                Quaternion.Euler(getColladaRotationFix(orientation)) * gameObject.transform.rotation);
         }
     }
 }

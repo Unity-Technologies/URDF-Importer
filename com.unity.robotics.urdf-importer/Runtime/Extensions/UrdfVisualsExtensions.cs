@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public static class UrdfVisualsExtensions
     {
@@ -32,7 +32,9 @@ namespace RosSharp.Urdf//.Editor
             if (visuals != null)
             {
                 foreach (Link.Visual visual in visuals)
+                {
                     UrdfVisualExtensions.Create(urdfVisuals.transform, visual);
+                }
             }
         }
 
