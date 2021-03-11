@@ -1,7 +1,5 @@
 * text=auto eol=lf
-
 # EOL
-
 *.py eol=lf
 *.pl eol=lf
 *.pm eol=lf
@@ -29,7 +27,6 @@ Makefile eol=lf
 Runtime/Export/common_* eol=lf
 Repositories.ini eol=lf
 .hgignore eol=lf
-
 # vs can handle these as lf, but really wants them as crlf
 *.vcproj eol=crlf
 *.vcxproj eol=crlf
@@ -42,14 +39,11 @@ Repositories.ini eol=lf
 *.bat eol=crlf
 *.cmd eol=crlf
 *.xaml eol=crlf
-
 # the templating parser will actually fail on lf, inexplicably setting every #line directive as '1'
 *.tt eol=crlf
 *.t4 eol=crlf
 *.ttinclude eol=crlf
-
 # LFS
-
 # archives and well-known binary formats
 *.[zZ][iI][pP] filter=lfs diff=lfs merge=lfs -text
 *.7[zZ] filter=lfs diff=lfs merge=lfs -text
@@ -62,7 +56,6 @@ Repositories.ini eol=lf
 *.[aA][pP][kK] filter=lfs diff=lfs merge=lfs -text
 *.[mM][sS][iI] filter=lfs diff=lfs merge=lfs -text
 *.[aA][rR][cC] filter=lfs diff=lfs merge=lfs -text
-
 # executables and libraries
 *.[aA] filter=lfs diff=lfs merge=lfs -text
 *.[oO] filter=lfs diff=lfs merge=lfs -text
@@ -73,7 +66,6 @@ Repositories.ini eol=lf
 *.[dD][yY][lL][iI][bB] filter=lfs diff=lfs merge=lfs -text
 *.[lL][iI][bB] filter=lfs diff=lfs merge=lfs -text
 *.[eE][xX][eE] filter=lfs diff=lfs merge=lfs -text
-
 # specific binaries in the unity codebase
 js filter=lfs diff=lfs merge=lfs -text
 p4 filter=lfs diff=lfs merge=lfs -text
@@ -142,3 +134,6 @@ OgreKit filter=lfs diff=lfs merge=lfs -text
 Projects/VisualStudio/ipch/middleman-2afd44a3/unitywebpluginax-eba8f4d1.ipch filter=lfs diff=lfs merge=lfs -text
 Editor/Resources/Common/unity[[:space:]]editor[[:space:]]resources filter=lfs diff=lfs merge=lfs -text
 Editor/Resources/unity[[:space:]]editor[[:space:]]resources filter=lfs diff=lfs merge=lfs -text
+*.dll filter=lfs diff=lfs merge=lfs -text
+*.so filter=lfs diff=lfs merge=lfs -text
+*.bundle filter=lfs diff=lfs merge=lfs -text
