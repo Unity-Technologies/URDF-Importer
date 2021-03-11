@@ -101,8 +101,8 @@ namespace RosSharp.Urdf
 
             if (joint.dynamics != null)
             {
-                unityJoint.angularDamping = (double.IsNaN(joint.dynamics.damping)) ? 0 : (float)joint.dynamics.damping;
-                unityJoint.jointFriction = (double.IsNaN(joint.dynamics.friction)) ? 0 : (float)joint.dynamics.friction;
+                unityJoint.angularDamping = (double.IsNaN(joint.dynamics.damping)) ? defaultDamping : (float)joint.dynamics.damping;
+                unityJoint.jointFriction = (double.IsNaN(joint.dynamics.friction)) ? defaultFriction : (float)joint.dynamics.friction;
             }
             else
             {
