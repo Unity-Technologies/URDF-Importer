@@ -31,19 +31,24 @@ namespace RosSharp
 
         public void OnPreprocessModel()
         {
-#if UNITY_EDITOR            
-            ModelImporter modelImporter = (ModelImporter)assetImporter;
-            isCollada = Path.GetExtension(modelImporter.assetPath).ToLowerInvariant() == ".dae";
+#if UNITY_EDITOR
+            if (!RuntimeURDF.isRuntimeMode)
+            {
+                ModelImporter modelImporter = (ModelImporter)assetImporter;
+                isCollada = Path.GetExtension(modelImporter.assetPath).ToLowerInvariant() == ".dae";
 
-            if (!isCollada)
-                return;
+                if (!isCollada)
+                    return;
 
-            if(modelImporter.useFileScale)
-                modelImporter.globalScale = readGlobalScale(getAbsolutePath(modelImporter.assetPath));
-            modelImporter.animationType = ModelImporterAnimationType.None;
-            modelImporter.importCameras = false;
-            modelImporter.importLights = false;
-            orientation = readColladaOrientation(getAbsolutePath(modelImporter.assetPath));
+                if (modelImporter.useFileScale)
+                {
+                    modelImporter.globalScale = readGlobalScale(getAbsolutePath(modelImporter.assetPath));
+                }
+                modelImporter.animationType = ModelImporterAnimationType.None;
+                modelImporter.importCameras = false;
+                modelImporter.importLights = false;
+                orientation = readColladaOrientation(getAbsolutePath(modelImporter.assetPath));
+            }
 #endif
         }
 

@@ -6,146 +6,185 @@ using UnityEditor;
 
 public static class RuntimeURDF
 {
+#if UNITY_EDITOR
+    public static bool isRuntimeMode = false;
+#else
+    public static bool isRuntimeMode = true;
+#endif
+
     public static T AssetDatabase_LoadAssetAtPath<T>(string fileAssetPath) where T : UnityEngine.Object 
     {
 #if UNITY_EDITOR
-        return AssetDatabase.LoadAssetAtPath<T>(fileAssetPath);
-#else
+        if (!isRuntimeMode)
+        {
+            return AssetDatabase.LoadAssetAtPath<T>(fileAssetPath);
+        }
+#endif
         return default(T);
-#endif        
     }  
 
     public static int EditorUtility_DisplayDialogComplex(string title, string message, string ok, string cancel, string alt) 
     {
 #if UNITY_EDITOR
-        return EditorUtility.DisplayDialogComplex(title, message, ok, cancel, alt);
-#else
-    return 0;
-#endif        
+        if (!isRuntimeMode)
+        {
+            return EditorUtility.DisplayDialogComplex(title, message, ok, cancel, alt);
+        }
+#endif
+        return 0;
     }
 
     public static UnityEngine.Object AssetDatabase_LoadAssetAtPath(string assetPath, Type type) 
     {
 #if UNITY_EDITOR
-        return AssetDatabase.LoadAssetAtPath(assetPath, type);
-#else
+        if (!isRuntimeMode)
+        {
+            return AssetDatabase.LoadAssetAtPath(assetPath, type);
+        }
+#endif
         return null;
-#endif        
     }
 
     public static string EditorUtility_OpenFolderPanel(string title, string folder, string defaultName) 
     {
 #if UNITY_EDITOR
-        return EditorUtility_OpenFolderPanel(title, folder, defaultName);
-#else
+        if (!isRuntimeMode)
+        {
+            return EditorUtility_OpenFolderPanel(title, folder, defaultName);
+        }
+#endif
     return "";
-#endif        
     }
 
     public static string EditorUtility_OpenFilePanel(string title, string directory, string extension) 
     {
 #if UNITY_EDITOR
-        return EditorUtility.OpenFilePanel(title, directory, extension);
-#else
-    return "";
-#endif        
+        if (!isRuntimeMode)
+        {
+            return EditorUtility.OpenFilePanel(title, directory, extension);
+        }
+#endif
+        return "";
     }
 
     public static bool EditorUtility_DisplayDialog(string title, string message, string ok, [UnityEngine.Internal.DefaultValue("\"\"")] string cancel) 
     {
 #if UNITY_EDITOR
-        return EditorUtility.DisplayDialog(title, message, ok, cancel);
-#else
-    return false;
-#endif        
+        if (!isRuntimeMode)
+        {
+            return EditorUtility.DisplayDialog(title, message, ok, cancel);
+        }
+#endif
+        return false;
     }
 
     public static bool AssetDatabase_IsValidFolder(string path) 
     {
 #if UNITY_EDITOR
-        return AssetDatabase.IsValidFolder(path);
-#else
+        if (!isRuntimeMode)
+        {
+            return AssetDatabase.IsValidFolder(path);
+        }
+#endif
         return false;
-#endif        
     }
 
     public static string AssetDatabase_CreateFolder(string parentFolder, string newFolderName) 
     {
 #if UNITY_EDITOR
-        return AssetDatabase.CreateFolder(parentFolder, newFolderName);
-#else
+        if (!isRuntimeMode)
+        {
+            return AssetDatabase.CreateFolder(parentFolder, newFolderName);
+        }
+#endif
     return "";
-#endif        
     }
 
     public static string AssetDatabase_MoveAsset(string oldPath, string newPath) 
     {
 #if UNITY_EDITOR
-        return AssetDatabase.MoveAsset(oldPath, newPath);
-#else
-    return "";
-#endif        
+        if (!isRuntimeMode)
+        {
+            return AssetDatabase.MoveAsset(oldPath, newPath);
+        }
+#endif
+        return "";
     }
 
     public static string[] AssetDatabase_FindAssets(string filter, string[] searchInFolders)
     {
 #if UNITY_EDITOR
-        return AssetDatabase.FindAssets(filter, searchInFolders);
-#else
+        if (!isRuntimeMode)
+        {
+            return AssetDatabase.FindAssets(filter, searchInFolders);
+        }
+#endif
         return new string[0];
-#endif        
     }
 
     public static string AssetDatabase_GUIDToAssetPath(string guid) 
     {
 #if UNITY_EDITOR
-        return AssetDatabase.GUIDToAssetPath(guid);
-#else
-    return "";
-#endif        
+        if (!isRuntimeMode)
+        {
+            return AssetDatabase.GUIDToAssetPath(guid);
+        }
+#endif
+        return "";
     }
 
     public static string AssetDatabase_GetAssetPath(UnityEngine.Object assetObject) 
     {
 #if UNITY_EDITOR
-        return AssetDatabase.GetAssetPath(assetObject);
-#else
-    return "";
-#endif        
+        if (!isRuntimeMode)
+        {
+            return AssetDatabase.GetAssetPath(assetObject);
+        }
+#endif
+        return "";
     }
 
     public static TObject PrefabUtility_GetCorrespondingObjectFromSource<TObject>(TObject componentOrGameObject) where TObject : UnityEngine.Object 
     {
 #if UNITY_EDITOR
-        return PrefabUtility.GetCorrespondingObjectFromSource(componentOrGameObject);
-#else
+        if (!isRuntimeMode)
+        {
+            return PrefabUtility.GetCorrespondingObjectFromSource(componentOrGameObject);
+        }
+#endif
         return default(TObject);
-#endif        
     }
 
     public static GameObject PrefabUtility_SaveAsPrefabAsset(GameObject instanceRoot, string assetPath) 
     {
 #if UNITY_EDITOR
-        return PrefabUtility.SaveAsPrefabAsset(instanceRoot, assetPath);
-#else
-    return null;
-#endif        
+        if (!isRuntimeMode)
+        {
+            return PrefabUtility.SaveAsPrefabAsset(instanceRoot, assetPath);
+        }
+#endif
+        return null;
     }
 
     public static T AssetDatabase_GetBuiltinExtraResource<T>(string path) where T : UnityEngine.Object 
     {
 #if UNITY_EDITOR
-        return AssetDatabase.GetBuiltinExtraResource<T>(path);
-#else
+        if (!isRuntimeMode)
+        {
+            return AssetDatabase.GetBuiltinExtraResource<T>(path);
+        }
+#endif
         return default(T);
-#endif        
     }
 
     public static void AssetDatabase_CreateAsset(UnityEngine.Object asset, string path) 
     {
 #if UNITY_EDITOR
-        AssetDatabase.CreateAsset(asset, path);
-#endif        
+        if (!isRuntimeMode)
+        {
+            AssetDatabase.CreateAsset(asset, path);
+        }
+#endif     
     }
 
     public static UnityEngine.Object PrefabUtility_InstantiatePrefab(UnityEngine.Object assetComponentOrGameObject) 

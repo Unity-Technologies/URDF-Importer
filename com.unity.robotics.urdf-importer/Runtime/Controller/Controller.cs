@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using RosSharp.Urdf;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -108,7 +109,7 @@ namespace RosSharp.Control
             // set the color of the selected join meshes to the highlight color
             foreach (var mesh in rendererList)
             {
-                if (IsHDR())
+                if (UrdfMaterial.IsHDR())
                 {
                     mesh.material.SetColor("_BaseColor", highLightColor);
                 }
@@ -166,7 +167,7 @@ namespace RosSharp.Control
             prevColor = new Color[materialLists.Length];
             for (int counter = 0; counter < materialLists.Length; counter++)
             {
-                if (IsHDR())
+                if (UrdfMaterial.IsHDR())
                 {
                     prevColor[counter] = materialLists[counter].material.GetColor("_BaseColor");
                 }
@@ -186,7 +187,7 @@ namespace RosSharp.Control
             Renderer[] previousRendererList = articulationChain[index].transform.GetChild(0).GetComponentsInChildren<Renderer>();
             for (int counter = 0; counter < previousRendererList.Length; counter++)
             {
-                if (IsHDR())
+                if (UrdfMaterial.IsHDR())
                 {
                     previousRendererList[counter].material.SetColor("_BaseColor", prevColor[counter]);
                 }
@@ -207,14 +208,6 @@ namespace RosSharp.Control
                 drive.damping = damping;
                 joint.joint.xDrive = drive;
             }
-        }
-
-        /// Checks if current render pipeline is HDR 
-        /// Used for setting the color of highlighted joint
-        private bool IsHDR()
-        {
-            //TODO: should we also return true for Universal Render pipeline?
-            return GraphicsSettings.renderPipelineAsset != null && GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition");
         }
 
         public void OnGUI()

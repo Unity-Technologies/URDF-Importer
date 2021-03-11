@@ -13,10 +13,9 @@ limitations under the License.
 */
 
 using System.IO;
-//using UnityEditor;
 using UnityEngine;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public static class UrdfAssetPathHandler
     {
@@ -31,11 +30,15 @@ namespace RosSharp.Urdf//.Editor
 
             packageRoot = GetRelativeAssetPath(newPath);
 
-            if(!RuntimeURDF.AssetDatabase_IsValidFolder(Path.Combine(packageRoot, MaterialFolderName)))
+            if (!RuntimeURDF.AssetDatabase_IsValidFolder(Path.Combine(packageRoot, MaterialFolderName)))
+            {
                 RuntimeURDF.AssetDatabase_CreateFolder(packageRoot, MaterialFolderName);
+            }
 
             if (correctingIncorrectPackageRoot)
+            {
                 MoveMaterialsToNewLocation(oldPackagePath);
+            }
         }
         #endregion
 
@@ -49,7 +52,15 @@ namespace RosSharp.Urdf//.Editor
         {
             var absolutePathUnityFormat = absolutePath.SetSeparatorChar();
             if (!absolutePathUnityFormat.StartsWith(Application.dataPath.SetSeparatorChar()))
-                return null;
+            {
+#if UNITY_EDITOR
+                if (!RuntimeURDF.isRuntimeMode)
+                {
+                    return null;
+                }
+#endif
+                return absolutePath; // so that it works in runtime
+            }
 
             var assetPath = "Assets" + absolutePath.Substring(Application.dataPath.Length);
             return assetPath.SetSeparatorChar();
@@ -61,7 +72,7 @@ namespace RosSharp.Urdf//.Editor
             return fullPath.SetSeparatorChar();
         }
 
-        public static string GetRelativeAssetPathFromUrdfPath(string urdfPath)
+        public static string GetRelativeAssetPathFromUrdfPath(string urdfPath, bool convertToPrefab=true)
         {
             //if (!urdfPath.StartsWith(@"package://"))
             //{
@@ -70,20 +81,34 @@ namespace RosSharp.Urdf//.Editor
             //}
             string path;
             if (urdfPath.StartsWith(@"package://"))
+            {
                 path = urdfPath.Substring(10).SetSeparatorChar();
+            }
             else
+            {
                 path = urdfPath.SetSeparatorChar();
+            }
 
-            if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
-                path = path.Substring(0, path.Length - 3) + "prefab";
+            if (convertToPrefab) 
+            {
+                if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
+                    path = path.Substring(0, path.Length - 3) + "prefab";
 
+            }
             return Path.Combine(packageRoot, path);
         }
         #endregion
 
         public static bool IsValidAssetPath(string path)
         {
-            return GetRelativeAssetPath(path) != null;
+#if UNITY_EDITOR
+            if (!RuntimeURDF.isRuntimeMode)
+            {
+                return GetRelativeAssetPath(path) != null;
+            }
+#endif
+            //RuntimeImporter. TODO: check if the path really exists
+            return true;
         }
 
         #region Materials

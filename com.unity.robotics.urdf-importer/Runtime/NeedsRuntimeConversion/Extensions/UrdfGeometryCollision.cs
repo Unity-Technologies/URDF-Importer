@@ -13,11 +13,10 @@ limitations under the License.
 */
 
 using UnityEngine;
-//using UnityEditor;
 using System.Collections.Generic;
 using MeshProcess;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public class UrdfGeometryCollision : UrdfGeometry
     {
@@ -63,13 +62,27 @@ namespace RosSharp.Urdf//.Editor
 
         private static GameObject CreateMeshCollider(Link.Geometry.Mesh mesh)
         {
-            GameObject prefabObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
-            if (prefabObject == null)
-                return null;
+#if UNITY_EDITOR
+            if (!RuntimeURDF.isRuntimeMode)
+            {
+                GameObject prefabObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
+                if (prefabObject == null)
+                    return null;
 
-            GameObject meshObject = (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(prefabObject);
+                GameObject meshObject = (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(prefabObject);
+                ConvertMeshToColliders(meshObject);
+
+                return meshObject;
+            }
+#endif
+            return CreateMeshColliderRuntime(mesh);
+        }
+
+        private static GameObject CreateMeshColliderRuntime(Link.Geometry.Mesh mesh)
+        {
+            string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(mesh.filename, false);
+            GameObject meshObject = StlAssetPostProcessor.CreateStlGameObjectRuntime(meshFilePath);
             ConvertMeshToColliders(meshObject);
-
             return meshObject;
         }
 

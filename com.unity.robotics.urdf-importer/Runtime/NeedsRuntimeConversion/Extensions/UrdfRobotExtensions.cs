@@ -21,9 +21,8 @@ using System.Linq;
 using UnityEditor;
 #endif
 using UnityEngine;
-using RosSharp;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public static class UrdfRobotExtensions
     {
@@ -51,7 +50,6 @@ namespace RosSharp.Urdf//.Editor
 
         public static IEnumerator Create(string filename, ImportSettings settings, bool loadStatus = false)
         {
-#if UNITY_EDITOR
             CreateTag();
             importsettings = settings;
             Robot robot = new Robot(filename);
@@ -95,15 +93,13 @@ namespace RosSharp.Urdf//.Editor
                     yield return null;
             }
 
+#if UNITY_EDITOR
             GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);
             Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);
             Selection.activeObject = robotGameObject;
-
+#endif
             CorrectAxis(robotGameObject);
             CreateCollisionExceptions(robot, robotGameObject);
-#else
-            yield return null;
-#endif
         }
 
         public static void CorrectAxis(GameObject robot)

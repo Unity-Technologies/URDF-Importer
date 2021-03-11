@@ -16,9 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-//using UnityEditor;
+using UnityEngine.Rendering;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public static class UrdfMaterial
     {
@@ -32,42 +32,79 @@ namespace RosSharp.Urdf//.Editor
         private static Material CreateMaterial(this Link.Visual.Material urdfMaterial)
         {
             if (urdfMaterial.name == "")
+            {
                 urdfMaterial.name = GenerateMaterialName(urdfMaterial);
+            }
 
             var material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
-            if (material != null) //material already exists
+            if (material != null)
+            {   //material already exists
                 return material;
+            }
 
             material = InitializeMaterial();
             if (urdfMaterial.color != null)
             {
-                material.color = CreateColor(urdfMaterial.color);
+                SetMaterialColor(material, CreateColor(urdfMaterial.color));
             }
             else if (urdfMaterial.texture != null)
+            {
                 material.mainTexture = LoadTexture(urdfMaterial.texture.filename);
+            }
 
             RuntimeURDF.AssetDatabase_CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
             return material;
         }
 
+        static Material defaultMaterial = null; // used RuntimeURDF
         private static void CreateDefaultMaterial()
         {
-            var material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+            Material material = defaultMaterial;
+#if UNITY_EDITOR
+            if (!RuntimeURDF.isRuntimeMode)
+            {
+                material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+            }
+#endif
             if (material != null)
+            {
                 return;
+            }
 
             material = InitializeMaterial();
             material.color = new Color(0.33f, 0.33f, 0.33f, 0.0f);
-
-            RuntimeURDF.AssetDatabase_CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+            
+            // just keep it in memory while the app is running.
+            defaultMaterial = material;
+#if UNITY_EDITOR
+            if (!RuntimeURDF.isRuntimeMode)
+            {
+                // create the material to be reused
+                RuntimeURDF.AssetDatabase_CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+            }
+#endif
         }
 
+        private static string[] standardShaders = { "Standard", "UI/Default" };
+        private static string[] hdrpShaders = { "HDRP/Lit", "UI/Default" };
         private static Material InitializeMaterial()
         {
-            var material = new Material(Shader.Find("Standard"));
-            material.SetFloat("_Metallic", 0.75f);
-            material.SetFloat("_Glossiness", 0.75f);
-            return material;
+            try {
+                string[] shadersToTry = IsHDR() ?  hdrpShaders : standardShaders;
+                foreach (var shaderName in shadersToTry) {
+                    Shader shader = Shader.Find(shaderName);
+                    if (shader != null) {
+                        //Debug.Log("Found shader: " + shaderName);
+                        var material = new Material(shader);
+                        material.SetFloat("_Metallic", 0.75f);
+                        material.SetFloat("_Glossiness", 0.75f);
+                        return material;
+                    }
+                }
+            } catch (Exception ex){
+                Debug.LogAssertion(ex.ToString());
+            }
+            return null;
         }
 
         private static string GenerateMaterialName(Link.Visual.Material urdfMaterial)
@@ -125,8 +162,14 @@ namespace RosSharp.Urdf//.Editor
                 Renderer renderer = gameObject.GetComponentInChildren<Renderer>();
                 if (renderer != null && renderer.sharedMaterial == null)
                 {
-                    var defaultMaterial = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
-                    SetMaterial(gameObject, defaultMaterial);
+                    Material material = defaultMaterial;
+#if UNITY_EDITOR
+                    if (!RuntimeURDF.isRuntimeMode)
+                    {
+                        material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+                    }
+#endif
+                    SetMaterial(gameObject, material);
                 }
             }
         }
@@ -135,16 +178,42 @@ namespace RosSharp.Urdf//.Editor
         {
             var renderers = gameObject.GetComponentsInChildren<Renderer>();
             foreach (var renderer in renderers)
+            {
                 renderer.sharedMaterial = material;
+            }
         }
+
+        /// Checks if current render pipeline is HDR 
+        /// Used for creating the proper default material.
+        public static bool IsHDR()
+        {
+            //TODO: should it also return true for Universal Render pipeline?
+            return GraphicsSettings.renderPipelineAsset != null && GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition");
+        }
+
+        public static void SetMaterialColor(Material material, Color color) 
+        {
+            if (IsHDR())
+            {
+                material.SetColor("_BaseColor", color);
+            }
+            else
+            {
+                material.color = color;
+            }
+        }
+
         #endregion
 
         #region Export
 
         public static Link.Visual.Material ExportMaterialData(Material material)
         {
+            if (material == null)
+            {
+                return null;
+            }
 
-            if (material == null) return null;
             if (!Materials.ContainsKey(material.name))
             {
                 if (material.mainTexture != null)
@@ -158,7 +227,9 @@ namespace RosSharp.Urdf//.Editor
                     Materials[material.name] = new Link.Visual.Material(material.name, color);
                 }
                 else
+                {
                     return null;
+                }
             }
 
             return Materials[material.name];
@@ -180,7 +251,9 @@ namespace RosSharp.Urdf//.Editor
             string oldTexturePath = UrdfAssetPathHandler.GetFullAssetPath(RuntimeURDF.AssetDatabase_GetAssetPath(texture));
             string newTexturePath = UrdfExportPathHandler.GetNewResourcePath(Path.GetFileName(oldTexturePath));
             if(oldTexturePath != newTexturePath)
+            {
                 File.Copy(oldTexturePath, newTexturePath, true);
+            }
 
             string packagePath = UrdfExportPathHandler.GetPackagePathForResource(newTexturePath);
             return new Link.Visual.Material.Texture(packagePath);

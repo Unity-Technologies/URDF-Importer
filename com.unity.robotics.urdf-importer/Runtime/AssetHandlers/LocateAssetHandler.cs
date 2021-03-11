@@ -66,10 +66,13 @@ namespace RosSharp.Urdf//.Editor
                 "");
 
             if (UrdfAssetPathHandler.IsValidAssetPath(newAssetPath))
+            {
                 UrdfAssetPathHandler.SetPackageRoot(newAssetPath, true);
-            else 
+            }
+            else
+            {
                 Debug.LogWarning("Selected package root " + newAssetPath + " is not within the Assets folder.");
-
+            }
             return UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName);
         }
 

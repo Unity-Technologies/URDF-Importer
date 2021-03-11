@@ -14,7 +14,7 @@ limitations under the License.
 
 using UnityEngine;
 
-namespace RosSharp.Urdf//.Editor
+namespace RosSharp.Urdf
 {
     public class UrdfGeometryVisual : UrdfGeometry
     {
@@ -37,9 +37,11 @@ namespace RosSharp.Urdf//.Editor
                     geometryGameObject.transform.DestroyImmediateIfExists<SphereCollider>();
                     break;
                 case GeometryTypes.Mesh:
-                    if (geometry != null)
-                        geometryGameObject = CreateMeshVisual(geometry.mesh);
-                    //else, let user add their own mesh gameObject
+                        if (geometry != null)
+                        {
+                            geometryGameObject = CreateMeshVisual(geometry.mesh);
+                        }
+                        //else, let user add their own mesh gameObject
                     break;
             }
 
@@ -53,8 +55,33 @@ namespace RosSharp.Urdf//.Editor
 
         private static GameObject CreateMeshVisual(Link.Geometry.Mesh mesh)
         {
-            GameObject meshObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
-            return meshObject == null ? null : (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(meshObject);
-        } 
+#if UNITY_EDITOR
+            if (!RuntimeURDF.isRuntimeMode)
+            {
+                GameObject meshObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
+                return meshObject == null ? null : (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(meshObject);
+            }
+#endif
+            return CreateMeshVisualRuntime(mesh);
+        }
+
+        private static GameObject CreateMeshVisualRuntime(Link.Geometry.Mesh mesh)
+        {
+            GameObject meshObject = null;
+            if (mesh.filename.ToLower().EndsWith(".stl"))
+            {
+                string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(mesh.filename, false);
+                meshObject = StlAssetPostProcessor.CreateStlGameObjectRuntime(meshFilePath);
+            }
+            else if (mesh.filename.ToLower().EndsWith(".dae"))
+            {
+                //TODO
+            }
+            else 
+            {
+                Debug.LogError("Unable to load mesh file: " + mesh.filename);
+            }
+            return meshObject;
+        }
     }
 }

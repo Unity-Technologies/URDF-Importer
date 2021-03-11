@@ -28,8 +28,13 @@ namespace RosSharp
     {
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
         {
-            foreach (string stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
-                createStlPrefab(stlFile);
+#if UNITY_EDITOR
+            if (!RuntimeURDF.isRuntimeMode)
+            {
+                foreach (string stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
+                    createStlPrefab(stlFile);
+            }
+#endif
         }
 
         private static void createStlPrefab(string stlFile)
@@ -74,5 +79,23 @@ namespace RosSharp
         {
             return stlFile.Substring(0, stlFile.Length - 4) + ".prefab";
         }
+        
+        public static GameObject CreateStlGameObjectRuntime(string stlFile)
+        {
+            Mesh[] meshes = Urdf.StlImporter.ImportMesh(stlFile);
+            if (meshes == null)
+                return null;
+            GameObject parent = new GameObject(Path.GetFileNameWithoutExtension(stlFile));
+            Material material = RuntimeURDF.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+            for (int i = 0; i < meshes.Length; i++)
+            {
+                GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(getMeshAssetPath(stlFile, i)));
+                gameObject.AddComponent<MeshFilter>().sharedMesh = meshes[i];
+                gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
+                gameObject.transform.SetParent(parent.transform, false);
+            }
+            return parent;
+        }
+
     }
 }
