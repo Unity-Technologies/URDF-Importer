@@ -52,6 +52,9 @@ namespace RosSharp.Urdf
         protected const int RoundDigits = 6;
         protected const float Tolerance = 0.0000001f;
 
+        protected int defaultDamping = 0;
+        protected int defaultFriction = 0;
+
         public static void Create(GameObject linkObject, JointTypes jointType, Joint joint = null)
         { 
             #if UNITY_2020_1_OR_NEWER 
