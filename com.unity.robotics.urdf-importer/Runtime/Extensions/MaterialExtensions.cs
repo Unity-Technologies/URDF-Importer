@@ -6,8 +6,8 @@ namespace Unity.Robotics
 {
     public static class MaterialExtensions
     {
-        private static string[] standardShaders = { "Standard", "UI/Default" };
-        private static string[] hdrpShaders = { "HDRP/Lit", "UI/Default" };
+        private static string[] standardShaders = { "Standard" };//, "UI/Default" };
+        private static string[] hdrpShaders = { "HDRP/Lit" };//, "UI/Default" };
         public static Material CreateBasicMaterial()
         {
             try
@@ -33,7 +33,7 @@ namespace Unity.Robotics
             return null;
         }
 
-        /// Checks if current render pipeline is HDR 
+        /// Checks if current render pipeline is HDRP 
         /// Used for creating the proper default material.
         public static bool IsHDRP()
         {
@@ -43,14 +43,14 @@ namespace Unity.Robotics
 
         public static void SetMaterialColor(Material material, Color color)
         {
-            if (IsHDRP())
-            {
-                material.SetColor("_BaseColor", color);
-            }
-            else
-            {
-                material.color = color;
-            }
+            material.SetColor(IsHDRP() ? "_BaseColor" : "_Color", color);
+        }
+
+        public static void SetMaterialEmissionColor(Material material, Color color)
+        {
+            // Assuming both shaders use the _EmissionColor property. Not tested for HDRP. 
+            material.SetColor(IsHDRP() ? "_EmissionColor" : "_EmissionColor", color);
+            material.EnableKeyword("_EMISSION");
         }
 
         public static Color GetMaterialColor(Renderer renderer)

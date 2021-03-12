@@ -54,7 +54,7 @@ namespace RosSharp.Urdf
             if (!absolutePathUnityFormat.StartsWith(Application.dataPath.SetSeparatorChar()))
             {
 #if UNITY_EDITOR
-                if (!RuntimeURDF.isRuntimeMode)
+                if (!RuntimeURDF.IsRuntimeMode())
                 {
                     return null;
                 }
@@ -102,7 +102,7 @@ namespace RosSharp.Urdf
         public static bool IsValidAssetPath(string path)
         {
 #if UNITY_EDITOR
-            if (!RuntimeURDF.isRuntimeMode)
+            if (!RuntimeURDF.IsRuntimeMode())
             {
                 return GetRelativeAssetPath(path) != null;
             }

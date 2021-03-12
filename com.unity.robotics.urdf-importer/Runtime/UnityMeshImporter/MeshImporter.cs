@@ -106,8 +106,7 @@ namespace UnityMeshImporter
                             m.ColorEmissive.B,
                             m.ColorEmissive.A
                         );
-                        uMaterial.SetColor("_EmissionColor", color);
-                        uMaterial.EnableKeyword("_EMISSION");
+                        MaterialExtensions.SetMaterialEmissionColor(uMaterial, color);
                     }
                     
                     // Reflectivity
