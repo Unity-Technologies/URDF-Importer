@@ -24,7 +24,7 @@ namespace RosSharp.Urdf
         {
             UrdfJointFixed urdfJoint = linkObject.AddComponent<UrdfJointFixed>();
             #if UNITY_2020_1_OR_NEWER
-                urdfJoint.unityJoint = linkObject.AddComponent<ArticulationBody>();
+                urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             #else
                         urdfJoint.UnityJoint = linkObject.AddComponent<FixedJoint>();
                         urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
