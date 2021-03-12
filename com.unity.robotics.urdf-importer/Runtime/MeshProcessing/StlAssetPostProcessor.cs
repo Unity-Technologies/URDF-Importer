@@ -29,7 +29,7 @@ namespace RosSharp
         private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
         {
 #if UNITY_EDITOR
-            if (!RuntimeURDF.isRuntimeMode)
+            if (!RuntimeURDF.IsRuntimeMode())
             {
                 foreach (string stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
                     createStlPrefab(stlFile);

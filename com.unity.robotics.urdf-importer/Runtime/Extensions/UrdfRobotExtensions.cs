@@ -48,8 +48,22 @@ namespace RosSharp.Urdf
 
         #region Import
 
-        public static IEnumerator<GameObject> Create(string filename, ImportSettings settings, bool loadStatus = false)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="settings"></param>
+        /// <param name="loadStatus"></param>
+        /// <param name="forceRuntimeMode"> When true, runs the runtime loading mode even in Editor. When false, uses the default behavior.</param>
+        /// <returns></returns>
+        public static IEnumerator<GameObject> Create(string filename, ImportSettings settings, bool loadStatus = false, bool forceRuntimeMode = false)
         {
+            bool wasRuntimeMode = RuntimeURDF.IsRuntimeMode();
+            if (forceRuntimeMode) 
+            {
+                RuntimeURDF.SetRuntimeMode(true);
+            }
+
             CreateTag();
             importsettings = settings;
             Robot robot = new Robot(filename);
@@ -58,6 +72,10 @@ namespace RosSharp.Urdf
             if (!UrdfAssetPathHandler.IsValidAssetPath(robot.filename))
             {
                 Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
+                if (forceRuntimeMode) 
+                { // set runtime mode back to what it was
+                    RuntimeURDF.SetRuntimeMode(wasRuntimeMode);
+                }
                 yield break;
             }
 
@@ -100,6 +118,10 @@ namespace RosSharp.Urdf
             CorrectAxis(robotGameObject);
             CreateCollisionExceptions(robot, robotGameObject);
 
+            if (forceRuntimeMode) 
+            { // set runtime mode back to what it was
+                RuntimeURDF.SetRuntimeMode(wasRuntimeMode);
+            }
             yield return robotGameObject;
         }
 

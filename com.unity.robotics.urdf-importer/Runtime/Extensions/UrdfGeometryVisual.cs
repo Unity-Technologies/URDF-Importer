@@ -60,7 +60,7 @@ namespace RosSharp.Urdf
         private static GameObject CreateMeshVisual(Link.Geometry.Mesh mesh)
         {
 #if UNITY_EDITOR
-            if (!RuntimeURDF.isRuntimeMode)
+            if (!RuntimeURDF.IsRuntimeMode())
             {
                 GameObject meshObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
                 return meshObject == null ? null : (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(meshObject);

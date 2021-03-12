@@ -62,7 +62,7 @@ namespace RosSharp.Urdf
         {
             Material material = defaultMaterial;
 #if UNITY_EDITOR
-            if (!RuntimeURDF.isRuntimeMode)
+            if (!RuntimeURDF.IsRuntimeMode())
             {
                 material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
             }
@@ -78,7 +78,7 @@ namespace RosSharp.Urdf
             // just keep it in memory while the app is running.
             defaultMaterial = material;
 #if UNITY_EDITOR
-            if (!RuntimeURDF.isRuntimeMode)
+            if (!RuntimeURDF.IsRuntimeMode())
             {
                 // create the material to be reused
                 RuntimeURDF.AssetDatabase_CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
@@ -143,7 +143,7 @@ namespace RosSharp.Urdf
                 {
                     Material material = defaultMaterial;
 #if UNITY_EDITOR
-                    if (!RuntimeURDF.isRuntimeMode)
+                    if (!RuntimeURDF.IsRuntimeMode())
                     {
                         material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
                     }

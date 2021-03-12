@@ -63,7 +63,7 @@ namespace RosSharp.Urdf
         private static GameObject CreateMeshCollider(Link.Geometry.Mesh mesh)
         {
 #if UNITY_EDITOR
-            if (!RuntimeURDF.isRuntimeMode)
+            if (!RuntimeURDF.IsRuntimeMode())
             {
                 GameObject prefabObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
                 if (prefabObject == null)

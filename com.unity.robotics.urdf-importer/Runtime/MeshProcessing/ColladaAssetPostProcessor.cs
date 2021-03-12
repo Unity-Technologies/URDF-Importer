@@ -32,7 +32,7 @@ namespace RosSharp
         public void OnPreprocessModel()
         {
 #if UNITY_EDITOR
-            if (!RuntimeURDF.isRuntimeMode)
+            if (!RuntimeURDF.IsRuntimeMode())
             {
                 ModelImporter modelImporter = (ModelImporter)assetImporter;
                 isCollada = Path.GetExtension(modelImporter.assetPath).ToLowerInvariant() == ".dae";
