@@ -86,6 +86,7 @@ namespace RosSharp.Urdf
 
 
             robotGameObject.AddComponent<RosSharp.Control.Controller>();
+            robotGameObject.GetComponent<RosSharp.Control.Controller>().enabled = false;
 
             robotGameObject.GetComponent<UrdfRobot>().SetAxis(settings.choosenAxis);
 
@@ -122,6 +123,7 @@ namespace RosSharp.Urdf
             { // set runtime mode back to what it was
                 RuntimeURDF.SetRuntimeMode(wasRuntimeMode);
             }
+            robotGameObject.GetComponent<RosSharp.Control.Controller>().enabled = true;
             yield return robotGameObject;
         }
 

@@ -1,4 +1,5 @@
-﻿using Unity.Robotics;
+﻿using System;
+using Unity.Robotics;
 using UnityEngine;
 
 namespace RosSharp.Control
@@ -48,35 +49,30 @@ namespace RosSharp.Control
             StoreJointColors(selectedIndex);
         }
 
+        void SetSelectedJointIndex(int index)
+        {
+            if (articulationChain.Length > 0) 
+            {
+                selectedIndex = (index + articulationChain.Length) % articulationChain.Length;
+            }
+        }
+
         void Update()
         {
             bool SelectionInput1 = Input.GetKeyDown("right");
             bool SelectionInput2 = Input.GetKeyDown("left");
 
+            SetSelectedJointIndex(selectedIndex); // to make sure it is in the valid range
             UpdateDirection(selectedIndex);
 
             if (SelectionInput2)
             {
-                if (selectedIndex == 1)
-                {
-                    selectedIndex = articulationChain.Length - 1;
-                }
-                else
-                {
-                    selectedIndex = selectedIndex - 1;
-                }
+                SetSelectedJointIndex(selectedIndex - 1);
                 Highlight(selectedIndex);
             }
             else if (SelectionInput1)
             {
-                if (selectedIndex == articulationChain.Length - 1)
-                {
-                    selectedIndex = 1;
-                }
-                else
-                {
-                    selectedIndex = selectedIndex + 1;
-                }
+                SetSelectedJointIndex(selectedIndex + 1);
                 Highlight(selectedIndex);
             }
 
@@ -89,7 +85,7 @@ namespace RosSharp.Control
         /// <param name="selectedIndex">Index of the link selected in the Articulation Chain</param>
         private void Highlight(int selectedIndex)
         {
-            if (selectedIndex == previousIndex)
+            if (selectedIndex == previousIndex || selectedIndex < 0 || selectedIndex >= articulationChain.Length) 
             {
                 return;
             }
@@ -112,6 +108,10 @@ namespace RosSharp.Control
 
         void DisplaySelectedJoint(int selectedIndex)
         {
+            if (selectedIndex < 0 || selectedIndex >= articulationChain.Length) 
+            {
+                return;
+            }
             selectedJoint = articulationChain[selectedIndex].name + " (" + selectedIndex + ")";
         }
 
@@ -121,6 +121,11 @@ namespace RosSharp.Control
         /// <param name="jointIndex">Index of the link selected in the Articulation Chain</param>
         private void UpdateDirection(int jointIndex)
         {
+            if (jointIndex < 0 || jointIndex >= articulationChain.Length) 
+            {
+                return;
+            }
+
             float moveDirection = Input.GetAxis("Vertical");
             JointControl current = articulationChain[jointIndex].GetComponent<JointControl>();
             if (previousIndex != jointIndex)
