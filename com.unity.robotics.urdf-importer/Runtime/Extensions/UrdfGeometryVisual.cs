@@ -85,7 +85,10 @@ namespace RosSharp.Urdf
                     {
                         float globalScale = ColladaAssetPostProcessor.ReadGlobalScale(meshFilePath);
                         meshObject = MeshImporter.Load(meshFilePath, globalScale, globalScale, globalScale);
-                        ColladaAssetPostProcessor.ApplyColladaOrientation(meshObject, meshFilePath);
+                        if (meshObject != null) 
+                        {
+                            ColladaAssetPostProcessor.ApplyColladaOrientation(meshObject, meshFilePath);
+                        }
                     }
                 }
                 catch (Exception ex) 
