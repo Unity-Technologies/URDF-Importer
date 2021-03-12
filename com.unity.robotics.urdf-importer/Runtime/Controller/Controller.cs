@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using RosSharp.Urdf;
+﻿using Unity.Robotics;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace RosSharp.Control
 {
@@ -109,14 +106,7 @@ namespace RosSharp.Control
             // set the color of the selected join meshes to the highlight color
             foreach (var mesh in rendererList)
             {
-                if (UrdfMaterial.IsHDR())
-                {
-                    mesh.material.SetColor("_BaseColor", highLightColor);
-                }
-                else
-                {
-                    mesh.material.color = highLightColor;
-                }
+                MaterialExtensions.SetMaterialColor(mesh.material, highLightColor);
             }
         }
 
@@ -167,14 +157,7 @@ namespace RosSharp.Control
             prevColor = new Color[materialLists.Length];
             for (int counter = 0; counter < materialLists.Length; counter++)
             {
-                if (UrdfMaterial.IsHDR())
-                {
-                    prevColor[counter] = materialLists[counter].material.GetColor("_BaseColor");
-                }
-                else
-                {
-                    prevColor[counter] = materialLists[counter].sharedMaterial.GetColor("_Color");
-                }
+                prevColor[counter] = MaterialExtensions.GetMaterialColor(materialLists[counter]);
             }
         }
 
@@ -187,14 +170,7 @@ namespace RosSharp.Control
             Renderer[] previousRendererList = articulationChain[index].transform.GetChild(0).GetComponentsInChildren<Renderer>();
             for (int counter = 0; counter < previousRendererList.Length; counter++)
             {
-                if (UrdfMaterial.IsHDR())
-                {
-                    previousRendererList[counter].material.SetColor("_BaseColor", prevColor[counter]);
-                }
-                else
-                {
-                    previousRendererList[counter].material.color = prevColor[counter];
-                }
+                MaterialExtensions.SetMaterialColor(previousRendererList[counter].material, prevColor[counter]);
             }
         }
 

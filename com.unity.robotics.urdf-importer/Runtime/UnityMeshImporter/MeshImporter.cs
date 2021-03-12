@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Assimp;
+using Unity.Robotics;
 using UnityEngine;
 using Material = UnityEngine.Material;
 using Mesh = UnityEngine.Mesh;
@@ -72,7 +73,7 @@ namespace UnityMeshImporter
             {
                 foreach (var m in scene.Materials)
                 {
-                    UnityEngine.Material uMaterial = new UnityEngine.Material(Shader.Find("Standard"));
+                    UnityEngine.Material uMaterial = MaterialExtensions.CreateBasicMaterial();
 
                     // Albedo
                     if (m.HasColorDiffuse)
@@ -83,7 +84,7 @@ namespace UnityMeshImporter
                             m.ColorDiffuse.B,
                             m.ColorDiffuse.A
                         );
-                        uMaterial.color = color;
+                        MaterialExtensions.SetMaterialColor(uMaterial, color);
                     }
 
                     // Emission

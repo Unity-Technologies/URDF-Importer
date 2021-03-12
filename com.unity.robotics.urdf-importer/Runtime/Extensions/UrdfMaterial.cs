@@ -15,6 +15,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.Robotics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -42,10 +43,10 @@ namespace RosSharp.Urdf
                 return material;
             }
 
-            material = InitializeMaterial();
+            material = MaterialExtensions.CreateBasicMaterial();
             if (urdfMaterial.color != null)
             {
-                SetMaterialColor(material, CreateColor(urdfMaterial.color));
+                MaterialExtensions.SetMaterialColor(material, CreateColor(urdfMaterial.color));
             }
             else if (urdfMaterial.texture != null)
             {
@@ -71,8 +72,8 @@ namespace RosSharp.Urdf
                 return;
             }
 
-            material = InitializeMaterial();
-            material.color = new Color(0.33f, 0.33f, 0.33f, 0.0f);
+            material = MaterialExtensions.CreateBasicMaterial();
+            MaterialExtensions.SetMaterialColor(material, new Color(0.33f, 0.33f, 0.33f, 0.0f));
             
             // just keep it in memory while the app is running.
             defaultMaterial = material;
@@ -83,28 +84,6 @@ namespace RosSharp.Urdf
                 RuntimeURDF.AssetDatabase_CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
             }
 #endif
-        }
-
-        private static string[] standardShaders = { "Standard", "UI/Default" };
-        private static string[] hdrpShaders = { "HDRP/Lit", "UI/Default" };
-        private static Material InitializeMaterial()
-        {
-            try {
-                string[] shadersToTry = IsHDR() ?  hdrpShaders : standardShaders;
-                foreach (var shaderName in shadersToTry) {
-                    Shader shader = Shader.Find(shaderName);
-                    if (shader != null) {
-                        //Debug.Log("Found shader: " + shaderName);
-                        var material = new Material(shader);
-                        material.SetFloat("_Metallic", 0.75f);
-                        material.SetFloat("_Glossiness", 0.75f);
-                        return material;
-                    }
-                }
-            } catch (Exception ex){
-                Debug.LogAssertion(ex.ToString());
-            }
-            return null;
         }
 
         private static string GenerateMaterialName(Link.Visual.Material urdfMaterial)
@@ -180,26 +159,6 @@ namespace RosSharp.Urdf
             foreach (var renderer in renderers)
             {
                 renderer.sharedMaterial = material;
-            }
-        }
-
-        /// Checks if current render pipeline is HDR 
-        /// Used for creating the proper default material.
-        public static bool IsHDR()
-        {
-            //TODO: should it also return true for Universal Render pipeline?
-            return GraphicsSettings.renderPipelineAsset != null && GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition");
-        }
-
-        public static void SetMaterialColor(Material material, Color color) 
-        {
-            if (IsHDR())
-            {
-                material.SetColor("_BaseColor", color);
-            }
-            else
-            {
-                material.color = color;
             }
         }
 
