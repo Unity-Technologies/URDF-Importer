@@ -13,12 +13,12 @@ limitations under the License.
 */ 
 
 using UnityEngine;
-//using UnityEditor;
 using System.Linq;
 using System.IO;
 
 namespace RosSharp
 {
+    using Unity.Robotics;
 #if UNITY_EDITOR
     using UnityEditor;
     public class StlAssetPostProcessor : AssetPostprocessor
@@ -32,7 +32,9 @@ namespace RosSharp
             if (!RuntimeURDF.IsRuntimeMode())
             {
                 foreach (string stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
+                {
                     createStlPrefab(stlFile);
+                }
             }
 #endif
         }
@@ -47,6 +49,23 @@ namespace RosSharp
             Object.DestroyImmediate(gameObject);
         }
 
+        private static Material defaultDiffuse = null;
+        private static Material GetDefaultDiffuseMaterial() 
+        {
+#if UNITY_EDITOR
+            // also save the material in the Assets
+            if (!RuntimeURDF.IsRuntimeMode() && !MaterialExtensions.IsHDRP())
+            {
+                defaultDiffuse = RuntimeURDF.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+            }
+#endif
+            if (defaultDiffuse == null) 
+            {   // Could't use the "Default-Diffuse.mat", either because of HDRP or runtime. so let's create one.
+                defaultDiffuse = MaterialExtensions.CreateBasicMaterial();
+            }
+            return defaultDiffuse;
+        }
+
         private static GameObject CreateStlParent(string stlFile)
         {
             Mesh[] meshes = Urdf.StlImporter.ImportMesh(stlFile);
@@ -54,7 +73,8 @@ namespace RosSharp
                 return null;
 
             GameObject parent = new GameObject(Path.GetFileNameWithoutExtension(stlFile));
-            Material material = RuntimeURDF.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+            Material material = GetDefaultDiffuseMaterial();
+
             for (int i = 0; i < meshes.Length; i++)
             {
                 string meshAssetPath = getMeshAssetPath(stlFile, i);
@@ -86,7 +106,9 @@ namespace RosSharp
             if (meshes == null)
                 return null;
             GameObject parent = new GameObject(Path.GetFileNameWithoutExtension(stlFile));
-            Material material = RuntimeURDF.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+
+            Material material = GetDefaultDiffuseMaterial();
+            
             for (int i = 0; i < meshes.Length; i++)
             {
                 GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(getMeshAssetPath(stlFile, i)));
