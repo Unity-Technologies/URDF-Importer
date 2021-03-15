@@ -33,7 +33,7 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 # Tutorials
 
-Instructions for using URDF importer can be found [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/master/tutorials/urdf_importer/urdf_tutorial.md).
+Instructions for using URDF importer can be found [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/tutorials/urdf_importer/urdf_tutorial.md).
 
 
 ## ROS#
