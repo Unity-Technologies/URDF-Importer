@@ -14,7 +14,6 @@ limitations under the License.
 
 using System.Collections.Generic;
 using System;
-using System.Collections;
 using System.IO;
 using System.Linq;
 #if UNITY_EDITOR
@@ -48,93 +47,173 @@ namespace RosSharp.Urdf
 
         #region Import
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="settings"></param>
-        /// <param name="loadStatus"></param>
-        /// <param name="forceRuntimeMode"> 
-        /// When true, runs the runtime loading mode even in Editor. When false, uses the default behavior, 
-        /// i.e. runtime will be enabled in standalone build and disable when running in editor.
-        /// In runtime mode, the Controller component of the robot will be added but not activated automatically and has to be enabled manually.
-        /// This is to allow initializing the values before the controller.Start() is called
-        /// </param>
-        /// <returns></returns>
-        public static IEnumerator<GameObject> Create(string filename, ImportSettings settings, bool loadStatus = false, bool forceRuntimeMode = false)
+        // Note: The Create() function is now broken into multiple pipeline stages to facilitate having
+        // both a non-blocking coroutine Create function as well as a blocking synchronous one needed for stable runtime import.
+
+        // Is used to pass data and parameters between stages of the import pipeline.
+        private class ImportPipelineData
         {
-            bool wasRuntimeMode = RuntimeURDF.IsRuntimeMode();
+            public ImportSettings settings;
+            public bool wasRuntimeMode;
+            public bool loadStatus;
+            public bool forceRuntimeMode;
+            public Robot robot;
+            public GameObject robotGameObject;
+            public Stack<Tuple<Link, Transform, Joint>> importStack;
+        }
+
+        // Initializes import pipeline and reads the urdf file.
+        private static ImportPipelineData ImportPipelineInit(string filename, ImportSettings settings, bool loadStatus, bool forceRuntimeMode)
+        {
+            ImportPipelineData im = new ImportPipelineData();
+            im.settings = settings;
+            im.loadStatus = loadStatus;
+            im.wasRuntimeMode = RuntimeURDF.IsRuntimeMode();
+            im.forceRuntimeMode = forceRuntimeMode;
+
             if (forceRuntimeMode) 
             {
                 RuntimeURDF.SetRuntimeMode(true);
             }
 
-            CreateTag();
-            importsettings = settings;
-            Robot robot = new Robot(filename);
-            settings.totalLinks = robot.links.Count;
+            im.robot = new Robot(filename);
 
-            if (!UrdfAssetPathHandler.IsValidAssetPath(robot.filename))
+            if (!UrdfAssetPathHandler.IsValidAssetPath(im.robot.filename))
             {
                 Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
                 if (forceRuntimeMode) 
                 { // set runtime mode back to what it was
-                    RuntimeURDF.SetRuntimeMode(wasRuntimeMode);
+                    RuntimeURDF.SetRuntimeMode(im.wasRuntimeMode);
                 }
-                yield break;
+                return null;
+            }
+            return im;
+        }
+
+        // Creates the robot game object.
+        private static void ImportPipelineCreateObject(ImportPipelineData im) 
+        {
+            im.robotGameObject = new GameObject(im.robot.name);
+           
+            importsettings = im.settings;
+            im.settings.totalLinks = im.robot.links.Count;
+            CreateTag();
+            im.robotGameObject.tag = tagName;
+
+            im.robotGameObject.AddComponent<UrdfRobot>();
+
+            im.robotGameObject.AddComponent<RosSharp.Control.Controller>();
+            if (RuntimeURDF.IsRuntimeMode()) 
+            {// In runtime mode, we have to disable controller while robot is being constructed.
+                im.robotGameObject.GetComponent<RosSharp.Control.Controller>().enabled = false;
             }
 
-            GameObject robotGameObject = new GameObject(robot.name);
-            robotGameObject.tag = tagName;
+            im.robotGameObject.GetComponent<UrdfRobot>().SetAxis(im.settings.choosenAxis);
 
-            robotGameObject.AddComponent<UrdfRobot>();
+            UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(im.robot.filename));
+            UrdfMaterial.InitializeRobotMaterials(im.robot);
+            UrdfPlugins.Create(im.robotGameObject.transform, im.robot.plugins);
+        }
 
-
-            robotGameObject.AddComponent<RosSharp.Control.Controller>();
-            robotGameObject.GetComponent<RosSharp.Control.Controller>().enabled = false;
-
-            robotGameObject.GetComponent<UrdfRobot>().SetAxis(settings.choosenAxis);
-
-            UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(robot.filename));
-            UrdfMaterial.InitializeRobotMaterials(robot);
-            UrdfPlugins.Create(robotGameObject.transform, robot.plugins);
-
-            Stack<Tuple<Link, Transform, Joint>> importStack = new Stack<Tuple<Link, Transform, Joint>>();
-            importStack.Push(new Tuple<Link, Transform, Joint>(robot.root, robotGameObject.transform, null));
-            while (importStack.Count != 0)
+        // Creates the stack of robot joints. Should be called iteratively until false is returned.
+        private static bool ProcessJointStack(ImportPipelineData im)
+        {
+            if (im.importStack == null) 
             {
-                Tuple<Link, Transform, Joint> currentLink = importStack.Pop();
+                im.importStack = new Stack<Tuple<Link, Transform, Joint>>();
+                im.importStack.Push(new Tuple<Link, Transform, Joint>(im.robot.root, im.robotGameObject.transform, null));
+            }
+            
+            if (im.importStack.Count != 0)
+            {
+                Tuple<Link, Transform, Joint> currentLink = im.importStack.Pop();
                 GameObject importedLink = UrdfLinkExtensions.Create(currentLink.Item2, currentLink.Item1, currentLink.Item3);
-                settings.linksLoaded++;
+                im.settings.linksLoaded++;
                 foreach (Joint childJoint in currentLink.Item1.joints)
                 {
                     Link child = childJoint.ChildLink;
-                    importStack.Push(new Tuple<Link, Transform, Joint>(child, importedLink.transform, childJoint));
+                    im.importStack.Push(new Tuple<Link, Transform, Joint>(child, importedLink.transform, childJoint));
                 }
+                return true;
+            }
+            return false;
+        }
 
+        // Post creation stuff: add to parent, fix axis and add collision exceptions.
+        private static void ImportPipelinePostCreate(ImportPipelineData im)
+        {
+#if UNITY_EDITOR
+            GameObjectUtility.SetParentAndAlign(im.robotGameObject, Selection.activeObject as GameObject);
+            Undo.RegisterCreatedObjectUndo(im.robotGameObject, "Create " + im.robotGameObject.name);
+            Selection.activeObject = im.robotGameObject;
+#endif
+
+            CorrectAxis(im.robotGameObject);
+            CreateCollisionExceptions(im.robot, im.robotGameObject);
+
+            if (im.forceRuntimeMode) 
+            { // set runtime mode back to what it was
+                RuntimeURDF.SetRuntimeMode(im.wasRuntimeMode);
+            }
+        }
+
+        /// <summary>
+        /// Coroutine to create a Robot game object from the urdf file
+        /// </summary>
+        /// <param name="filename">URDF filename</param>
+        /// <param name="settings">Import Settings</param>
+        /// <param name="loadStatus">If true, will show the progress of import step by step</param>
+        /// <param name="forceRuntimeMode"> 
+        /// When true, runs the runtime loading mode even in Editor. When false, uses the default behavior, 
+        /// i.e. runtime will be enabled in standalone build and disable when running in editor.
+        /// In runtime mode, the Controller component of the robot will be added but not activated automatically and has to be enabled manually.
+        /// This is to allow initializing the controller values (stiffness, damping, etc.) before the controller.Start() is called
+        /// </param>
+        /// <returns></returns>
+        public static IEnumerator<GameObject> Create(string filename, ImportSettings settings, bool loadStatus = false, bool forceRuntimeMode = false)
+        {
+            ImportPipelineData im = ImportPipelineInit(filename, settings, loadStatus, forceRuntimeMode);
+            if (im == null)
+            {
+                yield break;
+            }
+
+            ImportPipelineCreateObject(im);
+
+            while (ProcessJointStack(im))
+            {
                 if (loadStatus)
                     yield return null;
             }
 
-#if UNITY_EDITOR
-            GameObjectUtility.SetParentAndAlign(robotGameObject, Selection.activeObject as GameObject);
-            Undo.RegisterCreatedObjectUndo(robotGameObject, "Create " + robotGameObject.name);
-            Selection.activeObject = robotGameObject;
-#endif
-            CorrectAxis(robotGameObject);
-            CreateCollisionExceptions(robot, robotGameObject);
+            ImportPipelinePostCreate(im);
+            yield return im.robotGameObject;
+        }
 
-            if (forceRuntimeMode) 
-            { // set runtime mode back to what it was
-                RuntimeURDF.SetRuntimeMode(wasRuntimeMode);
+        /// <summary>
+        /// Create a Robot gameobject from filename in runtime.
+        /// It is a synchronous (blocking) function and only returns after the gameobject has been created.
+        /// </summary>
+        /// <param name="filename">URDF filename</param>
+        /// <param name="settings">Import Settings</param>
+        /// <returns> Robot game object</returns>
+        public static GameObject CreateRuntime(string filename, ImportSettings settings)
+        {
+            ImportPipelineData im = ImportPipelineInit(filename, settings, false, true);
+            if (im == null)
+            {
+                return null;
             }
 
-            if (!forceRuntimeMode) 
-            {   // don't enable the controller automatically yet, as values may need to be set in the caller script.
-                robotGameObject.GetComponent<RosSharp.Control.Controller>().enabled = true;
+            ImportPipelineCreateObject(im);
+
+            while (ProcessJointStack(im))
+            {// process the stack until finished.
             }
 
-            yield return robotGameObject;
+            ImportPipelinePostCreate(im);
+
+            return im.robotGameObject;
         }
 
         public static void CorrectAxis(GameObject robot)

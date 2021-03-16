@@ -68,9 +68,7 @@ namespace RosSharp.Urdf
 
         private void Start()
         {
-
             UpdateLinkData();
-
         }
 
         public void UpdateLinkData()
