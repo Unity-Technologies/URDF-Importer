@@ -104,7 +104,10 @@ namespace RosSharp
         {
             Mesh[] meshes = Urdf.StlImporter.ImportMesh(stlFile);
             if (meshes == null)
+            {
                 return null;
+            }
+            
             GameObject parent = new GameObject(Path.GetFileNameWithoutExtension(stlFile));
 
             Material material = GetDefaultDiffuseMaterial();

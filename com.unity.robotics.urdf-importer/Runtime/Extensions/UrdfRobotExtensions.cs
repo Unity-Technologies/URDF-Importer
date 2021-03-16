@@ -123,7 +123,7 @@ namespace RosSharp.Urdf
             { // set runtime mode back to what it was
                 RuntimeURDF.SetRuntimeMode(wasRuntimeMode);
             }
-            robotGameObject.GetComponent<RosSharp.Control.Controller>().enabled = true;
+                robotGameObject.GetComponent<RosSharp.Control.Controller>().enabled = true;
             yield return robotGameObject;
         }
 
@@ -192,6 +192,8 @@ namespace RosSharp.Urdf
             UrdfMaterial.Materials.Clear();
             UrdfExportPathHandler.Clear();
             AssetDatabase.Refresh();
+#else
+            Debug.LogError("URDF Export is only available in Editor.");
 #endif
         }
 
@@ -230,6 +232,7 @@ namespace RosSharp.Urdf
 
             return robot;
 #else
+            Debug.LogError("URDF Export is only available in Editor.");
             return null;
 #endif
         }
@@ -249,7 +252,11 @@ namespace RosSharp.Urdf
             for (int i = 0; i < tagsProp.arraySize; i++)
             {
                 SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
-                if (t.stringValue.Equals(tagName)) { found = true; break; }
+                if (t.stringValue.Equals(tagName))
+                {
+                    found = true; 
+                    break; 
+                }
             }
 
             // if not found, add it

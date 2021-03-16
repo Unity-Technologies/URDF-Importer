@@ -135,8 +135,10 @@ namespace RosSharp.Control
                 previousIndex = jointIndex;
             }
 
-            if (current.controltype != control)
+            if (current.controltype != control) 
+            {
                 UpdateControlType(current);
+            }
 
             if (moveDirection > 0)
             {
