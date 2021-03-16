@@ -67,7 +67,10 @@ namespace RosSharp.Urdf
             {
                 GameObject prefabObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
                 if (prefabObject == null)
+                {
+                    Debug.LogError("Unable to create mesh collider for the mesh: " + mesh.filename);
                     return null;
+                }
 
                 GameObject meshObject = (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(prefabObject);
                 ConvertMeshToColliders(meshObject);
@@ -81,8 +84,20 @@ namespace RosSharp.Urdf
         private static GameObject CreateMeshColliderRuntime(Link.Geometry.Mesh mesh)
         {
             string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(mesh.filename, false);
-            GameObject meshObject = StlAssetPostProcessor.CreateStlGameObjectRuntime(meshFilePath);
-            ConvertMeshToColliders(meshObject);
+            GameObject meshObject = null;
+            if (meshFilePath.ToLower().EndsWith(".stl"))
+            {
+                meshObject = StlAssetPostProcessor.CreateStlGameObjectRuntime(meshFilePath);
+            }
+            else
+            {
+                Debug.LogError("Unable to create mesh collider for the mesh: " + mesh.filename);
+            }
+            
+            if (meshObject != null)
+            {
+                ConvertMeshToColliders(meshObject);
+            }
             return meshObject;
         }
 

@@ -90,6 +90,10 @@ namespace RosSharp.Urdf
                             ColladaAssetPostProcessor.ApplyColladaOrientation(meshObject, meshFilePath);
                         }
                     }
+                    else if (meshFilePath.ToLower().EndsWith(".obj"))
+                    {
+                        meshObject = MeshImporter.Load(meshFilePath);
+                    }
                 }
                 catch (Exception ex) 
                 {
