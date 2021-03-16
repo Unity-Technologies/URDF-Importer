@@ -167,18 +167,18 @@ namespace RosSharp.Urdf
 
         private static void CreateCollisionExceptions(Robot robot, GameObject robotGameObject)
         {
-            List<CollisionIgnore> ColliisonList = new List<CollisionIgnore>();
+            List<CollisionIgnore> CollisionList = new List<CollisionIgnore>();
             if (robot.ignoreCollisionPair.Count > 0)
             {
                 foreach (System.Tuple<string, string> ignoreCollision in robot.ignoreCollisionPair)
                 {
-                    Transform colliisonObject1 = GameObject.Find(ignoreCollision.Item1).transform.Find(collisionObjectName);
+                    Transform collisionObject1 = GameObject.Find(ignoreCollision.Item1).transform.Find(collisionObjectName);
                     Transform collisionObject2 = GameObject.Find(ignoreCollision.Item2).transform.Find(collisionObjectName);
 
-                    ColliisonList.Add(new CollisionIgnore(colliisonObject1, collisionObject2));
+                    CollisionList.Add(new CollisionIgnore(collisionObject1, collisionObject2));
                 }
             }
-            robotGameObject.GetComponent<UrdfRobot>().collisionExceptions = ColliisonList;
+            robotGameObject.GetComponent<UrdfRobot>().collisionExceptions = CollisionList;
         }
 
         #endregion
