@@ -54,7 +54,12 @@ namespace RosSharp.Urdf
         /// <param name="filename"></param>
         /// <param name="settings"></param>
         /// <param name="loadStatus"></param>
-        /// <param name="forceRuntimeMode"> When true, runs the runtime loading mode even in Editor. When false, uses the default behavior.</param>
+        /// <param name="forceRuntimeMode"> 
+        /// When true, runs the runtime loading mode even in Editor. When false, uses the default behavior, 
+        /// i.e. runtime will be enabled in standalone build and disable when running in editor.
+        /// In runtime mode, the Controller component of the robot will be added but not activated automatically and has to be enabled manually.
+        /// This is to allow initializing the values before the controller.Start() is called
+        /// </param>
         /// <returns></returns>
         public static IEnumerator<GameObject> Create(string filename, ImportSettings settings, bool loadStatus = false, bool forceRuntimeMode = false)
         {
@@ -123,7 +128,12 @@ namespace RosSharp.Urdf
             { // set runtime mode back to what it was
                 RuntimeURDF.SetRuntimeMode(wasRuntimeMode);
             }
+
+            if (!forceRuntimeMode) 
+            {   // don't enable the controller automatically yet, as values may need to be set in the caller script.
                 robotGameObject.GetComponent<RosSharp.Control.Controller>().enabled = true;
+            }
+
             yield return robotGameObject;
         }
 
