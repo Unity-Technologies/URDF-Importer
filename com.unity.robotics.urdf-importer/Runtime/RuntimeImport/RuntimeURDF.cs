@@ -64,7 +64,7 @@ public static class RuntimeURDF
 #if UNITY_EDITOR
         if (!IsRuntimeMode())
         {
-            return EditorUtility_OpenFolderPanel(title, folder, defaultName);
+            return EditorUtility.OpenFolderPanel(title, folder, defaultName);
         }
 #endif
     return "";
