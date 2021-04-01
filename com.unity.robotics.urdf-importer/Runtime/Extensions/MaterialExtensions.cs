@@ -6,13 +6,30 @@ namespace Unity.Robotics
 {
     public static class MaterialExtensions
     {
+        public enum RenderPipelineType 
+        {
+            Standard,
+            URP,
+            HDRP,
+        }
+        
         private static string[] standardShaders = { "Standard" };//, "UI/Default" };
         private static string[] hdrpShaders = { "HDRP/Lit" };//, "UI/Default" };
+        private static string[] urpShaders = { "Universal Render Pipeline/Lit" };
         public static Material CreateBasicMaterial()
         {
             try
             {
-                string[] shadersToTry = IsHDRP() ?  hdrpShaders : standardShaders;
+                string[] shadersToTry = standardShaders;
+                if (GetRenderPipelineType() == RenderPipelineType.HDRP)
+                {
+                    shadersToTry = hdrpShaders;
+                }
+                else if (GetRenderPipelineType() == RenderPipelineType.URP)
+                {
+                    shadersToTry = urpShaders;
+                }
+
                 foreach (var shaderName in shadersToTry)
                 {
                     Shader shader = Shader.Find(shaderName);
@@ -35,27 +52,38 @@ namespace Unity.Robotics
 
         /// Checks if current render pipeline is HDRP 
         /// Used for creating the proper default material.
-        public static bool IsHDRP()
+        public static RenderPipelineType GetRenderPipelineType()
         {
-            //TODO: should it also return true for Universal Render pipeline?
-            return GraphicsSettings.renderPipelineAsset != null && GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition");
+            if (GraphicsSettings.renderPipelineAsset != null) 
+            {
+                if (GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition"))
+                {
+                    return RenderPipelineType.HDRP;
+                }
+                else if (GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("Universal"))
+                {
+                    return RenderPipelineType.URP;
+                }
+            }
+            return RenderPipelineType.Standard;
         }
 
         public static void SetMaterialColor(Material material, Color color)
         {
-            material.SetColor(IsHDRP() ? "_BaseColor" : "_Color", color);
+            material.SetColor(GetRenderPipelineType() != RenderPipelineType.Standard ? "_BaseColor" : "_Color", color);
         }
 
         public static void SetMaterialEmissionColor(Material material, Color color)
         {
-            // Assuming both shaders use the _EmissionColor property. Not tested for HDRP. 
-            material.SetColor(IsHDRP() ? "_EmissionColor" : "_EmissionColor", color);
+            // Assuming both shaders use the _EmissionColor property. Not tested for HDRP and URP.
+            //Library/PackageCache/com.unity.render-pipelines.universal@10.3.2/Shaders/Lit.shader 
+            material.SetColor(GetRenderPipelineType() != RenderPipelineType.Standard ? "_EmissionColor" : "_EmissionColor", color);
             material.EnableKeyword("_EMISSION");
         }
 
         public static Color GetMaterialColor(Renderer renderer)
         {
-            if (IsHDRP())
+            if (GetRenderPipelineType() != RenderPipelineType.Standard)
             {
                 return renderer.material.GetColor("_BaseColor");
             }

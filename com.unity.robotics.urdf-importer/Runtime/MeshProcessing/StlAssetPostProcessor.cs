@@ -54,7 +54,7 @@ namespace RosSharp
         {
 #if UNITY_EDITOR
             // also save the material in the Assets
-            if (!RuntimeURDF.IsRuntimeMode() && !MaterialExtensions.IsHDRP())
+            if (!RuntimeURDF.IsRuntimeMode() && MaterialExtensions.GetRenderPipelineType() == MaterialExtensions.RenderPipelineType.Standard)
             {
                 defaultDiffuse = RuntimeURDF.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
             }
