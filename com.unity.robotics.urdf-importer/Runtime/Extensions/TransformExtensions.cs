@@ -162,7 +162,7 @@ namespace RosSharp
                 return false;
             }
 
-            for (int i = 0; i < array.Length ; i++)
+            for (int i = 0; i < array.Length; i++)
             {
                 if ((array[i] >= array2[i] - delta) && (array[i] <= array2[i] + delta))
                 {
@@ -252,6 +252,32 @@ namespace RosSharp
                 first[1, 0] + " " + first[1, 1] + " " + first[1, 2] + " " + first[1, 3] + " " +
                 first[2, 0] + " " + first[2, 1] + " " + first[2, 2] + " " + first[2, 3] + " " +
                 first[3, 0] + " " + first[3, 1] + " " + first[3, 2] + " " + first[3, 3]);
+        }
+
+        /// <summary>
+        /// Recursively searches the entire children hierachy (depth first) to find the child of the game object that matches the query
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="query"> query to test of the child game objects </param>
+        /// <returns>The first child of the game object that matches the query</returns>
+        public static Transform FirstChildByQuery(this Transform parent, Func<Transform, bool> query)
+        {
+            if (parent.childCount == 0)
+            {
+                return null;
+            }
+
+            Transform result = null;
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                var child = parent.GetChild(i);
+                if (query(child))
+                {
+                    return child;
+                }
+                result = FirstChildByQuery(child, query);
+            }
+            return result;
         }
     }
 }
