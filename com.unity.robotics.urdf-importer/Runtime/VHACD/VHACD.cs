@@ -133,8 +133,10 @@ namespace MeshProcess
         [ContextMenu("Generate Convex Meshes")]
         public unsafe List<Mesh> GenerateConvexMeshes(Mesh mesh = null)
         {
-            if(mesh == null)
+            if (mesh == null)
+            {
                 mesh = GetComponent<MeshFilter>().sharedMesh;
+            }
             var vhacd = CreateVHACD();
             var parameters = m_parameters;
 

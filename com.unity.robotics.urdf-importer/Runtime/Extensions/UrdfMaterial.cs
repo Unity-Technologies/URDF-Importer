@@ -209,7 +209,7 @@ namespace RosSharp.Urdf
         {
             string oldTexturePath = UrdfAssetPathHandler.GetFullAssetPath(RuntimeURDF.AssetDatabase_GetAssetPath(texture));
             string newTexturePath = UrdfExportPathHandler.GetNewResourcePath(Path.GetFileName(oldTexturePath));
-            if(oldTexturePath != newTexturePath)
+            if (oldTexturePath != newTexturePath)
             {
                 File.Copy(oldTexturePath, newTexturePath, true);
             }

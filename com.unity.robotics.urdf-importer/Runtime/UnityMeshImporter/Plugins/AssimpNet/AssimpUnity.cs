@@ -57,13 +57,13 @@ namespace Assimp
         private static void InitializePlugin()
         {
             //Only try once during runtime
-            if(s_triedLoading)
+            if (s_triedLoading)
                 return;
 
             UnmanagedLibrary libInstance = AssimpLibrary.Instance;
 
             //If already initialized, set flags and return
-            if(libInstance.IsLibraryLoaded)
+            if (libInstance.IsLibraryLoaded)
             {
                 s_assimpAvailable = true;
                 s_triedLoading = true;
@@ -129,7 +129,7 @@ namespace Assimp
             }
 
             //If both null, then we do not support the platform
-            if(native64LibPath == null && native32LibPath == null)
+            if (native64LibPath == null && native32LibPath == null)
             {
                 Debug.Log(string.Format("Assimp does not support platform: {0}", Application.platform.ToString()));
                 s_assimpAvailable = false;

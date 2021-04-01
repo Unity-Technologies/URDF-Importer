@@ -27,14 +27,18 @@ namespace RosSharp
         {
             T component = transform.GetComponent<T>();
             if (component != null)
+            {
                 Object.DestroyImmediate(component);
+            }
         }
 
         public static T AddComponentIfNotExists<T>(this Transform transform) where T : Component
         {
             T component = transform.GetComponent<T>();
             if (component == null)
+            {
                 component = transform.gameObject.AddComponent<T>();
+            }
             return component;
         }
 
@@ -125,7 +129,9 @@ namespace RosSharp
         {
             double[] arr = new double[3];
             for (int i = 0; i < 3; i++)
+            {
                 arr[i] = Math.Round(vector3[i], RoundDigits);
+            }
 
             return arr;
         }
@@ -152,13 +158,20 @@ namespace RosSharp
         public static bool DoubleDeltaCompare(this double[] array, double[] array2, double delta)
         {
             if (array.Length != array2.Length)
+            {
                 return false;
+            }
+
             for (int i = 0; i < array.Length ; i++)
             {
                 if ((array[i] >= array2[i] - delta) && (array[i] <= array2[i] + delta))
+                {
                     continue;
+                }
                 else
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -173,16 +186,19 @@ namespace RosSharp
         /// <returns></returns>
         public static bool VectorEqualDelta(this Vector3 source, Vector3 exported, double delta)
         {
-            
             return Vector3.SqrMagnitude(source - exported) < delta;
         }
 
         public static bool EqualsDelta(this double first, double second, double delta)
         {
             if (Math.Abs(first - second) <= Math.Abs(delta * first))
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>
@@ -194,9 +210,9 @@ namespace RosSharp
         public static Matrix4x4 Subtract(this Matrix4x4 first, Matrix4x4 second)
         {
             Matrix4x4 result = new Matrix4x4();
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     result[i, j] = first[i, j] - second[i, j];
                 }

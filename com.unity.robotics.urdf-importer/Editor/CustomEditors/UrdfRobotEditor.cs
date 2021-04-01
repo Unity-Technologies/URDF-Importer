@@ -102,7 +102,7 @@ namespace RosSharp.Urdf.Editor
             }
 
             GUILayout.Space(5);
-            if(GUILayout.Button("Compare URDF Files"))
+            if (GUILayout.Button("Compare URDF Files"))
             {
                 CompareURDF window = (CompareURDF)EditorWindow.GetWindow(typeof(CompareURDF));
                 window.minSize = new Vector2(500, 200);
@@ -120,7 +120,9 @@ namespace RosSharp.Urdf.Editor
             EditorGUILayout.PrefixLabel(label);
             string buttonName = currentState ? "Disable" : "Enable";
             if (GUILayout.Button(buttonName, buttonStyle))
+            {
                 handler();
+            }
             EditorGUILayout.EndHorizontal();
         }
 

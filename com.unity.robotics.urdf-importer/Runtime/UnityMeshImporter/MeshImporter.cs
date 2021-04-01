@@ -173,7 +173,7 @@ namespace UnityMeshImporter
                             if (f.IndexCount == 1 || f.IndexCount == 2)
                                 continue;
 
-                            for(int i=0;i<(f.IndexCount-2);i++)
+                            for (int i=0;i<(f.IndexCount-2);i++)
                             {
                                 uIndices.Add(f.Indices[i+2]);
                                 uIndices.Add(f.Indices[i+1]);

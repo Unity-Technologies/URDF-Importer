@@ -57,7 +57,7 @@ namespace RosSharp.Urdf//.Testing
 
             bool flag;
 
-            if(CompareLink(this.source.root, this.exported.root,0))
+            if (CompareLink(this.source.root, this.exported.root,0))
             {
                 flag = true;
             }
@@ -167,7 +167,7 @@ namespace RosSharp.Urdf//.Testing
             foreach (Joint jointSource in source.joints)
             {
                 Joint jointExported = exported.joints.Find(x => x.name == jointSource.name); // Check for no match
-                if(jointExported == null)
+                if (jointExported == null)
                 {
                     linkLog.AppendLine(String.Format("{0}Joint Not Found in Exported: Joint Name:{1,12}",Indent(indent + 1),jointSource.name));
                     return false;
@@ -283,7 +283,7 @@ namespace RosSharp.Urdf//.Testing
                 linkLog.AppendLine(String.Format("{0}Inertia Attributes Null:{1,6}",Indent(indent),"True"));
                 return true;
             }
-            if((source == null && exported !=null) || (source != null && exported == null))
+            if ((source == null && exported !=null) || (source != null && exported == null))
             {
                 linkLog.AppendLine(String.Format("{0}Inertia Attributes Null:{1,6}", Indent(indent), "False"));
                 return false;
@@ -322,7 +322,7 @@ namespace RosSharp.Urdf//.Testing
                 linkLog.AppendLine(String.Format("{0}Origin Nullity Check: {1,6}", Indent(indent), "True"));
                 return true;
             }
-            else if(source != null && exported == null)
+            else if (source != null && exported == null)
             {
                 if (source.Xyz.ToVector3() == new Vector3(0, 0, 0) && source.Rpy.ToVector3() == new Vector3(0, 0, 0))
                 {
@@ -348,7 +348,7 @@ namespace RosSharp.Urdf//.Testing
                     return false;
                 }
             }
-            else if(source != null && exported != null)
+            else if (source != null && exported != null)
             {
                 linkLog.AppendLine(String.Format("{0}Origin Nullity Check: {1,6}", Indent(indent), "True"));
             }
@@ -459,7 +459,7 @@ namespace RosSharp.Urdf//.Testing
                     return false;
                 }
             }
-            else if((source.material == null && exported.material.name == "Default-Material")|| (exported.material == null && source.material?.name == "Default-Material"))
+            else if ((source.material == null && exported.material.name == "Default-Material")|| (exported.material == null && source.material?.name == "Default-Material"))
             {
                 linkLog.AppendLine(String.Format("{0}Material Nullity Check: {1,6}", Indent(indent), "True"));
                 return true;
@@ -495,7 +495,7 @@ namespace RosSharp.Urdf//.Testing
                   return false;
             }
 
-            if(source.cylinder != null && exported.cylinder != null)
+            if (source.cylinder != null && exported.cylinder != null)
             {
                 bool cylinderEqual = (source.cylinder.radius == exported.cylinder.radius && source.cylinder.length == exported.cylinder.length);
                 linkLog.AppendLine(String.Format("{0}Geometry:", Indent(indent)));
@@ -510,7 +510,7 @@ namespace RosSharp.Urdf//.Testing
                     return false;
             }
 
-            if(source.sphere != null && exported.sphere != null)
+            if (source.sphere != null && exported.sphere != null)
             {
                 bool sphereEqual = source.sphere.radius.EqualsDelta(exported.sphere.radius, .0001);
                 linkLog.AppendLine(String.Format("{0}Geometry:", Indent(indent)));
@@ -610,7 +610,7 @@ namespace RosSharp.Urdf//.Testing
                 linkLog.AppendLine(String.Format("{0}Colors Equal: {1,6}", Indent(indent), "True"));
                 linkLog.AppendLine(String.Format("{0}RGB :{1,5:F3} {2,5:F3} {3,5:F3} ", Indent(indent), source.color.rgba[0], source.color.rgba[1], source.color.rgba[2]));
             }
-            else if(source.color == null && exported.color == null)
+            else if (source.color == null && exported.color == null)
             {
                 linkLog.AppendLine(String.Format("{0} Color nullity equality:{1,6}", Indent(indent), "True"));
             }
@@ -629,7 +629,7 @@ namespace RosSharp.Urdf//.Testing
                 if (!textureNameEqual)
                     return false;
             }
-            else if(source.texture == null && source.texture == null)
+            else if (source.texture == null && source.texture == null)
             {
                 linkLog.AppendLine(String.Format("{0}Texture nullity equality:{1,6}", Indent(indent), "True"));
             }
@@ -753,10 +753,11 @@ namespace RosSharp.Urdf//.Testing
                     linkLog.AppendLine(String.Format("{0}Damping Valye: Exported: {1,12}", Indent(indent), exported.damping));
 
                     if (dampingEqual)
+                    {
                         return false;
-                 
+                    }
                 }
-                else if((source.damping == double.NaN && exported.damping == 0 )|| (exported.damping == double.NaN && source.damping == 0 )|| (source.damping ==double.NaN && exported.damping == double.NaN))
+                else if ((source.damping == double.NaN && exported.damping == 0 )|| (exported.damping == double.NaN && source.damping == 0 )|| (source.damping ==double.NaN && exported.damping == double.NaN))
                 {
                     linkLog.AppendLine(String.Format("{0}Damping:", Indent(indent)));
                     linkLog.AppendLine(String.Format("{0}Equal: {1,6}", Indent(indent), "True"));
@@ -794,12 +795,10 @@ namespace RosSharp.Urdf//.Testing
                     return false;
                 }
             }
-
             else if ((source == null && exported?.damping == 0 && exported?.friction == 0) || (exported == null && source?.damping == 0 && source?.friction == 0))
             {
                 linkLog.AppendLine(String.Format("{0}Dynamics Equal: {1,6} ", Indent(indent), "True"));
             }
-
             else
             {
                 linkLog.AppendLine(String.Format("{0}Dynamics Equal: {1,6} ", Indent(indent), "False"));
@@ -818,7 +817,7 @@ namespace RosSharp.Urdf//.Testing
         private bool CompareLimit(Joint.Limit source, Joint.Limit exported, int indent)
         {
             //Lower
-            if((source.lower == double.NaN && exported.lower == 0) || (source.lower == 0 && exported.lower == double.NaN))
+            if ((source.lower == double.NaN && exported.lower == 0) || (source.lower == 0 && exported.lower == double.NaN))
             {
                 linkLog.AppendLine(String.Format("{0}Lower Limit:", Indent(indent)));
                 linkLog.AppendLine(String.Format("{0}Equal: {1,6}", Indent(indent), "True"));
@@ -903,7 +902,9 @@ namespace RosSharp.Urdf//.Testing
         {
             string returnString = "";
             for (int i = 0; i < numberofIndents; i++)
+            {
                 returnString += " ";
+            }
             return returnString;
         }
 
@@ -917,16 +918,24 @@ namespace RosSharp.Urdf//.Testing
         /// <returns></returns>
         private bool RpyCheck(double[] source, double[] exported, double delta)
         {
-            for(int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
                 if (source[i].EqualsDelta(exported[i], delta))
+                {
                     continue;
+                }
                 else if (source[i] > 0 || source[i].EqualsDelta(exported[i] + (2 * Mathf.PI), delta))
+                {
                     continue;
+                }
                 else if (source[i] <= 0 || source[i].EqualsDelta(exported[i] - (2 * Mathf.PI), delta))
+                {
                     continue;
+                }
                 else
+                {
                     return false;
+                }
             }
             return true;
         }

@@ -183,7 +183,9 @@ namespace RosSharp.Urdf
             while (ProcessJointStack(im))
             {
                 if (loadStatus)
+                {
                     yield return null;
+                }
             }
 
             ImportPipelinePostCreate(im);

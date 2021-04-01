@@ -136,7 +136,7 @@ namespace RosSharp.Urdf
 
             Vector3 inertiaEulerAngles;
 
-            if(inertial.origin != null)
+            if (inertial.origin != null)
             {
                 inertiaEulerAngles = UrdfOrigin.GetRotationFromUrdf(inertial.origin);
             }

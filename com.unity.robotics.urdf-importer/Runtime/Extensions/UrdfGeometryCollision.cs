@@ -52,11 +52,13 @@ namespace RosSharp.Urdf
                     break;
             }
 
-            if(geometryGameObject != null)
+            if (geometryGameObject != null)
             {
                 geometryGameObject.transform.SetParentAndAlign(parent);
                 if (geometry != null)
+                {
                     SetScale(parent, geometry, geometryType);
+                }
             }
         }
 
@@ -123,9 +125,13 @@ namespace RosSharp.Urdf
 
             GameObject collisionObject;
             if (prefabObject != null)
+            {
                 collisionObject = (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(prefabObject);
+            }
             else
+            {
                 collisionObject = Object.Instantiate(objectToCopy);
+            }
 
             collisionObject.name = objectToCopy.name;
             ConvertMeshToColliders(collisionObject, true);
