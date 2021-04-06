@@ -15,6 +15,10 @@ limitations under the License.
 using UnityEngine;
 using System.Collections.Generic;
 using MeshProcess;
+#if UNITY_EDITOR
+using UnityEditor;
+using System.IO;
+#endif
 
 namespace RosSharp.Urdf
 {
@@ -73,7 +77,7 @@ namespace RosSharp.Urdf
                 }
 
                 GameObject meshObject = (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(prefabObject);
-                ConvertMeshToColliders(meshObject);
+                ConvertMeshToColliders(meshObject, location:mesh.filename);
 
                 return meshObject;
             }
@@ -128,12 +132,12 @@ namespace RosSharp.Urdf
                 collisionObject = Object.Instantiate(objectToCopy);
 
             collisionObject.name = objectToCopy.name;
-            ConvertMeshToColliders(collisionObject, true);
+            ConvertMeshToColliders(collisionObject);
 
             collisionObject.transform.SetParentAndAlign(parent);
         }
 
-        private static void ConvertMeshToColliders(GameObject gameObject, bool setConvex = true)
+        private static void ConvertMeshToColliders(GameObject gameObject, string location = null, bool setConvex = true)
         {
             MeshFilter[] meshFilters = gameObject.GetComponentsInChildren<MeshFilter>();
             if (UrdfRobotExtensions.importsettings.convexMethod == ImportSettings.convexDecomposer.unity)
@@ -152,6 +156,11 @@ namespace RosSharp.Urdf
             }
             else
             {
+                string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(location, false);
+
+                string templateFileName = Path.GetFileNameWithoutExtension(meshFilePath);
+                string filePath = Path.GetDirectoryName(meshFilePath);
+                int meshIndex = 0;
                 foreach (MeshFilter meshFilter in meshFilters)
                 {                   
                     GameObject child = meshFilter.gameObject;
@@ -159,6 +168,13 @@ namespace RosSharp.Urdf
                     List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);
                     foreach (Mesh collider in colliderMeshes)
                     {
+#if UNITY_EDITOR
+                        meshIndex++;
+                        string name = filePath + "/" + templateFileName + "_" + meshIndex + ".asset";
+                        Debug.Log(name);
+                        AssetDatabase.CreateAsset(collider, name);
+                        AssetDatabase.SaveAssets();
+#endif
                         MeshCollider current = child.AddComponent<MeshCollider>();
                         current.sharedMesh = collider;
                         current.convex = setConvex;
@@ -169,5 +185,6 @@ namespace RosSharp.Urdf
                 }
             }
         }
+
     }
 }
