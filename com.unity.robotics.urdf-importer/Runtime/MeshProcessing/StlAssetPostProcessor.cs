@@ -43,7 +43,9 @@ namespace RosSharp
         {
             GameObject gameObject = CreateStlParent(stlFile);
             if (gameObject == null)
+            {
                 return;
+            }
 
             RuntimeURDF.PrefabUtility_SaveAsPrefabAsset(gameObject, getPrefabAssetPath(stlFile));
             Object.DestroyImmediate(gameObject);
@@ -84,6 +86,7 @@ namespace RosSharp
             }
             return parent;
         }
+        
         private static GameObject CreateStlGameObject(string meshAssetPath, Material material)
         {
             GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(meshAssetPath));
@@ -91,10 +94,12 @@ namespace RosSharp
             gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
             return gameObject;
         }
+        
         private static string getMeshAssetPath(string stlFile, int i)
         {
             return stlFile.Substring(0, stlFile.Length - 4) + "_" + i.ToString() + ".asset";
         }
+
         private static string getPrefabAssetPath(string stlFile)
         {
             return stlFile.Substring(0, stlFile.Length - 4) + ".prefab";

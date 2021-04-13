@@ -38,7 +38,9 @@ namespace RosSharp
                 isCollada = Path.GetExtension(modelImporter.assetPath).ToLowerInvariant() == ".dae";
 
                 if (!isCollada)
+                {
                     return;
+                }
 
                 if (modelImporter.useFileScale)
                 {
@@ -73,10 +75,14 @@ namespace RosSharp
         { 
             switch (orientation)
             {
-                case "X_UP": return position; // not tested
-                case "Y_UP": return position; // not tested
-                case "Z_UP": return new Vector3(-position.z, position.y, -position.x); // tested
-                default: return position; // not tested  
+                case "X_UP": 
+                    return position; // not tested
+                case "Y_UP": 
+                    return position; // not tested
+                case "Z_UP": 
+                    return new Vector3(-position.z, position.y, -position.x); // tested
+                default: 
+                    return position; // not tested  
             }
         }
 
@@ -84,10 +90,14 @@ namespace RosSharp
         {
             switch (orientation)
             { 
-                case "X_UP": return new Vector3(-90, 90, 90); // not tested
-                case "Y_UP": return new Vector3(-90, 90, 0);  // tested
-                case "Z_UP": return new Vector3(0, 90, 0);    // tested
-                default: return new Vector3(-90, 90, 0);    // tested                      
+                case "X_UP":
+                    return new Vector3(-90, 90, 90); // not tested
+                case "Y_UP":
+                    return new Vector3(-90, 90, 0);  // tested
+                case "Z_UP":
+                    return new Vector3(0, 90, 0);    // tested
+                default:
+                    return new Vector3(-90, 90, 0);    // tested                      
             }
         }
 
@@ -120,7 +130,7 @@ namespace RosSharp
             }
         }
 
-        static public void ApplyColladaOrientation(GameObject gameObject, string absolutePath) 
+        public static void ApplyColladaOrientation(GameObject gameObject, string absolutePath) 
         {
             string orientation = readColladaOrientation(absolutePath);
             gameObject.transform.SetPositionAndRotation(
