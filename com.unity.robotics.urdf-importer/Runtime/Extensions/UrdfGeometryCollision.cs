@@ -15,6 +15,7 @@ limitations under the License.
 using UnityEngine;
 using System.Collections.Generic;
 using MeshProcess;
+using System.IO;
 
 namespace RosSharp.Urdf
 {
@@ -47,8 +48,6 @@ namespace RosSharp.Urdf
                         geometryGameObject = new GameObject(geometryType.ToString());
                         geometryGameObject.AddComponent<MeshCollider>();
                     }
-                    //var collider = geometryGameObject.GetComponent<MeshCollider>();
-                    //collider.convex = true;
                     break;
             }
 
@@ -64,7 +63,6 @@ namespace RosSharp.Urdf
 
         private static GameObject CreateMeshCollider(Link.Geometry.Mesh mesh)
         {
-#if UNITY_EDITOR
             if (!RuntimeURDF.IsRuntimeMode())
             {
                 GameObject prefabObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
@@ -75,11 +73,10 @@ namespace RosSharp.Urdf
                 }
 
                 GameObject meshObject = (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(prefabObject);
-                ConvertMeshToColliders(meshObject);
+                ConvertMeshToColliders(meshObject, location:mesh.filename);
 
                 return meshObject;
             }
-#endif
             return CreateMeshColliderRuntime(mesh);
         }
 
@@ -118,7 +115,10 @@ namespace RosSharp.Urdf
 
         public static void CreateMatchingMeshCollision(Transform parent, Transform visualToCopy)
         {
-            if (visualToCopy.childCount == 0) return;
+            if (visualToCopy.childCount == 0)
+            {
+                return;
+            }
 
             GameObject objectToCopy = visualToCopy.GetChild(0).gameObject;
             GameObject prefabObject = (GameObject)RuntimeURDF.PrefabUtility_GetCorrespondingObjectFromSource(objectToCopy);
@@ -134,12 +134,12 @@ namespace RosSharp.Urdf
             }
 
             collisionObject.name = objectToCopy.name;
-            ConvertMeshToColliders(collisionObject, true);
+            ConvertMeshToColliders(collisionObject);
 
             collisionObject.transform.SetParentAndAlign(parent);
         }
 
-        private static void ConvertMeshToColliders(GameObject gameObject, bool setConvex = true)
+        private static void ConvertMeshToColliders(GameObject gameObject, string location = null, bool setConvex = true)
         {
             MeshFilter[] meshFilters = gameObject.GetComponentsInChildren<MeshFilter>();
             if (UrdfRobotExtensions.importsettings.convexMethod == ImportSettings.convexDecomposer.unity)
@@ -158,6 +158,16 @@ namespace RosSharp.Urdf
             }
             else
             {
+                string templateFileName = "";
+                string filePath = "";
+                int meshIndex = 0;
+                if (!RuntimeURDF.IsRuntimeMode() && location != null)
+                {
+                    string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(location, false);
+                    templateFileName = Path.GetFileNameWithoutExtension(meshFilePath);
+                    filePath = Path.GetDirectoryName(meshFilePath);
+                }
+
                 foreach (MeshFilter meshFilter in meshFilters)
                 {                   
                     GameObject child = meshFilter.gameObject;
@@ -165,6 +175,15 @@ namespace RosSharp.Urdf
                     List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);
                     foreach (Mesh collider in colliderMeshes)
                     {
+                        if (!RuntimeURDF.IsRuntimeMode())
+                        {
+
+                            meshIndex++;
+                            string name = filePath + "/" + templateFileName + "_" + meshIndex + ".asset";
+                            Debug.Log("Creating new mesh file:" + name);
+                            RuntimeURDF.AssetDatabase_CreateAsset(collider, name);
+                            RuntimeURDF.AssetDatabase_SaveAssets();
+                        }
                         MeshCollider current = child.AddComponent<MeshCollider>();
                         current.sharedMesh = collider;
                         current.convex = setConvex;
@@ -175,5 +194,6 @@ namespace RosSharp.Urdf
                 }
             }
         }
+
     }
 }
