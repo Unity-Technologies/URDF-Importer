@@ -15,10 +15,7 @@ limitations under the License.
 using UnityEngine;
 using System.Collections.Generic;
 using MeshProcess;
-#if UNITY_EDITOR
-using UnityEditor;
 using System.IO;
-#endif
 
 namespace RosSharp.Urdf
 {
@@ -66,7 +63,6 @@ namespace RosSharp.Urdf
 
         private static GameObject CreateMeshCollider(Link.Geometry.Mesh mesh)
         {
-#if UNITY_EDITOR
             if (!RuntimeURDF.IsRuntimeMode())
             {
                 GameObject prefabObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
@@ -81,7 +77,6 @@ namespace RosSharp.Urdf
 
                 return meshObject;
             }
-#endif
             return CreateMeshColliderRuntime(mesh);
         }
 
@@ -156,11 +151,16 @@ namespace RosSharp.Urdf
             }
             else
             {
-                string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(location, false);
-
-                string templateFileName = Path.GetFileNameWithoutExtension(meshFilePath);
-                string filePath = Path.GetDirectoryName(meshFilePath);
+                string templateFileName = "";
+                string filePath = "";
                 int meshIndex = 0;
+                if (!RuntimeURDF.IsRuntimeMode() && location != null)
+                {
+                    string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(location, false);
+                    templateFileName = Path.GetFileNameWithoutExtension(meshFilePath);
+                    filePath = Path.GetDirectoryName(meshFilePath);
+                }
+
                 foreach (MeshFilter meshFilter in meshFilters)
                 {                   
                     GameObject child = meshFilter.gameObject;
@@ -168,13 +168,15 @@ namespace RosSharp.Urdf
                     List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);
                     foreach (Mesh collider in colliderMeshes)
                     {
-#if UNITY_EDITOR
-                        meshIndex++;
-                        string name = filePath + "/" + templateFileName + "_" + meshIndex + ".asset";
-                        Debug.Log(name);
-                        AssetDatabase.CreateAsset(collider, name);
-                        AssetDatabase.SaveAssets();
-#endif
+                        if (!RuntimeURDF.IsRuntimeMode())
+                        {
+
+                            meshIndex++;
+                            string name = filePath + "/" + templateFileName + "_" + meshIndex + ".asset";
+                            Debug.Log("Creating new mesh file:" + name);
+                            RuntimeURDF.AssetDatabase_CreateAsset(collider, name);
+                            RuntimeURDF.AssetDatabase_SaveAssets();
+                        }
                         MeshCollider current = child.AddComponent<MeshCollider>();
                         current.sharedMesh = collider;
                         current.convex = setConvex;

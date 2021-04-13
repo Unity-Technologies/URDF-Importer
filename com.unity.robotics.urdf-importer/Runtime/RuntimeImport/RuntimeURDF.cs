@@ -211,4 +211,14 @@ public static class RuntimeURDF
 #endif
         return null;
     }
+
+    public static void AssetDatabase_SaveAssets()
+    {
+#if UNITY_EDITOR
+        if (!IsRuntimeMode())
+        {
+            AssetDatabase.SaveAssets();
+        }
+#endif
+    }
 }
