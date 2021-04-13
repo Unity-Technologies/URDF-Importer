@@ -48,8 +48,6 @@ namespace RosSharp.Urdf
                         geometryGameObject = new GameObject(geometryType.ToString());
                         geometryGameObject.AddComponent<MeshCollider>();
                     }
-                    //var collider = geometryGameObject.GetComponent<MeshCollider>();
-                    //collider.convex = true;
                     break;
             }
 
@@ -57,7 +55,9 @@ namespace RosSharp.Urdf
             {
                 geometryGameObject.transform.SetParentAndAlign(parent);
                 if (geometry != null)
+                {
                     SetScale(parent, geometry, geometryType);
+                }
             }
         }
 
@@ -115,16 +115,23 @@ namespace RosSharp.Urdf
 
         public static void CreateMatchingMeshCollision(Transform parent, Transform visualToCopy)
         {
-            if (visualToCopy.childCount == 0) return;
+            if (visualToCopy.childCount == 0)
+            {
+                return;
+            }
 
             GameObject objectToCopy = visualToCopy.GetChild(0).gameObject;
             GameObject prefabObject = (GameObject)RuntimeURDF.PrefabUtility_GetCorrespondingObjectFromSource(objectToCopy);
 
             GameObject collisionObject;
             if (prefabObject != null)
+            {
                 collisionObject = (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(prefabObject);
+            }
             else
+            {
                 collisionObject = Object.Instantiate(objectToCopy);
+            }
 
             collisionObject.name = objectToCopy.name;
             ConvertMeshToColliders(collisionObject);
