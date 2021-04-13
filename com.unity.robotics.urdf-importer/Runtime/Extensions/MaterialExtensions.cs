@@ -13,8 +13,8 @@ namespace Unity.Robotics
             HDRP,
         }
         
-        private static string[] standardShaders = { "Standard" };//, "UI/Default" };
-        private static string[] hdrpShaders = { "HDRP/Lit" };//, "UI/Default" };
+        private static string[] standardShaders = { "Standard" };
+        private static string[] hdrpShaders = { "HDRP/Lit" };
         private static string[] urpShaders = { "Universal Render Pipeline/Lit" };
         public static Material CreateBasicMaterial()
         {
@@ -35,7 +35,6 @@ namespace Unity.Robotics
                     Shader shader = Shader.Find(shaderName);
                     if (shader != null)
                     {
-                        //Debug.Log("Found shader: " + shaderName);
                         var material = new Material(shader);
                         material.SetFloat("_Metallic", 0.75f);
                         material.SetFloat("_Glossiness", 0.75f);
