@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace RosSharp.Urdf//.Testing
+namespace RosSharp.Urdf
 {
     public class UrdfComparator
     {

@@ -67,7 +67,6 @@ public class RuntimeURDFImporter : MonoBehaviour
             robotObject.transform.SetParent(transform);
             SetControllerParameters(robotObject);
             Debug.Log("Successfully Loaded URDF" + robotObject.name);
-            //robotObject.SetActive(true);
         }
         currentRobot = robotObject;
         isLoading = false;
