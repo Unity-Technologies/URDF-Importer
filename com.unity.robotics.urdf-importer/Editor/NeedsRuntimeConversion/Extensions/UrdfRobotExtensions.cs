@@ -124,7 +124,10 @@ namespace RosSharp.Urdf.Editor
 
             foreach (UrdfCollision collision in collisionMeshList)
             {
-                collision.transform.localRotation = collision.transform.localRotation * correction;
+                if (robotScript.choosenAxis != ImportSettings.axisType.zAxis)
+                {
+                    collision.transform.localRotation = collision.transform.localRotation * correction;
+                }
             }
             robotScript.SetOrientation();
         }
