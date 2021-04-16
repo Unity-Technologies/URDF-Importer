@@ -59,10 +59,11 @@ namespace RosSharp.Urdf.Editor
         {
             UrdfGeometry.CheckForUrdfCompatibility(urdfCollision.transform, urdfCollision.geometryType);
 
-            Link.Geometry geometry = UrdfGeometry.ExportGeometryData(urdfCollision.geometryType, urdfCollision.transform, true);
+            // Link.Geometry geometry = UrdfGeometry.ExportGeometryData(urdfCollision.geometryType, urdfCollision.transform, true);
+            System.Tuple<Link.Geometry, Urdf.Origin> geometryAndOrigin = UrdfGeometry.ExportCollisionGeometryAndOriginData(urdfCollision.geometryType, urdfCollision.transform, substituteCapsuleForCylinder:true);
             string collisionName = urdfCollision.name == "unnamed" ? null : urdfCollision.name;
 
-            return new Link.Collision(geometry, collisionName, UrdfOrigin.ExportOriginData(urdfCollision.transform));
+            return new Link.Collision(geometryAndOrigin.Item1, collisionName, geometryAndOrigin.Item2);
         }
     }
 }

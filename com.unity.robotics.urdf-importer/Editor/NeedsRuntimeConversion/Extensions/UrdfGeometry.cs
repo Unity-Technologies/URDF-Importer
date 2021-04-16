@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
 using System;
 using UnityEngine;
@@ -27,15 +27,39 @@ namespace RosSharp.Urdf.Editor
             switch (geometryType)
             {
                 case GeometryTypes.Box:
-                    geometry = new Link.Geometry(new Link.Geometry.Box(ExportUrdfSize(transform)));
+                    double[] boxSize = new double[3];
+                    BoxCollider boxCollider = transform.GetComponentInChildren<BoxCollider>();
+
+                    if (isCollisionGeometry == true && boxCollider != null)
+                    {
+                        boxSize = boxCollider.size.Unity2RosScale().ToRoundedDoubleArray();
+                    }
+                    else
+                    {
+                        boxSize = ExportUrdfSize(transform);
+                    }
+
+                    geometry = new Link.Geometry(new Link.Geometry.Box(boxSize));
+
                     break;
                 case GeometryTypes.Cylinder:
+                    // NOTE: Unity does not have a cylinder collider
                     geometry = new Link.Geometry(
                         null,
                         new Link.Geometry.Cylinder(ExportUrdfRadius(transform), ExportCylinderHeight(transform)));
                     break;
                 case GeometryTypes.Sphere:
-                    geometry = new Link.Geometry(null, null, new Link.Geometry.Sphere(ExportUrdfRadius(transform)));
+                    double radius = 0;
+                    SphereCollider sphereCollider = transform.GetComponentInChildren<SphereCollider>();
+                    if (isCollisionGeometry == true && sphereCollider != null)
+                    {
+                        radius = sphereCollider.radius;
+                    }
+                    else
+                    {
+                        radius = ExportUrdfRadius(transform);
+                    }
+                    geometry = new Link.Geometry(null, null, new Link.Geometry.Sphere(radius));
                     break;
                 case GeometryTypes.Mesh:
                     geometry = ExportGeometryMeshData(transform.GetChild(0).gameObject, ExportUrdfSize(transform), isCollisionGeometry);
@@ -44,7 +68,105 @@ namespace RosSharp.Urdf.Editor
 
             return geometry;
         }
-        
+
+        public static Tuple<Link.Geometry, Urdf.Origin> ExportCollisionGeometryAndOriginData(GeometryTypes geometryType, Transform transform, bool substituteCapsuleForCylinder = true)
+        {
+            Link.Geometry geometry = null;
+            Urdf.Origin origin = Urdf.UrdfOrigin.ExportOriginData(transform);  // world space 
+
+            switch (geometryType)
+            {
+                case GeometryTypes.Box:
+                    double[] boxSize = new double[3];
+                    BoxCollider boxCollider = transform.GetComponentInChildren<BoxCollider>();
+
+                    if (boxCollider != null)
+                    {
+                        boxSize = boxCollider.size.Unity2RosScale().ToRoundedDoubleArray();
+                        double[] xyz = boxCollider.center.Unity2Ros().ToRoundedDoubleArray();
+                        if (origin == null)
+                        {
+                            origin = new Urdf.Origin(xyz, null);
+                        }
+                        else
+                        {
+                            origin.Xyz[0] += xyz[0];
+                            origin.Xyz[1] += xyz[1];
+                            origin.Xyz[2] += xyz[2];
+                        }
+                    }
+                    else
+                    {
+                        boxSize = ExportUrdfSize(transform);
+                    }
+
+                    geometry = new Link.Geometry(new Link.Geometry.Box(boxSize));
+
+                    break;
+                case GeometryTypes.Cylinder:
+                    // NOTE: Unity does not have a cylinder collider
+                    CapsuleCollider capsuleCollider = transform.GetComponentInChildren<CapsuleCollider>();
+                    if (substituteCapsuleForCylinder == true && capsuleCollider != null)
+                    {
+                        geometry = new Link.Geometry(
+                            null,
+                            new Link.Geometry.Cylinder(capsuleCollider.radius, capsuleCollider.height));
+
+                        double[] xyz = capsuleCollider.center.Unity2Ros().ToRoundedDoubleArray();
+                        if (origin == null)
+                        {
+                            origin = new Urdf.Origin(xyz, null);
+                        }
+                        else
+                        {
+                            origin.Xyz[0] += xyz[0];
+                            origin.Xyz[1] += xyz[1];
+                            origin.Xyz[2] += xyz[2];
+                        }
+
+                    }
+                    else
+                    {
+                        geometry = new Link.Geometry(
+                            null,
+                            new Link.Geometry.Cylinder(ExportUrdfRadius(transform), ExportCylinderHeight(transform)));
+                    }
+                    break;
+                case GeometryTypes.Sphere:
+                    double radius = 0;
+                    SphereCollider sphereCollider = transform.GetComponentInChildren<SphereCollider>();
+                    if (sphereCollider != null)
+                    {
+                        radius = sphereCollider.radius;
+                        double[] xyz = sphereCollider.center.Unity2Ros().ToRoundedDoubleArray();
+                        if (origin == null)
+                        {
+                            origin = new Urdf.Origin(xyz, null);
+                        }
+                        else
+                        {
+                            origin.Xyz[0] += xyz[0];
+                            origin.Xyz[1] += xyz[1];
+                            origin.Xyz[2] += xyz[2];
+                        }
+
+                    }
+                    else
+                    {
+                        radius = ExportUrdfRadius(transform);
+                    }
+                    geometry = new Link.Geometry(null, null, new Link.Geometry.Sphere(radius));
+                    break;
+                case GeometryTypes.Mesh:
+                    geometry = ExportGeometryMeshData(transform.GetChild(0).gameObject, ExportUrdfSize(transform), true);
+                    break;
+            }
+
+            return new Tuple<Link.Geometry, Origin>(geometry, origin);
+
+        }
+
+
         #region Import Helpers
 
         public static GeometryTypes GetGeometryType(Link.Geometry geometry)
