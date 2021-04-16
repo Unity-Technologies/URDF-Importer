@@ -41,7 +41,7 @@ namespace RosSharp.Urdf.Editor
             if (!urdfCollision.transform.HasExactlyOneChild())
             {
                 GUILayout.Space(5);
-                EditorGUILayout.HelpBox("Visual element must have one and only one child Geometry element.", MessageType.Error);
+                EditorGUILayout.HelpBox("Collision element must have one and only one child Geometry element.", MessageType.Error);
             }
             else if (UrdfGeometry.IsTransformed(urdfCollision.transform.GetChild(0), urdfCollision.geometryType))
             {
