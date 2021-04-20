@@ -28,7 +28,7 @@ namespace RosSharp.Control
         public float acceleration = 5f;// Units: m/s^2 / degree/s^2
 
         [Tooltip("Color to highlight the currently selected join")]
-        public Color highLightColor = new Color(255, 0, 0, 255);
+        public Color highLightColor = new Color(1.0f, 0, 0, 1.0f);
 
         void Start()
         {
