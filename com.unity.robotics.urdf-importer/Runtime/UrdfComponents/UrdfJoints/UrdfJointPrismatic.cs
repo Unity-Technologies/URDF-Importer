@@ -30,6 +30,7 @@ namespace RosSharp.Urdf
         public static UrdfJoint Create(GameObject linkObject)
         {
             UrdfJointPrismatic urdfJoint = linkObject.AddComponent<UrdfJointPrismatic>();
+#if UNITY_2020_1_OR_NEWER
             urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.PrismaticJoint;
 #else
