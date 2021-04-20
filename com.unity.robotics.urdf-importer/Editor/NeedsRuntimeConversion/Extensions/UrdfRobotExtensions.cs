@@ -54,8 +54,6 @@ namespace RosSharp.Urdf.Editor
             Robot robot = new Robot(filename);
             settings.totalLinks = robot.links.Count;
 
-            settings.totalLinks = robot.links.Count;
-
             if (!UrdfAssetPathHandler.IsValidAssetPath(robot.filename))
             {
                 Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
