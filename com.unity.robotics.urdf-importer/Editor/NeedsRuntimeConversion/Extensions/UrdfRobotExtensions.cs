@@ -47,12 +47,11 @@ namespace RosSharp.Urdf.Editor
 
         #region Import
 
-        public static IEnumerator Create(string filename, ImportSettings settings, bool loadStatus = false)
+        public static IEnumerator<GameObject> Create(string filename, ImportSettings settings, bool loadStatus = false)
         {
             CreateTag();
             importsettings = settings;
             Robot robot = new Robot(filename);
-
             settings.totalLinks = robot.links.Count;
 
             if (!UrdfAssetPathHandler.IsValidAssetPath(robot.filename))
@@ -98,6 +97,8 @@ namespace RosSharp.Urdf.Editor
 
             CorrectAxis(robotGameObject);
             CreateCollisionExceptions(robot, robotGameObject);
+
+            yield return robotGameObject;
         }
 
         public static void CorrectAxis(GameObject robot)

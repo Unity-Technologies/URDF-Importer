@@ -34,6 +34,7 @@ namespace RosSharp.Urdf
 
         private const int RoundDigits = 10;
         private const float MinInertia = 1e-6f;
+        private const float minMass = 0.1f;
 
         public static void Create(GameObject linkObject, Link.Inertial inertial = null)
         {
@@ -46,7 +47,7 @@ namespace RosSharp.Urdf
 #endif
             if (inertial != null)
             {
-                robotLink.mass = (float)inertial.mass;
+                robotLink.mass = ((float)inertial.mass > 0)?((float)inertial.mass):minMass;
                 if (inertial.origin != null) {
                     
                     robotLink.centerOfMass = UrdfOrigin.GetPositionFromUrdf(inertial.origin);
