@@ -116,9 +116,12 @@ namespace RosSharp.Urdf
                 }
             }
 
-            public int AxisofMotion(){
-                for(int i = 0; i < 3; i++){
-                    if(xyz[i] > 0){
+            public int AxisofMotion()
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (xyz[i] > 0)
+                    {
                         return i;
                     }
                 }
@@ -180,9 +183,13 @@ namespace RosSharp.Urdf
                 writer.WriteStartElement("dynamics");
 
                 if (damping != 0)
+                {
                     writer.WriteAttributeString("damping", damping + "");
+                }
                 if (friction != 0)
+                {
                     writer.WriteAttributeString("friction", friction + "");
+                }
 
                 writer.WriteEndElement();
             }
@@ -254,9 +261,13 @@ namespace RosSharp.Urdf
 
                 writer.WriteAttributeString("joint", joint);
                 if (multiplier != 1)
+                {
                     writer.WriteAttributeString("multiplier", multiplier + "");
+                }
                 if (offset != 0)
+                {
                     writer.WriteAttributeString("offset", offset + "");
+                }
 
                 writer.WriteEndElement();
             }
@@ -290,11 +301,17 @@ namespace RosSharp.Urdf
                 writer.WriteStartElement("safetyController");
 
                 if (softLowerLimit != 0)
+                {
                     writer.WriteAttributeString("soft_lower_limit", softLowerLimit + "");
+                }
                 if (softUpperLimit != 0)
+                {
                     writer.WriteAttributeString("soft_upper_limit", softUpperLimit + "");
+                }
                 if (kPosition != 0)
+                {
                     writer.WriteAttributeString("k_position", kPosition + "");
+                }
                 writer.WriteAttributeString("k_velocity", kVelocity + "");
 
                 writer.WriteEndElement();
