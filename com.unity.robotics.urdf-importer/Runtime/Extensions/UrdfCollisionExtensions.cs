@@ -18,7 +18,7 @@ namespace RosSharp.Urdf
 {
     public static class UrdfCollisionExtensions
     {
-        public static UrdfCollision Create(Transform parent, GeometryTypes type, Transform visualToCopy = null)
+        public static void Create(Transform parent, GeometryTypes type, Transform visualToCopy = null)
         {
             GameObject collisionObject = new GameObject("unnamed");
             collisionObject.transform.SetParentAndAlign(parent);
@@ -29,13 +29,9 @@ namespace RosSharp.Urdf
             if (visualToCopy != null)
             {
                 if (urdfCollision.geometryType == GeometryTypes.Mesh)
-                {
                     UrdfGeometryCollision.CreateMatchingMeshCollision(collisionObject.transform, visualToCopy);
-                }
                 else
-                {
                     UrdfGeometryCollision.Create(collisionObject.transform, type);
-                }
 
                 //copy transform values from corresponding UrdfVisual
                 collisionObject.transform.position = visualToCopy.position;
@@ -43,17 +39,14 @@ namespace RosSharp.Urdf
                 collisionObject.transform.rotation = visualToCopy.rotation;
             }
             else
-            {
                 UrdfGeometryCollision.Create(collisionObject.transform, type);
-            }
 
 #if UNITY_EDITOR
             UnityEditor.EditorGUIUtility.PingObject(collisionObject);
 #endif
-            return urdfCollision;
         }
 
-        public static UrdfCollision Create(Transform parent, Link.Collision collision)
+        public static void Create(Transform parent, Link.Collision collision)
         {
             GameObject collisionObject = new GameObject("unnamed");
             collisionObject.transform.SetParentAndAlign(parent);
@@ -61,7 +54,6 @@ namespace RosSharp.Urdf
             urdfCollision.geometryType = UrdfGeometry.GetGeometryType(collision.geometry);
             UrdfGeometryCollision.Create(collisionObject.transform, urdfCollision.geometryType, collision.geometry);
             UrdfOrigin.ImportOriginData(collisionObject.transform, collision.origin);
-            return urdfCollision;
         }
     
         public static Link.Collision ExportCollisionData(this UrdfCollision urdfCollision)
