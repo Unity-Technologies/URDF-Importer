@@ -39,7 +39,7 @@ namespace RosSharp.Urdf
         public void AddElement(XElement element, string key)
         {
             string currentKey = key + elementDelimit + element.Name;
-            if(element.Elements().Count() == 0)
+            if(element.Elements().Count() == 0 && !(element.Value == ""))
                 elements.Add(currentKey,element.Value);
             foreach(XAttribute attribute in element.Attributes())
                 AddAttribute(attribute, currentKey);

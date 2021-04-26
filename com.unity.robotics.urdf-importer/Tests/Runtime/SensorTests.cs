@@ -13,16 +13,16 @@ public class SensorTests
     [Test]
     public void TotalDataTest()
     {
-        int totalData = 11;
+        int totalData = 13;
         XDocument xdoc = XDocument.Load("Assets/test.txt");
         Sensor sensor = new Sensor(xdoc.Element("sensor"));
-        Assert.AreEqual(sensor.elements.Count , totalData);
+        Assert.AreEqual(totalData,sensor.elements.Count);
     }
 
     [Test]
     public void NumberofAttributeTest()
     {
-        int totalAttributes = 3;
+        int totalAttributes = 5;
         int numberofAttributes = 0;
         XDocument xdoc = XDocument.Load("Assets/test.txt");
         Sensor sensor = new Sensor(xdoc.Element("sensor"));
