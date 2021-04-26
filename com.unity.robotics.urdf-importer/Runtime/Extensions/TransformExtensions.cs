@@ -27,14 +27,18 @@ namespace RosSharp
         {
             T component = transform.GetComponent<T>();
             if (component != null)
+            {
                 Object.DestroyImmediate(component);
+            }
         }
 
         public static T AddComponentIfNotExists<T>(this Transform transform) where T : Component
         {
             T component = transform.GetComponent<T>();
             if (component == null)
+            {
                 component = transform.gameObject.AddComponent<T>();
+            }
             return component;
         }
 
@@ -125,7 +129,9 @@ namespace RosSharp
         {
             double[] arr = new double[3];
             for (int i = 0; i < 3; i++)
+            {
                 arr[i] = Math.Round(vector3[i], RoundDigits);
+            }
 
             return arr;
         }
@@ -152,13 +158,20 @@ namespace RosSharp
         public static bool DoubleDeltaCompare(this double[] array, double[] array2, double delta)
         {
             if (array.Length != array2.Length)
+            {
                 return false;
-            for (int i = 0; i < array.Length ; i++)
+            }
+
+            for (int i = 0; i < array.Length; i++)
             {
                 if ((array[i] >= array2[i] - delta) && (array[i] <= array2[i] + delta))
+                {
                     continue;
+                }
                 else
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -173,16 +186,19 @@ namespace RosSharp
         /// <returns></returns>
         public static bool VectorEqualDelta(this Vector3 source, Vector3 exported, double delta)
         {
-            
             return Vector3.SqrMagnitude(source - exported) < delta;
         }
 
         public static bool EqualsDelta(this double first, double second, double delta)
         {
             if (Math.Abs(first - second) <= Math.Abs(delta * first))
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>
@@ -194,9 +210,9 @@ namespace RosSharp
         public static Matrix4x4 Subtract(this Matrix4x4 first, Matrix4x4 second)
         {
             Matrix4x4 result = new Matrix4x4();
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     result[i, j] = first[i, j] - second[i, j];
                 }
@@ -236,6 +252,32 @@ namespace RosSharp
                 first[1, 0] + " " + first[1, 1] + " " + first[1, 2] + " " + first[1, 3] + " " +
                 first[2, 0] + " " + first[2, 1] + " " + first[2, 2] + " " + first[2, 3] + " " +
                 first[3, 0] + " " + first[3, 1] + " " + first[3, 2] + " " + first[3, 3]);
+        }
+
+        /// <summary>
+        /// Recursively searches the entire children hierachy (depth first) to find the child of the game object that matches the query
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="query"> query to test of the child game objects </param>
+        /// <returns>The first child of the game object that matches the query</returns>
+        public static Transform FirstChildByQuery(this Transform parent, Func<Transform, bool> query)
+        {
+            if (parent.childCount == 0)
+            {
+                return null;
+            }
+
+            Transform result = null;
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                var child = parent.GetChild(i);
+                if (query(child))
+                {
+                    return child;
+                }
+                result = FirstChildByQuery(child, query);
+            }
+            return result;
         }
     }
 }
