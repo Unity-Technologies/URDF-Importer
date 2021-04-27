@@ -221,16 +221,28 @@ namespace RosSharp.Urdf
         public static void CorrectAxis(GameObject robot)
         {
             UrdfRobot robotScript = robot.GetComponent<UrdfRobot>();
-            if (robotScript.CheckOrientation())
+            if (robotScript == null) 
+            {
+                Debug.LogError("Robot has no UrdfRobot component attached. Abandon correcting axis");
                 return;
+            }
+
+            if (robotScript.CheckOrientation())
+            {
+                return;
+            }
             Quaternion correctYtoZ = Quaternion.Euler(-90, 0, 90);
             Quaternion correctZtoY = Quaternion.Inverse((correctYtoZ));
             Quaternion correction = new Quaternion();
 
             if (robotScript.choosenAxis == ImportSettings.axisType.zAxis)
+            {
                 correction = correctYtoZ;
+            }
             else
+            {
                 correction = correctZtoY;
+            }
 
             UrdfVisual[] visualMeshList = robot.GetComponentsInChildren<UrdfVisual>();
             UrdfCollision[] collisionMeshList = robot.GetComponentsInChildren<UrdfCollision>();
@@ -241,7 +253,10 @@ namespace RosSharp.Urdf
 
             foreach (UrdfCollision collision in collisionMeshList)
             {
-                collision.transform.localRotation = collision.transform.localRotation * correction;
+                if (robotScript.choosenAxis != ImportSettings.axisType.zAxis) 
+                {
+                    collision.transform.localRotation = collision.transform.localRotation * correction;
+                }
             }
             robotScript.SetOrientation();
         }
