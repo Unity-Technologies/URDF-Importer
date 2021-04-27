@@ -25,9 +25,13 @@ namespace RosSharp.Urdf
         {
             elements = new Dictionary<string, string>();
             foreach(XAttribute attribute in node.Attributes())
+            {
                 AddAttribute(attribute, baseKey);
+            }
             foreach(XElement element in node.Elements())
+            {
                 AddElement(element,baseKey);
+            }
         }
 
         public void AddAttribute(XAttribute attribute, string key)
@@ -40,11 +44,17 @@ namespace RosSharp.Urdf
         {
             string currentKey = key + elementDelimit + element.Name;
             if(element.Elements().Count() == 0 && !(element.Value == ""))
+            {
                 elements.Add(currentKey,element.Value);
+            }
             foreach(XAttribute attribute in element.Attributes())
+            {
                 AddAttribute(attribute, currentKey);
+            }
             foreach(XElement ele in element.Elements())
+            {
                 AddElement(ele,currentKey);
+            }
         }
 
 

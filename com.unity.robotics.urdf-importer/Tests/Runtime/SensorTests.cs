@@ -27,8 +27,12 @@ public class SensorTests
         XDocument xdoc = XDocument.Load("Assets/test.txt");
         Sensor sensor = new Sensor(xdoc.Element("sensor"));
         foreach(var key in sensor.elements.Keys)
+        {
             if(key.Contains("@"))
+            {
                 numberofAttributes++;
+            }
+        }
         Assert.AreEqual(totalAttributes , numberofAttributes);
     }
 
@@ -40,8 +44,12 @@ public class SensorTests
         XDocument xdoc = XDocument.Load("Assets/test.txt");
         Sensor sensor = new Sensor(xdoc.Element("sensor"));
         foreach(var key in sensor.elements.Keys)
+        {
             if(!(key.Contains("@")))
+            {
                 numberofElements++;
+            }
+        }
         Assert.AreEqual(totalElements , numberofElements);
     }
 
@@ -52,8 +60,12 @@ public class SensorTests
         XDocument xdoc = XDocument.Load("Assets/test.txt");
         Sensor sensor = new Sensor(xdoc.Element("sensor"));
         foreach(var value in sensor.elements.Values)
+        {
             if(value == "" || value == null)
+            {
                 emptyValue++;
+            }
+        }
         Assert.AreEqual(emptyValue , 0);       
     }
 }
