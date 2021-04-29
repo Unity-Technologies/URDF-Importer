@@ -56,9 +56,5 @@ namespace RosSharp.Urdf
                 AddElement(ele,currentKey);
             }
         }
-
-
     }
-
-    
 }

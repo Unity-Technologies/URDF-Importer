@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
@@ -10,11 +11,36 @@ using System.Xml.Linq;
 public class SensorTests
 {
     // A Test behaves as an ordinary method
+    private TextReader GetSample()
+    {
+        string sampleDoc = "<sensor name='my_camera' type='camera'>\n" +
+                            "  <camera>\n" +
+                            "    <save enabled=\"true\">\n" +
+                            "      <path>/tmp/camera_save_tutorial</path>\n" +
+                            "    </save>\n" +
+                            "    <horizontal_fov>1.047</horizontal_fov>\n" +
+                            "    <image>\n" +
+                            "      <width>1920</width>\n" +
+                            "      <height>1080</height>\n" +
+                            "    </image>\n" +
+                            "    <clip>\n" +
+                            "      <near>0.1</near>\n" +
+                            "      <far>100</far>\n" +
+                            "    </clip>\n" +
+                            "  </camera>\n" +
+                            "  <always_on>1</always_on>\n" +
+                            "  <update_rate>30</update_rate>\n" +
+                            "  <plugin name='test_plugin' filename='test_filename'>\n" +
+                            "  </plugin>\n" +
+                            "</sensor>\n";
+        return new StringReader(sampleDoc);
+    }
     [Test]
     public void TotalDataTest()
     {
+        
         int totalData = 13;
-        XDocument xdoc = XDocument.Load("Assets/test.txt");
+        XDocument xdoc = XDocument.Load(GetSample());
         Sensor sensor = new Sensor(xdoc.Element("sensor"));
         Assert.AreEqual(totalData,sensor.elements.Count);
     }
@@ -24,7 +50,7 @@ public class SensorTests
     {
         int totalAttributes = 5;
         int numberofAttributes = 0;
-        XDocument xdoc = XDocument.Load("Assets/test.txt");
+        XDocument xdoc = XDocument.Load(GetSample());
         Sensor sensor = new Sensor(xdoc.Element("sensor"));
         foreach(var key in sensor.elements.Keys)
         {
@@ -41,7 +67,7 @@ public class SensorTests
     {
         int totalElements = 8;
         int numberofElements = 0;
-        XDocument xdoc = XDocument.Load("Assets/test.txt");
+        XDocument xdoc = XDocument.Load(GetSample());
         Sensor sensor = new Sensor(xdoc.Element("sensor"));
         foreach(var key in sensor.elements.Keys)
         {
@@ -57,7 +83,7 @@ public class SensorTests
     public void NoEmptyValue()
     {
         int emptyValue = 0;
-        XDocument xdoc = XDocument.Load("Assets/test.txt");
+        XDocument xdoc = XDocument.Load(GetSample());
         Sensor sensor = new Sensor(xdoc.Element("sensor"));
         foreach(var value in sensor.elements.Values)
         {
