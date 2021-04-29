@@ -94,4 +94,75 @@ public class SensorTests
         }
         Assert.AreEqual(emptyValue , 0);       
     }
+
+    [Test]
+    public void CorrectAttributeValues()
+    {
+        XDocument xdoc = XDocument.Load(GetSample());
+        XElement sensor = xdoc.Element("sensor");
+        Assert.IsNotNull(sensor);
+        XAttribute sensorName = sensor.Attribute("name");
+        Assert.IsNotNull(sensorName);
+        Assert.AreEqual(sensorName.Value,"my_camera");
+        XAttribute sensorType = sensor.Attribute("type");
+        Assert.IsNotNull(sensorType);
+        Assert.AreEqual(sensorType.Value,"camera");
+
+        XElement camera = sensor.Element("camera");
+        Assert.IsNotNull(camera);
+
+        XElement save = camera.Element("save");
+        Assert.IsNotNull(save);
+        XAttribute enabled = save.Attribute("enabled");
+        Assert.AreEqual(enabled.Value,"true");
+        XElement path = save.Element("path");
+        Assert.IsNotNull(path);
+        Assert.AreEqual(path.Value,"/tmp/camera_save_tutorial");
+
+        XElement horizontal_fov = camera.Element("horizontal_fov");
+        Assert.IsNotNull(horizontal_fov);
+        Assert.AreEqual(horizontal_fov.Value,"1.047");
+
+        XElement image = camera.Element("image");
+        Assert.IsNotNull(image);
+
+        XElement width = image.Element("width");
+        Assert.IsNotNull(width);
+        Assert.AreEqual(width.Value,"1920");
+
+        XElement height = image.Element("height");
+        Assert.IsNotNull(height);
+        Assert.AreEqual(height.Value,"1080"); 
+
+        XElement clip = camera.Element("clip");
+        Assert.IsNotNull(clip);
+
+        XElement far = clip.Element("far");
+        Assert.IsNotNull(far);
+        Assert.AreEqual(far.Value,"100");
+
+        XElement near = clip.Element("near");
+        Assert.IsNotNull(near);
+        Assert.AreEqual(near.Value, "0.1");
+
+        XElement always_on = sensor.Element("always_on");
+        Assert.IsNotNull(always_on);
+        Assert.AreEqual(always_on.Value,"1");
+
+        XElement updateRate = sensor.Element("update_rate");
+        Assert.IsNotNull(updateRate);
+        Assert.AreEqual(updateRate.Value,"30");
+
+        XElement plugin = sensor.Element("plugin");
+        Assert.IsNotNull(plugin);
+
+        XAttribute pluginName = plugin.Attribute("name");
+        Assert.IsNotNull(pluginName);
+        Assert.AreEqual(pluginName.Value,"test_plugin");
+
+        XAttribute pluginFileName = plugin.Attribute("filename");
+        Assert.IsNotNull(pluginFileName);
+        Assert.AreEqual(pluginFileName.Value,"test_filename");
+
+    }
 }
