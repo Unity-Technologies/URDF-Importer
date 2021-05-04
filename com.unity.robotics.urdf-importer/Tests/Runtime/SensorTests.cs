@@ -55,9 +55,9 @@ namespace  RosSharp.Urdf.Sensors.Test
             int numberofAttributes = 0;
             XDocument xdoc = XDocument.Load(GetSample());
             Sensor sensor = new Sensor(xdoc.Element("sensor"));
-            foreach(var key in sensor.elements.Keys)
+            foreach (var key in sensor.elements.Keys)
             {
-                if(key.Contains("@"))
+                if (key.Contains("@"))
                 {
                     numberofAttributes++;
                 }
@@ -72,9 +72,9 @@ namespace  RosSharp.Urdf.Sensors.Test
             int numberofElements = 0;
             XDocument xdoc = XDocument.Load(GetSample());
             Sensor sensor = new Sensor(xdoc.Element("sensor"));
-            foreach(var key in sensor.elements.Keys)
+            foreach (var key in sensor.elements.Keys)
             {
-                if(!(key.Contains("@")))
+                if (!(key.Contains("@")))
                 {
                     numberofElements++;
                 }
@@ -88,9 +88,9 @@ namespace  RosSharp.Urdf.Sensors.Test
             int emptyValue = 0;
             XDocument xdoc = XDocument.Load(GetSample());
             Sensor sensor = new Sensor(xdoc.Element("sensor"));
-            foreach(var value in sensor.elements.Values)
+            foreach (var value in sensor.elements.Values)
             {
-                if(value == "" || value == null)
+                if (value == "" || value == null)
                 {
                     emptyValue++;
                 }

@@ -27,34 +27,34 @@ namespace RosSharp.Urdf
         public Sensor(XElement node)
         {
             elements = new Dictionary<string, string>();
-            foreach(XAttribute attribute in node.Attributes())
+            foreach (XAttribute attribute in node.Attributes())
             {
-                AddAttribute(attribute, k_baseKey);
+                AddAttribute(attribute, k_BaseKey);
             }
-            foreach(XElement element in node.Elements())
+            foreach (XElement element in node.Elements())
             {
-                AddElement(element,k_baseKey);
+                AddElement(element,k_BaseKey);
             }
         }
 
         public void AddAttribute(XAttribute attribute, string key)
         {
-            string currentKey = key + k_attributeDelimit + attribute.Name;
+            string currentKey = key + k_AttributeDelimit + attribute.Name;
             elements.Add(currentKey, attribute.Value);
         }
 
         public void AddElement(XElement element, string key)
         {
-            string currentKey = key + k_elementDelimit + element.Name;
-            if(element.Elements().Count() == 0 && !(element.Value == ""))
+            string currentKey = key + k_ElementDelimit + element.Name;
+            if (element.Elements().Count() == 0 && !(element.Value == ""))
             {
                 elements.Add(currentKey,element.Value);
             }
-            foreach(XAttribute attribute in element.Attributes())
+            foreach (XAttribute attribute in element.Attributes())
             {
                 AddAttribute(attribute, currentKey);
             }
-            foreach(XElement ele in element.Elements())
+            foreach (XElement ele in element.Elements())
             {
                 AddElement(ele,currentKey);
             }
