@@ -108,7 +108,15 @@ public static class RuntimeURDF
 #if UNITY_EDITOR
         if (!IsRuntimeMode())
         {
-            return AssetDatabase.CreateFolder(parentFolder, newFolderName);
+            if (!AssetDatabase.IsValidFolder($"{parentFolder}/{newFolderName}"))
+            {
+                return AssetDatabase.CreateFolder(parentFolder, newFolderName);
+            }
+            else 
+            {
+                Debug.LogWarning($"{parentFolder}/{newFolderName} already exists!");
+                return $"{parentFolder}/{newFolderName}";
+            }
         }
 #endif
     return "";
@@ -196,6 +204,7 @@ public static class RuntimeURDF
 #if UNITY_EDITOR
         if (!IsRuntimeMode())
         {
+            path = AssetDatabase.GenerateUniqueAssetPath(path);
             AssetDatabase.CreateAsset(asset, path);
         }
 #endif     
