@@ -18,13 +18,11 @@ namespace RosSharp.Urdf
         { get; set; }
         public string topic
         { get; set; }
-        private static string k_baseKey = "sensor";
-        private static string k_attributeDelimit = "@";
-        private static string k_elementDelimit = "/";
-        public int updateRate
-        { get; set; }
-        public Dictionary<string,string> elements
-        { get; set; }
+        private static string k_BaseKey = "sensor";
+        private static string k_AttributeDelimit = "@";
+        private static string k_ElementDelimit = "/";
+        public int updateRate { get; set; }
+        public Dictionary<string,string> elements { get; set; }
 
         public Sensor(XElement node)
         {
