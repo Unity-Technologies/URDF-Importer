@@ -12,12 +12,9 @@ namespace RosSharp.Urdf
 {
     public class Sensor
     {
-        public string name
-        { get; set; }
-        public string type
-        { get; set; }
-        public string topic
-        { get; set; }
+        public string name { get; set; }
+        public string type { get; set; }
+        public string topic { get; set; }
         private static string k_BaseKey = "sensor";
         private static string k_AttributeDelimit = "@";
         private static string k_ElementDelimit = "/";
@@ -36,7 +33,7 @@ namespace RosSharp.Urdf
                 AddElement(element,k_BaseKey);
             }
         }
-
+ 
         public void AddAttribute(XAttribute attribute, string key)
         {
             string currentKey = key + k_AttributeDelimit + attribute.Name;
