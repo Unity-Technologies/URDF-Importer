@@ -108,7 +108,6 @@ namespace RosSharp.Urdf
             Link.Geometry.Cylinder cylinder = new Link.Geometry.Cylinder(0.5, 2); //Default unity cylinder sizes
 
             meshFilter.sharedMesh = CreateCylinderMesh(cylinder);
-
             ConvertMeshToColliders(gameObject, cylinder:true);
 
             return gameObject;
@@ -186,17 +185,9 @@ namespace RosSharp.Urdf
                         if (!RuntimeURDF.IsRuntimeMode())
                         {
                             meshIndex++;
-                            string name;
-                            if (!cylinder)
-                            {
-                                name = $"{filePath}/{templateFileName}_{meshIndex}.asset";
-                            }
-                            else
-                            {
-                                name = $"{filePath}/{templateFileName}.asset";
-                            }
+                            string name = (cylinder) ? $"{filePath}/{templateFileName}.asset" : $"{filePath}/{templateFileName}_{meshIndex}.asset";
                             Debug.Log($"Creating new mesh file: {name}");
-                            RuntimeURDF.AssetDatabase_CreateAsset(collider, name);
+                            RuntimeURDF.AssetDatabase_CreateAsset(collider, name, uniquePath: cylinder);
                             RuntimeURDF.AssetDatabase_SaveAssets();
                         }
                         MeshCollider current = child.AddComponent<MeshCollider>();

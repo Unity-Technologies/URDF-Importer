@@ -114,7 +114,7 @@ public static class RuntimeURDF
             }
             else 
             {
-                Debug.LogWarning($"{parentFolder}/{newFolderName} already exists!");
+                Debug.LogWarning($"{parentFolder}/{newFolderName} already exists: not creating a new directory.");
                 return $"{parentFolder}/{newFolderName}";
             }
         }
@@ -199,12 +199,15 @@ public static class RuntimeURDF
         return default(T);
     }
 
-    public static void AssetDatabase_CreateAsset(UnityEngine.Object asset, string path) 
+    public static void AssetDatabase_CreateAsset(UnityEngine.Object asset, string path, bool uniquePath = false) 
     {
 #if UNITY_EDITOR
         if (!IsRuntimeMode())
         {
-            path = AssetDatabase.GenerateUniqueAssetPath(path);
+            if (uniquePath)
+            {
+                path = AssetDatabase.GenerateUniqueAssetPath(path);
+            }
             AssetDatabase.CreateAsset(asset, path);
         }
 #endif     
