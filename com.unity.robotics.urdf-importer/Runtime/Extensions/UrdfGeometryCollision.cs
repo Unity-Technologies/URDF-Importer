@@ -108,9 +108,35 @@ namespace RosSharp.Urdf
             Link.Geometry.Cylinder cylinder = new Link.Geometry.Cylinder(0.5, 2); //Default unity cylinder sizes
 
             meshFilter.sharedMesh = CreateCylinderMesh(cylinder);
-            ConvertMeshToColliders(gameObject, cylinder:true);
+            ConvertCylinderToCollider(meshFilter);
 
             return gameObject;
+        }
+
+        private static void ConvertCylinderToCollider(MeshFilter filter)
+        {
+            GameObject go = filter.gameObject;
+            VHACD decomposer = go.AddComponent<VHACD>();
+            List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(filter.sharedMesh);
+            foreach (Mesh collider in colliderMeshes)
+            {
+                // Only create an asset if not runtime import
+                if (!RuntimeURDF.IsRuntimeMode())
+                {
+                    var packageRoot = UrdfAssetPathHandler.GetPackageRoot();
+                    var filePath = RuntimeURDF.AssetDatabase_GUIDToAssetPath(RuntimeURDF.AssetDatabase_CreateFolder($"{packageRoot}", "meshes"));
+                    var name =$"{filePath}/Cylinder.asset";
+                    Debug.Log($"Creating new cylinder file: {name}");
+                    RuntimeURDF.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
+                    RuntimeURDF.AssetDatabase_SaveAssets();    
+                }
+                MeshCollider current = go.AddComponent<MeshCollider>();
+                current.sharedMesh = collider;
+                current.convex = true;
+            }
+            Component.DestroyImmediate(go.GetComponent<VHACD>());
+            Object.DestroyImmediate(go.GetComponent<MeshRenderer>());
+            Object.DestroyImmediate(filter);
         }
 
         public static void CreateMatchingMeshCollision(Transform parent, Transform visualToCopy)
@@ -139,7 +165,7 @@ namespace RosSharp.Urdf
             collisionObject.transform.SetParentAndAlign(parent);
         }
 
-        private static void ConvertMeshToColliders(GameObject gameObject, string location = null, bool setConvex = true, bool cylinder = false)
+        private static void ConvertMeshToColliders(GameObject gameObject, string location = null, bool setConvex = true)
         {
             MeshFilter[] meshFilters = gameObject.GetComponentsInChildren<MeshFilter>();
             if (UrdfRobotExtensions.importsettings.convexMethod == ImportSettings.convexDecomposer.unity)
@@ -167,13 +193,6 @@ namespace RosSharp.Urdf
                     templateFileName = Path.GetFileNameWithoutExtension(meshFilePath);
                     filePath = Path.GetDirectoryName(meshFilePath);
                 }
-                else if (cylinder) 
-                {
-                    filePath = "Assets/URDF/GeneratedMeshes";
-                    templateFileName = "Cylinder";
-                    RuntimeURDF.AssetDatabase_CreateFolder("Assets", "URDF");
-                    RuntimeURDF.AssetDatabase_CreateFolder("Assets/URDF", "GeneratedMeshes");
-                }
 
                 foreach (MeshFilter meshFilter in meshFilters)
                 {                  
@@ -185,9 +204,9 @@ namespace RosSharp.Urdf
                         if (!RuntimeURDF.IsRuntimeMode())
                         {
                             meshIndex++;
-                            string name = (cylinder) ? $"{filePath}/{templateFileName}.asset" : $"{filePath}/{templateFileName}_{meshIndex}.asset";
+                            string name = $"{filePath}/{templateFileName}_{meshIndex}.asset";
                             Debug.Log($"Creating new mesh file: {name}");
-                            RuntimeURDF.AssetDatabase_CreateAsset(collider, name, uniquePath: cylinder);
+                            RuntimeURDF.AssetDatabase_CreateAsset(collider, name);
                             RuntimeURDF.AssetDatabase_SaveAssets();
                         }
                         MeshCollider current = child.AddComponent<MeshCollider>();

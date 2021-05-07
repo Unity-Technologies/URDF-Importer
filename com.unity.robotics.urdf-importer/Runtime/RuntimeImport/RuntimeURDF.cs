@@ -15,7 +15,7 @@ public static class RuntimeURDF
     public static bool runtimeModeEnabled = false;
 #else
     public static bool runtimeModeEnabled = true;
-#endif
+#endif    
     public static bool IsRuntimeMode() 
     {
         return runtimeModeEnabled;
@@ -114,8 +114,8 @@ public static class RuntimeURDF
             }
             else 
             {
-                Debug.LogWarning($"{parentFolder}/{newFolderName} already exists: not creating a new directory.");
-                return $"{parentFolder}/{newFolderName}";
+                Debug.LogWarning($"{parentFolder}/{newFolderName} cannot be created! It may already exist.");
+                return AssetDatabase.GUIDFromAssetPath($"{parentFolder}/{newFolderName}").ToString();
             }
         }
 #endif
