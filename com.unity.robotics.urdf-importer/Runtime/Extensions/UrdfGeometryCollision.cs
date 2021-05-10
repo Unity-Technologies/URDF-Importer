@@ -116,25 +116,20 @@ namespace RosSharp.Urdf
         private static void ConvertCylinderToCollider(MeshFilter filter)
         {
             GameObject go = filter.gameObject;
-            VHACD decomposer = go.AddComponent<VHACD>();
-            List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(filter.sharedMesh);
-            foreach (Mesh collider in colliderMeshes)
+            var collider = filter.sharedMesh;
+            // Only create an asset if not runtime import
+            if (!RuntimeURDF.IsRuntimeMode())
             {
-                // Only create an asset if not runtime import
-                if (!RuntimeURDF.IsRuntimeMode())
-                {
-                    var packageRoot = UrdfAssetPathHandler.GetPackageRoot();
-                    var filePath = RuntimeURDF.AssetDatabase_GUIDToAssetPath(RuntimeURDF.AssetDatabase_CreateFolder($"{packageRoot}", "meshes"));
-                    var name =$"{filePath}/Cylinder.asset";
-                    Debug.Log($"Creating new cylinder file: {name}");
-                    RuntimeURDF.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
-                    RuntimeURDF.AssetDatabase_SaveAssets();    
-                }
-                MeshCollider current = go.AddComponent<MeshCollider>();
-                current.sharedMesh = collider;
-                current.convex = true;
+                var packageRoot = UrdfAssetPathHandler.GetPackageRoot();
+                var filePath = RuntimeURDF.AssetDatabase_GUIDToAssetPath(RuntimeURDF.AssetDatabase_CreateFolder($"{packageRoot}", "meshes"));
+                var name =$"{filePath}/Cylinder.asset";
+                Debug.Log($"Creating new cylinder file: {name}");
+                RuntimeURDF.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
+                RuntimeURDF.AssetDatabase_SaveAssets();    
             }
-            Component.DestroyImmediate(go.GetComponent<VHACD>());
+            MeshCollider current = go.AddComponent<MeshCollider>();
+            current.sharedMesh = collider;
+            current.convex = true;
             Object.DestroyImmediate(go.GetComponent<MeshRenderer>());
             Object.DestroyImmediate(filter);
         }
