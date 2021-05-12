@@ -17,6 +17,7 @@ public class RuntimeURDFTests
     [Test]
     public void AssetDatabase_CreateFolder_AssetAsRoot()
     {
+        RuntimeURDF.runtimeModeEnabled = false;
         string testPath = "Assets/Tests/Runtime/RuntimeURDF";
         RuntimeURDF.AssetDatabase_CreateFolder("Assets", "Tests");
         RuntimeURDF.AssetDatabase_CreateFolder("Assets/Tests", "Runtime");

@@ -18,6 +18,17 @@ namespace RosSharp.Urdf.Tests
             RuntimeURDF.AssetDatabase_CreateFolder("Assets/Tests", "Runtime");
             RuntimeURDF.AssetDatabase_CreateFolder("Assets/Tests/Runtime", "GeometryTests");
         }
+
+        [Test]
+        public void Create_Box_UnityPrimitive()
+        {
+            var parent = new GameObject("Parent").transform;
+            UrdfGeometryCollision.Create(parent, GeometryTypes.Box);
+            
+            // Verify geometry created in Hierarchy
+            Assert.IsNotNull(GameObject.Find("Box").activeInHierarchy);
+            Assert.IsNotNull(GameObject.Find("Box").GetComponent<BoxCollider>());
+        }
         
         [Test]
         public void Create_CylinderMesh_AssetCreated()
@@ -31,8 +42,31 @@ namespace RosSharp.Urdf.Tests
             
             // Verify Cylinder created in Hierarchy
             Assert.IsNotNull(GameObject.Find("Cylinder").activeInHierarchy);
+            Assert.IsNotNull(GameObject.Find("Cylinder").GetComponent<MeshCollider>());
             // Verify Cylinder created in Assets
             Assert.IsNotNull(RuntimeURDF.AssetDatabase_FindAssets("Cylinder t:mesh", new string[] {"Assets/Tests/Runtime/GeometryTests"}));
+        }
+
+        [Test]
+        public void Create_Sphere_UnityPrimitive()
+        {
+            var parent = new GameObject("Parent").transform;
+            UrdfGeometryCollision.Create(parent, GeometryTypes.Sphere);
+            
+            // Verify geometry created in Hierarchy
+            Assert.IsNotNull(GameObject.Find("Sphere").activeInHierarchy);
+            Assert.IsNotNull(GameObject.Find("Sphere").GetComponent<SphereCollider>());
+        }
+
+        [Test]
+        public void Create_Mesh_UnityPrimitive()
+        {
+            var parent = new GameObject("Parent").transform;
+            UrdfGeometryCollision.Create(parent, GeometryTypes.Mesh);
+            
+            // Verify geometry created in Hierarchy
+            Assert.IsNotNull(GameObject.Find("Mesh").activeInHierarchy);
+            Assert.IsNotNull(GameObject.Find("Mesh").GetComponent<MeshCollider>());
         }
 
         [TearDown]
