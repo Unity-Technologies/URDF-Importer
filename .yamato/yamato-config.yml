@@ -22,9 +22,7 @@ triggers:
         (pull_request.target eq "main"  AND
         NOT pull_request.push.changes.all match "**/*.md") OR
         (pull_request.target eq "dev"  AND
-        NOT pull_request.push.changes.all match "**/*.md") OR
-        (push.branch eq "dev" AND
-        NOT push.changes.all match "**/*.md")
+        NOT pull_request.push.changes.all match "**/*.md")
 artifacts:
     logs:
         paths:
