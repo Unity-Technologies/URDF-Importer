@@ -15,7 +15,7 @@ public static class RuntimeURDF
     public static bool runtimeModeEnabled = false;
 #else
     public static bool runtimeModeEnabled = true;
-#endif
+#endif    
     public static bool IsRuntimeMode() 
     {
         return runtimeModeEnabled;
@@ -108,7 +108,15 @@ public static class RuntimeURDF
 #if UNITY_EDITOR
         if (!IsRuntimeMode())
         {
-            return AssetDatabase.CreateFolder(parentFolder, newFolderName);
+            if (!AssetDatabase.IsValidFolder($"{parentFolder}/{newFolderName}"))
+            {
+                return AssetDatabase.CreateFolder(parentFolder, newFolderName);
+            }
+            else 
+            {
+                Debug.LogWarning($"{parentFolder}/{newFolderName} cannot be created! It may already exist.");
+                return AssetDatabase.GUIDFromAssetPath($"{parentFolder}/{newFolderName}").ToString();
+            }
         }
 #endif
     return "";
@@ -191,11 +199,15 @@ public static class RuntimeURDF
         return default(T);
     }
 
-    public static void AssetDatabase_CreateAsset(UnityEngine.Object asset, string path) 
+    public static void AssetDatabase_CreateAsset(UnityEngine.Object asset, string path, bool uniquePath = false) 
     {
 #if UNITY_EDITOR
         if (!IsRuntimeMode())
         {
+            if (uniquePath)
+            {
+                path = AssetDatabase.GenerateUniqueAssetPath(path);
+            }
             AssetDatabase.CreateAsset(asset, path);
         }
 #endif     
