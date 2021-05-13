@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using RosSharp;
 
-public class MathTests
+public class Matrix3x3Tests
 {
     [Test]
-    public void CreateMatrix3x3()
+    public void Matrix3x3_Instantiations_All()
     {
         var zeroMatrix = new Matrix3x3(0f);
 
@@ -20,7 +20,7 @@ public class MathTests
     }
 
     [Test]
-    public void Indexing()
+    public void Member_Indexing()
     {
         var m = new Matrix3x3();
         Assert.IsNotNull(m[0]);
@@ -28,7 +28,7 @@ public class MathTests
     }
 
     [Test]
-    public void OperatorOverrides()
+    public void OperatorOverrides_Arithmetic()
     {
         var zeroMatrix = new Matrix3x3(0f);
         var oneMatrix = new Matrix3x3(1f);
@@ -60,22 +60,27 @@ public class MathTests
 
         // Determinant
         Assert.AreEqual(1f, identity.Determinant());
+
         // Trace
         Assert.AreEqual(3f, identity.Trace());
+
         // IsDiagonal
         Assert.IsTrue(identity.IsDiagonal());
         Assert.IsFalse(nonDiag.IsDiagonal());
+
         // Transpose
         Assert.AreEqual(identity.elements, identity.Transpose().elements);
         Assert.AreEqual(nonDiagT.elements, nonDiag.Transpose().elements);
+
         // DiagonalizeRealSymmetric
+        // Identity
         Vector3 values;
         Vector3[] vectors;
         identity.DiagonalizeRealSymmetric(out values, out vectors);
         Assert.AreEqual(Vector3.one, values);
         Assert.AreEqual(new Vector3[] {new Vector3(1, 0, 0), new Vector3(0, 1, 0), new Vector3(0, 0, 1)}, vectors);
 
-        // TODO
+        // Non-identity
         Vector3 nonDiagValues;
         Vector3[] nonDiagVectors;
         eigenTest.DiagonalizeRealSymmetric(out nonDiagValues, out nonDiagVectors);

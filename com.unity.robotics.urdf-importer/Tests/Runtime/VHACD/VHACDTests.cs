@@ -9,7 +9,7 @@ using MeshProcess;
 public class VHACDTests
 {
     [Test]
-    public void GenerateConvexNullMeshes()
+    public void GenerateConvexMeshes_Cylinder_NullInput()
     {
         // Create primitive cylinder with VHACD
         GameObject geometryGameObject = new GameObject("Cylinder");
@@ -30,7 +30,7 @@ public class VHACDTests
     }
 
     [Test]
-    public void GenerateConvexMeshes()
+    public void GenerateConvexMeshes_Cylinder_MeshInput()
     {
         // Create primitive cylinder with VHACD
         GameObject geometryGameObject = new GameObject("Cylinder");
