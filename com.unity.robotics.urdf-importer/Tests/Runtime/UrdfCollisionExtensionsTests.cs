@@ -9,7 +9,7 @@ using RosSharp.Urdf;
 
 namespace RosSharp.Urdf.Tests
 {
-    public class UrdfCollisionExtensionsTest
+    public class UrdfCollisionExtensionsTests
     {
         [Test]
         public void Create_Geometry_Box()
