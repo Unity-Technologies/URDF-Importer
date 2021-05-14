@@ -45,12 +45,6 @@ public class RuntimeURDFTests
         Assert.IsNotNull(RuntimeURDF.AssetDatabase_LoadAssetAtPath<UnityEngine.Object>(path));
     }
 
-    // [Test]
-    // public void EditorUtility_DisplayDialogComplex_EditorMode()
-    // {
-    //     Assert.IsTrue(RuntimeURDF.EditorUtility_DisplayDialogComplex("Title", "Message", "Ok", "Cancel", "Alt") >= 0);
-    // }
-
     [Test]
     public void AssetDatabase_LoadAssetAtPath_Object()
     {
@@ -58,26 +52,6 @@ public class RuntimeURDFTests
         string path = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/RuntimeImport/RuntimeURDFTests.cs";
         Assert.IsNotNull(RuntimeURDF.AssetDatabase_LoadAssetAtPath(path, typeof(UnityEngine.Object)));
     }
-
-    // [Test]
-    // public void EditorUtility_OpenFolderPanel_EditorMode()
-    // {
-    //     string path = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/RuntimeImport";
-    //     Assert.IsTrue(RuntimeURDF.EditorUtility_OpenFolderPanel("Title", path, "").Length >= 0);
-    // }
-
-    // [Test]
-    // public void EditorUtility_OpenFilePanel_EditorMode()
-    // {
-    //     string path = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/RuntimeImport";
-    //     Assert.IsTrue(RuntimeURDF.EditorUtility_OpenFilePanel("Title", path, "cs").Length >= 0);
-    // }
-
-    // [Test]
-    // public void EditorUtility_DisplayDialog_EditorMode()
-    // {
-    //     Assert.IsTrue(RuntimeURDF.EditorUtility_DisplayDialog("Title", "Message", "Ok", "Cancel"));
-    // }
 
     [Test]
     public void AssetDatabase_IsValidFolder_EditorMode()
