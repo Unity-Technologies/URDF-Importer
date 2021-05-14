@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "UnityEngine.TestRunner",
-        "Unity.Robotics.URDFImporter"
+        "Unity.Robotics.URDFImporter",
+        "vhacd"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
