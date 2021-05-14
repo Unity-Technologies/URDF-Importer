@@ -24,16 +24,22 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void ExportGeometryData_Box()
+        public void ExportGeometryData_Box_DefaultGeometry()
         {
             var parent = new GameObject("Parent").transform;
             UrdfGeometryCollision.Create(parent, GeometryTypes.Box);
             var t = parent.transform.Find("Box");
-            Assert.IsNotNull(UrdfGeometry.ExportGeometryData(GeometryTypes.Box, t));
+            var export = UrdfGeometry.ExportGeometryData(GeometryTypes.Box, t);
+            Assert.IsNotNull(export);
+            Assert.AreEqual(new double[] {1, 1, 1}, export.box.size);
+            Assert.AreEqual(typeof(Link.Geometry.Box), export.box.GetType());
+            Assert.IsNull(export.cylinder);
+            Assert.IsNull(export.sphere);
+            Assert.IsNull(export.mesh);
         }
 
         [Test]
-        public void ExportGeometryData_Cylinder()
+        public void ExportGeometryData_Cylinder_DefaultGeometry()
         {
             // Force runtime mode to avoid creating asset file
             RuntimeURDF.runtimeModeEnabled = true;
@@ -41,20 +47,33 @@ namespace RosSharp.Urdf.Tests
             UrdfGeometryCollision.Create(parent, GeometryTypes.Cylinder);
 
             var t = parent.transform.Find("Cylinder");
-            Assert.IsNotNull(UrdfGeometry.ExportGeometryData(GeometryTypes.Cylinder, t));
+            var export = UrdfGeometry.ExportGeometryData(GeometryTypes.Cylinder, t);
+            Assert.IsNotNull(export);
+            Assert.AreEqual(0.5, export.cylinder.radius);
+            Assert.AreEqual(2, export.cylinder.length);
+            Assert.AreEqual(typeof(Link.Geometry.Cylinder), export.cylinder.GetType());
+            Assert.IsNull(export.box);
+            Assert.IsNull(export.sphere);
+            Assert.IsNull(export.mesh);
         }
 
         [Test]
-        public void ExportGeometryData_Sphere()
+        public void ExportGeometryData_Sphere_DefaultGeometry()
         {
             var parent = new GameObject("Parent").transform;
             UrdfGeometryCollision.Create(parent, GeometryTypes.Sphere);
             var t = parent.transform.Find("Sphere");
-            Assert.IsNotNull(UrdfGeometry.ExportGeometryData(GeometryTypes.Sphere, t));
+            var export = UrdfGeometry.ExportGeometryData(GeometryTypes.Sphere, t);
+            Assert.IsNotNull(export);
+            Assert.AreEqual(0.5, export.sphere.radius);
+            Assert.AreEqual(typeof(Link.Geometry.Sphere), export.sphere.GetType());
+            Assert.IsNull(export.box);
+            Assert.IsNull(export.cylinder);
+            Assert.IsNull(export.mesh);
         }
 
         [Test]
-        public void GetGeometryTypes_All()
+        public void GetGeometryTypes_All_DefaultEnums()
         {
             Assert.AreEqual(GeometryTypes.Box, UrdfGeometry.GetGeometryType(box));
             Assert.AreEqual(GeometryTypes.Cylinder, UrdfGeometry.GetGeometryType(cylinder));
@@ -62,7 +81,7 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void SetScale_Box()
+        public void SetScale_Box_IncreaseLocalScale()
         {
             var parent = new GameObject("Parent").transform;
             UrdfGeometry.SetScale(parent, box, UrdfGeometry.GetGeometryType(box));
@@ -70,7 +89,7 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void SetScale_Cylinder()
+        public void SetScale_Cylinder_IncreaseLocalScale()
         {
             var parent = new GameObject("Parent").transform;
             UrdfGeometry.SetScale(parent, cylinder, UrdfGeometry.GetGeometryType(cylinder));
@@ -78,7 +97,7 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void SetScale_Sphere()
+        public void SetScale_Sphere_IncreaseLocalScale()
         {
             var parent = new GameObject("Parent").transform;
             UrdfGeometry.SetScale(parent, sphere, UrdfGeometry.GetGeometryType(sphere));
@@ -86,14 +105,14 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void IsTransformed_False()
+        public void IsTransformed_Default_False()
         {
             var parent = new GameObject("Parent").transform;
             Assert.IsFalse(UrdfGeometry.IsTransformed(parent, UrdfGeometry.GetGeometryType(box)));
         }
 
         [Test]
-        public void IsTransformed_Position()
+        public void IsTransformed_Position_True()
         {
             var parent = new GameObject("Parent").transform;
             parent.transform.localPosition = Vector3.one;
@@ -101,7 +120,7 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void IsTransformed_Scale()
+        public void IsTransformed_Scale_True()
         {
             var parent = new GameObject("Parent").transform;
             parent.transform.localScale = Vector3.one * 2f;
@@ -109,7 +128,7 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void IsTransformed_Rotation()
+        public void IsTransformed_Rotation_True()
         {
             var parent = new GameObject("Parent").transform;
             parent.transform.localRotation = Quaternion.Euler(0, 30, 0);
