@@ -56,14 +56,12 @@ namespace RosSharp.Urdf
         protected int defaultFriction = 0;
 
         public static void Create(GameObject linkObject, JointTypes jointType, Joint joint = null)
-        { 
-            #if UNITY_2020_1_OR_NEWER 
-             //ArticulationBody parentRigidbody = linkObject.transform.parent.gameObject.GetComponent<ArticulationBody>();
+        {
+#if UNITY_2020_1_OR_NEWER
 #else
             Rigidbody parentRigidbody = linkObject.transform.parent.gameObject.GetComponent<Rigidbody>();
             if (parentRigidbody == null) return;
 #endif
-
             UrdfJoint urdfJoint = AddCorrectJointType(linkObject, jointType);
 
             if (joint != null)

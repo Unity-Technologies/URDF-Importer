@@ -25,7 +25,7 @@ namespace RosSharp.Urdf
         {
             UrdfJointPlanar urdfJoint = linkObject.AddComponent<UrdfJointPlanar>();
 #if UNITY_2020_1_OR_NEWER
-            urdfJoint.unityJoint = linkObject.AddComponent<ArticulationBody>();
+            urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.PrismaticJoint;
 #else
             urdfJoint.unityJoint = linkObject.AddComponent<ConfigurableJoint>();
