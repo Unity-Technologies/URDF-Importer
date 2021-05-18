@@ -195,32 +195,29 @@ namespace RosSharp.Urdf
             return new Vector3(-1, 0, 0);
         }
 
-        protected static JointDrive GetJointDrive(Joint.Dynamics dynamics)
-        {
-            return new JointDrive
-            {
-                maximumForce = float.MaxValue,
-                positionDamper = (float)dynamics.damping,
-                positionSpring = (float)dynamics.friction
-            };
-        }
-
-        protected static JointSpring GetJointSpring(Joint.Dynamics dynamics)
-        {
-            return new JointSpring
-            {
-                damper = (float)dynamics.damping,
-                spring = (float)dynamics.friction,
-                targetPosition = 0
-            };
-        }
-
-        protected static SoftJointLimit GetLinearLimit(Joint.Limit limit)
-        {
-            return new SoftJointLimit { limit = (float)limit.upper };
-        }
-
         protected virtual void AdjustMovement(Joint joint) {}
+
+        protected void SetDynamics(Joint.Dynamics dynamics)
+        {
+            if (unityJoint == null)
+            {
+                unityJoint = GetComponent<ArticulationBody>();
+            }
+
+            if (dynamics != null)
+            {
+                float damping = (double.IsNaN(dynamics.damping)) ? defaultDamping : (float)dynamics.damping;
+                unityJoint.linearDamping = damping;
+                unityJoint.angularDamping = damping;
+                unityJoint.jointFriction = (double.IsNaN(dynamics.friction)) ? defaultFriction : (float)dynamics.friction;
+            }
+            else
+            {
+                unityJoint.linearDamping = defaultDamping;
+                unityJoint.angularDamping = defaultDamping;
+                unityJoint.jointFriction = defaultFriction;
+            }
+        }
 
         #endregion
 

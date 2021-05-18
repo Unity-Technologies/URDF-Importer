@@ -5,6 +5,15 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using RosSharp.Urdf;
 
+public class TestUrdfJoint : UrdfJoint
+{
+    public override JointTypes JointType => throw new System.NotImplementedException();
+
+    public static Vector3 Axis(RosSharp.Urdf.Joint.Axis axis) => GetAxis(axis);
+    public static Vector3 DefaultAxis() => GetDefaultAxis();
+    public void Dynamics(RosSharp.Urdf.Joint.Dynamics dynamics) => SetDynamics(dynamics);
+}
+
 public class UrdfJointTests
 {
 #if UNITY_2020_1_OR_NEWER
@@ -144,4 +153,85 @@ public class UrdfJointTests
         Object.DestroyImmediate(linkObject);
     }
 #endif
+
+#if UNITY_2020_1_OR_NEWER
+    [Test]
+    public void ChangeJointType_FromFixedToRevolute()
+    {
+        GameObject baseLink = new GameObject("base");
+        GameObject linkObject = new GameObject("link");
+        linkObject.transform.parent = baseLink.transform;
+
+        UrdfJoint.Create(baseLink, UrdfJoint.JointTypes.Fixed);
+        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Fixed);
+        ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
+
+        Assert.AreEqual(ArticulationJointType.FixedJoint, articulationBody.jointType);
+        Assert.AreEqual(0, articulationBody.dofCount);
+
+        UrdfJoint.ChangeJointType(linkObject, UrdfJoint.JointTypes.Revolute);
+        articulationBody = linkObject.GetComponent<ArticulationBody>();
+
+        Assert.AreEqual(ArticulationJointType.RevoluteJoint, articulationBody.jointType);
+        Assert.AreEqual(1, articulationBody.dofCount);
+
+        Object.DestroyImmediate(linkObject);
+    }
+#endif
+
+    [Test]
+    public void GetJointType_AllJointTypes()
+    {
+        Assert.AreEqual(UrdfJoint.JointTypes.Fixed, UrdfJoint.GetJointType("fixed"));
+        Assert.AreEqual(UrdfJoint.JointTypes.Continuous, UrdfJoint.GetJointType("continuous"));
+        Assert.AreEqual(UrdfJoint.JointTypes.Revolute, UrdfJoint.GetJointType("revolute"));
+        Assert.AreEqual(UrdfJoint.JointTypes.Floating, UrdfJoint.GetJointType("floating"));
+        Assert.AreEqual(UrdfJoint.JointTypes.Prismatic, UrdfJoint.GetJointType("prismatic"));
+        Assert.AreEqual(UrdfJoint.JointTypes.Planar, UrdfJoint.GetJointType("planar"));
+        Assert.AreEqual(UrdfJoint.JointTypes.Fixed, UrdfJoint.GetJointType("unknown"));
+    }
+
+    [Test]
+    public void GetAxis_JointAxis()
+    {
+        var axis = new RosSharp.Urdf.Joint.Axis(new double[] { 1, 2, 3 });
+        Assert.AreEqual(new Vector3(-2, 3, 1), TestUrdfJoint.Axis(axis));
+    }
+
+    [Test]
+    public void GetDefaultAxis_JointAxis()
+    {
+        Assert.AreEqual(new Vector3(-1, 0, 0), TestUrdfJoint.DefaultAxis());
+    }
+
+    [Test]
+    public void SetDynamics_Success()
+    {
+        var dynamics = new RosSharp.Urdf.Joint.Dynamics(1, 2);
+        GameObject linkObject = new GameObject("link");
+        var joint = linkObject.AddComponent<TestUrdfJoint>();
+        joint.Dynamics(dynamics);
+
+        var articulationBody = linkObject.GetComponent<ArticulationBody>();
+        Assert.AreEqual(1, articulationBody.linearDamping);
+        Assert.AreEqual(1, articulationBody.angularDamping);
+        Assert.AreEqual(2, articulationBody.jointFriction);
+
+        Object.DestroyImmediate(linkObject);
+    }
+
+    [Test]
+    public void SetDynamics_DefaultDynamics()
+    {
+        GameObject linkObject = new GameObject("link");
+        var joint = linkObject.AddComponent<TestUrdfJoint>();
+        joint.Dynamics(null);
+
+        var articulationBody = linkObject.GetComponent<ArticulationBody>();
+        Assert.AreEqual(0, articulationBody.linearDamping);
+        Assert.AreEqual(0, articulationBody.angularDamping);
+        Assert.AreEqual(0, articulationBody.jointFriction);
+
+        Object.DestroyImmediate(linkObject);
+    }
 }
