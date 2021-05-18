@@ -56,7 +56,6 @@ public class UrdfJointTests
 #endif
 
 #if UNITY_2020_1_OR_NEWER
-    // TODO: (pjing) add more unit tests for the create methods with RosSharp.Urdf.Joint when testing specific joint types
     [Test]
     public void Create_ContinuousArticulationBody()
     {
@@ -76,7 +75,6 @@ public class UrdfJointTests
 #endif
 
 #if UNITY_2020_1_OR_NEWER
-    // TODO: (pjing) add more unit tests for the create methods with RosSharp.Urdf.Joint when testing specific joint types
     [Test]
     public void Create_FloatingArticulationBody()
     {
@@ -96,7 +94,6 @@ public class UrdfJointTests
 #endif
 
 #if UNITY_2020_1_OR_NEWER
-    // TODO: (pjing) add more unit tests for the create methods with RosSharp.Urdf.Joint when testing specific joint types
     [Test]
     public void Create_PlanarArticulationBody()
     {
@@ -116,7 +113,6 @@ public class UrdfJointTests
 #endif
 
 #if UNITY_2020_1_OR_NEWER
-    // TODO: (pjing) add more unit tests for the create methods with RosSharp.Urdf.Joint when testing specific joint types
     [Test]
     public void Create_RevoluteArticulationBody()
     {
@@ -136,7 +132,6 @@ public class UrdfJointTests
 #endif
 
 #if UNITY_2020_1_OR_NEWER
-    // TODO: (pjing) add more unit tests for the create methods with RosSharp.Urdf.Joint when testing specific joint types
     [Test]
     public void Create_PrismaticArticulationBody()
     {
@@ -151,6 +146,25 @@ public class UrdfJointTests
         Assert.AreEqual(UrdfJoint.JointTypes.Prismatic, urdfJoint.JointType);
         Assert.AreEqual(ArticulationJointType.PrismaticJoint, articulationBody.jointType);
 
+        Object.DestroyImmediate(linkObject);
+    }
+#endif
+
+#if UNITY_2020_1_OR_NEWER
+    [Test]
+    public void Create_WithJointData()
+    {
+        GameObject baseObject = new GameObject("base");
+        GameObject linkObject = new GameObject("link");
+        linkObject.transform.parent = baseObject.transform;
+
+        var joint = new RosSharp.Urdf.Joint("custom_name", "revolute", "base", "link");
+        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Prismatic, joint);
+        UrdfJoint urdfJoint = linkObject.GetComponent<UrdfJointPrismatic>();
+
+        Assert.AreEqual("custom_name", urdfJoint.jointName);
+
+        Object.DestroyImmediate(baseObject);
         Object.DestroyImmediate(linkObject);
     }
 #endif
