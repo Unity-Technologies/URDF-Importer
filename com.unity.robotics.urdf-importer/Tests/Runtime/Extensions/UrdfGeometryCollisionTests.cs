@@ -31,7 +31,7 @@ namespace RosSharp.Urdf.Tests
             
             // Verify geometry created in Hierarchy
             var box = parent.Find("Box").gameObject;
-            Assert.IsNotNull(box.activeInHierarchy);
+            Assert.IsTrue(box.activeInHierarchy);
             Assert.IsNotNull(box.GetComponent<BoxCollider>());
             Assert.AreEqual(new Bounds(Vector3.zero, Vector3.one), box.GetComponent<BoxCollider>().bounds);
 
@@ -50,7 +50,7 @@ namespace RosSharp.Urdf.Tests
             
             // Verify Cylinder created in Hierarchy
             var createdCylinder = parent.Find("Cylinder").gameObject;
-            Assert.IsNotNull(createdCylinder.activeInHierarchy);
+            Assert.IsTrue(createdCylinder.activeInHierarchy);
             Assert.IsNotNull(createdCylinder.GetComponent<MeshCollider>());
 
             // Check for standard values on collider
@@ -59,7 +59,8 @@ namespace RosSharp.Urdf.Tests
             Assert.IsTrue(Vector3.Distance(new Vector3(0.5f, 1f, 0.5f), createdCylinder.GetComponent<MeshCollider>().sharedMesh.bounds.extents) < scaleDelta); 
             // Verify Cylinder created in Assets
             Assert.IsNotNull(RuntimeURDF.AssetDatabase_FindAssets("Cylinder t:mesh", new string[] {"Assets/Tests/Runtime/GeometryTests"}));
-
+            
+            AssetDatabase.DeleteAsset("Assets/Tests/Runtime/GeometryTests/Cylinder.asset");
             Object.DestroyImmediate(parent.gameObject);
         }
 
@@ -71,7 +72,7 @@ namespace RosSharp.Urdf.Tests
             
             // Verify geometry created in Hierarchy
             var sphere = parent.Find("Sphere").gameObject;
-            Assert.IsNotNull(sphere.activeInHierarchy);
+            Assert.IsTrue(sphere.activeInHierarchy);
             Assert.IsNotNull(sphere.GetComponent<SphereCollider>());
             Assert.AreEqual(new Bounds(Vector3.zero, Vector3.one), sphere.GetComponent<SphereCollider>().bounds);
 
@@ -86,11 +87,134 @@ namespace RosSharp.Urdf.Tests
             
             // Verify geometry created in Hierarchy
             var mesh = parent.Find("Mesh").gameObject;
-            Assert.IsNotNull(mesh.activeInHierarchy);
+            Assert.IsTrue(mesh.activeInHierarchy);
             Assert.IsNotNull(mesh.GetComponent<MeshCollider>());
             Assert.AreEqual(new Bounds(Vector3.zero, Vector3.zero), mesh.GetComponent<MeshCollider>().bounds);
 
             Object.DestroyImmediate(parent.gameObject);
+        }
+
+        [Test]
+        public void Create_FromStlUnity_CubeMesh()
+        {
+            // Force runtime mode to set testing package root
+            RuntimeURDF.runtimeModeEnabled = true;
+            UrdfAssetPathHandler.SetPackageRoot("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/");
+            RuntimeURDF.runtimeModeEnabled = false;
+            UrdfRobotExtensions.importsettings = ImportSettings.DefaultSettings();
+            UrdfRobotExtensions.importsettings.convexMethod = ImportSettings.convexDecomposer.unity;
+            
+            var parent = new GameObject("Parent").transform;
+            string path = "package://meshes/cube.stl";
+            var meshGeometry = new Link.Geometry(mesh: new Link.Geometry.Mesh(path, new double[] {1,1,1}));
+            UrdfCollisionExtensions.Create(parent, new Link.Collision(meshGeometry));
+
+            // Verify geometry created in Hierarchy
+            var urdfCollision = parent.GetComponentInChildren<UrdfCollision>().transform;
+            var mesh = urdfCollision.Find("cube/cube_0").gameObject;
+            Assert.IsTrue(mesh.activeInHierarchy);
+            Assert.IsNotNull(mesh.GetComponent<MeshCollider>());
+            Assert.AreEqual(36, mesh.GetComponent<MeshCollider>().sharedMesh.vertexCount); 
+            Assert.IsTrue(Vector3.Distance(Vector3.one * 15f, mesh.GetComponent<MeshCollider>().sharedMesh.bounds.extents) < scaleDelta); 
+            
+            // Verify geometry created in Assets
+            Assert.IsNotNull(AssetDatabase.FindAssets("cube t:mesh", new string[] {"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes"}));
+
+            AssetDatabase.DeleteAsset("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset");
+            Object.DestroyImmediate(parent.gameObject);
+        }
+
+        [Test]
+        public void Create_FromStlVhacdNotRuntime_CubeMesh()
+        {
+            // Force runtime mode to set testing package root
+            RuntimeURDF.runtimeModeEnabled = true;
+            UrdfAssetPathHandler.SetPackageRoot("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/");
+            RuntimeURDF.runtimeModeEnabled = false;
+            UrdfRobotExtensions.importsettings = ImportSettings.DefaultSettings();
+            
+            var parent = new GameObject("Parent").transform;
+            string path = "package://meshes/cube.stl";
+            var meshGeometry = new Link.Geometry(mesh: new Link.Geometry.Mesh(path, new double[] {1,1,1}));
+            UrdfCollisionExtensions.Create(parent, new Link.Collision(meshGeometry));
+
+            // Verify geometry created in Hierarchy
+            var urdfCollision = parent.GetComponentInChildren<UrdfCollision>().transform;
+            var mesh = urdfCollision.Find("cube/cube_0").gameObject;
+            Assert.IsTrue(mesh.activeInHierarchy);
+            Assert.IsNotNull(mesh.GetComponent<MeshCollider>());
+            Assert.AreEqual(8, mesh.GetComponent<MeshCollider>().sharedMesh.vertexCount); 
+            Assert.IsTrue(Vector3.Distance(Vector3.one * 15f, mesh.GetComponent<MeshCollider>().sharedMesh.bounds.extents) < scaleDelta); 
+            
+            // Verify geometry created in Assets
+            Assert.IsNotNull(AssetDatabase.FindAssets("cube t:mesh", new string[] {"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes"}));
+
+            AssetDatabase.DeleteAsset("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset");
+            Object.DestroyImmediate(parent.gameObject);
+        }
+
+        [Test]
+        public void Create_FromStlVhacdRuntime_CubeMesh()
+        {
+            // Force runtime mode to set testing package root
+            RuntimeURDF.runtimeModeEnabled = true;
+            UrdfAssetPathHandler.SetPackageRoot("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/");
+            UrdfRobotExtensions.importsettings = ImportSettings.DefaultSettings();
+            
+            var parent = new GameObject("Parent").transform;
+            string path = "package://meshes/cube.stl";
+            var meshGeometry = new Link.Geometry(mesh: new Link.Geometry.Mesh(path, new double[] {1,1,1}));
+            UrdfCollisionExtensions.Create(parent, new Link.Collision(meshGeometry));
+
+            // Verify geometry created in Hierarchy
+            var urdfCollision = parent.GetComponentInChildren<UrdfCollision>().transform;
+            var mesh = urdfCollision.Find("cube/cube_0").gameObject;
+            Assert.IsTrue(mesh.activeInHierarchy);
+            Assert.IsNotNull(mesh.GetComponent<MeshCollider>());
+            Assert.AreEqual(8, mesh.GetComponent<MeshCollider>().sharedMesh.vertexCount); 
+            Assert.IsTrue(Vector3.Distance(Vector3.one * 15f, mesh.GetComponent<MeshCollider>().sharedMesh.bounds.extents) < scaleDelta); 
+            
+            // Verify geometry created in Assets
+            Assert.IsNotNull(AssetDatabase.FindAssets("cube t:mesh", new string[] {"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes"}));
+
+            AssetDatabase.DeleteAsset("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset");
+            Object.DestroyImmediate(parent.gameObject);
+        }
+
+        [Test]
+        public void CreateMatchingMeshCollision_NoVisual_Null()
+        {
+            var visualToCopy = new GameObject("VisualToCopy").transform;
+            var parent = new GameObject("Parent").transform;
+            UrdfGeometryCollision.CreateMatchingMeshCollision(parent, visualToCopy);
+            
+            Assert.AreEqual(0, parent.childCount);
+
+            Object.DestroyImmediate(parent.gameObject); 
+            Object.DestroyImmediate(visualToCopy.gameObject); 
+        }
+
+        [Test]
+        public void CreateMatchingMeshCollision_CubeMesh_CopiedCube()
+        {
+            var urdfFile = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/cube.urdf";
+            UrdfRobotExtensions.importsettings = ImportSettings.DefaultSettings();
+            UrdfRobotExtensions.importsettings.convexMethod = ImportSettings.convexDecomposer.unity;
+            var robotObject = UrdfRobotExtensions.CreateRuntime(urdfFile, UrdfRobotExtensions.importsettings);
+            Transform visualToCopy = robotObject.transform.Find("base_link/Visuals/unnamed/cube");
+
+            var parent = new GameObject("Parent").transform;
+            UrdfGeometryCollision.CreateMatchingMeshCollision(parent, visualToCopy);
+            
+            Assert.AreEqual(1, parent.childCount);
+            var mesh = parent.GetChild(0).gameObject;
+            Assert.IsTrue(mesh.activeInHierarchy);
+            Assert.IsNotNull(mesh.GetComponent<MeshCollider>());
+            Assert.AreEqual(36, mesh.GetComponent<MeshCollider>().sharedMesh.vertexCount); 
+            Assert.IsTrue(Vector3.Distance(Vector3.one * 15f, mesh.GetComponent<MeshCollider>().sharedMesh.bounds.extents) < scaleDelta); 
+
+            Object.DestroyImmediate(parent.gameObject); 
+            Object.DestroyImmediate(robotObject.gameObject); 
         }
 
         [TearDown]
