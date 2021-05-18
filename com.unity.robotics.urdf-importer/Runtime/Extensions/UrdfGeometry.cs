@@ -308,19 +308,27 @@ namespace RosSharp.Urdf
             return new Link.Geometry(null, null, null, new Link.Geometry.Mesh(packagePath, urdfSize));
         }
 
-        public static void CheckForUrdfCompatibility(Transform transform, GeometryTypes type)
+        public static bool CheckForUrdfCompatibility(Transform transform, GeometryTypes type)
         {
+            if (transform.childCount == 0)
+            {
+                Debug.LogWarning($"No elements found in {transform}! Cannot export to URDF.");
+                return false;
+            }
+
             Transform childTransform = transform.GetChild(0);
             if (IsTransformed(childTransform, type))
             {
-                Debug.LogWarning("Changes to the transform of " + childTransform.name + " cannot be exported to URDF. " +
-                                 "Make any translation, rotation, or scale changes to the parent Visual or Collision object instead.",
-                    childTransform);
+                Debug.LogWarning($"Changes to the transform of {childTransform.name} cannot be exported to URDF. Make any translation, rotation, or scale changes to the parent Visual or Collision object instead.", childTransform);
+                return false;
             }
 
             if (!transform.HasExactlyOneChild())
-                Debug.LogWarning("Only one Geometry element is allowed for each Visual or Collision element. In "
-                                 + transform.parent.parent.name + ", move each Geometry into its own Visual or Collision.", transform);
+            {
+                Debug.LogWarning($"Only one Geometry element is allowed for each Visual or Collision element. In {transform.root.name} move each Geometry into its own Visual or Collision.", transform);
+                return false;
+            }
+            return true;
         }
 
         public static bool IsTransformed(Transform transform, GeometryTypes type)
