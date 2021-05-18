@@ -291,7 +291,7 @@ namespace RosSharp.Urdf
             jointName = transform.parent.name + "_" + transform.name + "_joint";
         }
 
-        protected Joint.Axis GetAxisData(Vector3 axis)
+        protected static Joint.Axis GetAxisData(Vector3 axis)
         {
             double[] rosAxis = axis.ToRoundedDoubleArray();
             return new Joint.Axis(rosAxis);

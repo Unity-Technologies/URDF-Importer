@@ -11,6 +11,7 @@ public class TestUrdfJoint : UrdfJoint
 
     public static Vector3 Axis(RosSharp.Urdf.Joint.Axis axis) => GetAxis(axis);
     public static Vector3 DefaultAxis() => GetDefaultAxis();
+    public static RosSharp.Urdf.Joint.Axis AxisData(Vector3 axis) => GetAxisData(axis);
     public void Dynamics(RosSharp.Urdf.Joint.Dynamics dynamics) => SetDynamics(dynamics);
 }
 
@@ -233,5 +234,56 @@ public class UrdfJointTests
         Assert.AreEqual(0, articulationBody.jointFriction);
 
         Object.DestroyImmediate(linkObject);
+    }
+
+    [Test]
+    public void ExportJointData_Success()
+    {
+        GameObject baseObject = new GameObject("base");
+        GameObject linkObject = new GameObject("link");
+        linkObject.transform.parent = baseObject.transform;
+        linkObject.transform.position = new Vector3(1, 2, 3);
+        linkObject.transform.rotation = Quaternion.Euler(4, 5, 6);
+
+        UrdfJoint.Create(baseObject, UrdfJoint.JointTypes.Fixed);
+        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
+        var joint = linkObject.GetComponent<UrdfJoint>().ExportJointData();
+
+        Assert.AreEqual(null, joint.name);
+        Assert.AreEqual("revolute", joint.type);
+        Assert.AreEqual("base", joint.parent);
+        Assert.AreEqual("link", joint.child);
+        Assert.AreEqual(new double[] { 3, -1, 2 }, joint.origin.Xyz);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-6 * Mathf.Deg2Rad, (float)joint.origin.Rpy[0]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(4 * Mathf.Deg2Rad, (float)joint.origin.Rpy[1]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-5 * Mathf.Deg2Rad, (float)joint.origin.Rpy[2]);
+
+        Object.DestroyImmediate(baseObject);
+        Object.DestroyImmediate(linkObject);
+    }
+
+    [Test]
+    public void GenerateUniqueJointName_Name()
+    {
+        GameObject baseObject = new GameObject("base");
+        GameObject linkObject = new GameObject("link");
+        linkObject.transform.parent = baseObject.transform;
+
+        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
+        var joint = linkObject.GetComponent<UrdfJoint>();
+
+        Assert.AreEqual(null, joint.jointName);
+        joint.GenerateUniqueJointName();
+        Assert.AreEqual("base_link_joint", joint.jointName);
+
+        Object.DestroyImmediate(baseObject);
+        Object.DestroyImmediate(linkObject);
+    }
+
+    [Test]
+    public void GetAxisData_Success()
+    {
+        Assert.AreEqual(new double[] { 1.234568, 2.345679, 3.456789 },
+            TestUrdfJoint.AxisData(new Vector3(1.2345678f, 2.3456789f, 3.4567891f)).xyz);
     }
 }
