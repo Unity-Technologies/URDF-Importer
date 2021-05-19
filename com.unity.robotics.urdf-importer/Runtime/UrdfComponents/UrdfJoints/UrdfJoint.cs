@@ -55,7 +55,7 @@ namespace RosSharp.Urdf
         protected int defaultDamping = 0;
         protected int defaultFriction = 0;
 
-        public static void Create(GameObject linkObject, JointTypes jointType, Joint joint = null)
+        public static UrdfJoint Create(GameObject linkObject, JointTypes jointType, Joint joint = null)
         {
 #if UNITY_2020_1_OR_NEWER
 #else
@@ -69,6 +69,7 @@ namespace RosSharp.Urdf
                 urdfJoint.jointName = joint.name;
                 urdfJoint.ImportJointData(joint);
             }
+            return urdfJoint;
         }
 
         private static UrdfJoint AddCorrectJointType(GameObject linkObject, JointTypes jointType)

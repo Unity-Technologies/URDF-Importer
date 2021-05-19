@@ -22,9 +22,7 @@ public class UrdfJointTests
     public void Create_FixedArticulationBody()
     {
         GameObject linkObject = new GameObject("link");
-        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Fixed);
-
-        UrdfJoint urdfJoint = linkObject.GetComponent<UrdfJointFixed>();
+        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Fixed);
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
 
         Assert.IsNotNull(urdfJoint);
@@ -43,9 +41,7 @@ public class UrdfJointTests
         RosSharp.Urdf.Joint joint = new RosSharp.Urdf.Joint(
             name: "reference", type: "prismatic", parent: null, child: null);
         GameObject linkObject = new GameObject("link");
-        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Fixed, joint);
-
-        UrdfJoint urdfJoint = linkObject.GetComponent<UrdfJointFixed>();
+        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Fixed, joint);
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
 
         Assert.IsNotNull(urdfJoint);
@@ -60,9 +56,7 @@ public class UrdfJointTests
     public void Create_ContinuousArticulationBody()
     {
         GameObject linkObject = new GameObject("link");
-        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Continuous);
-
-        UrdfJoint urdfJoint = linkObject.GetComponent<UrdfJointContinuous>();
+        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Continuous);
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
 
         Assert.IsNotNull(urdfJoint);
@@ -79,9 +73,8 @@ public class UrdfJointTests
     public void Create_FloatingArticulationBody()
     {
         GameObject linkObject = new GameObject("link");
-        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Floating);
+        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Floating);
 
-        UrdfJoint urdfJoint = linkObject.GetComponent<UrdfJointFloating>();
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
 
         Assert.IsNotNull(urdfJoint);
@@ -98,9 +91,7 @@ public class UrdfJointTests
     public void Create_PlanarArticulationBody()
     {
         GameObject linkObject = new GameObject("link");
-        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Planar);
-
-        UrdfJoint urdfJoint = linkObject.GetComponent<UrdfJointPlanar>();
+        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Planar);
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
 
         Assert.IsNotNull(urdfJoint);
@@ -117,9 +108,7 @@ public class UrdfJointTests
     public void Create_RevoluteArticulationBody()
     {
         GameObject linkObject = new GameObject("link");
-        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
-
-        UrdfJoint urdfJoint = linkObject.GetComponent<UrdfJointRevolute>();
+        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
 
         Assert.IsNotNull(urdfJoint);
@@ -136,9 +125,7 @@ public class UrdfJointTests
     public void Create_PrismaticArticulationBody()
     {
         GameObject linkObject = new GameObject("link");
-        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Prismatic);
-
-        UrdfJoint urdfJoint = linkObject.GetComponent<UrdfJointPrismatic>();
+        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Prismatic);
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
 
         Assert.IsNotNull(urdfJoint);
@@ -159,8 +146,7 @@ public class UrdfJointTests
         linkObject.transform.parent = baseObject.transform;
 
         var joint = new RosSharp.Urdf.Joint("custom_name", "revolute", "base", "link");
-        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Prismatic, joint);
-        UrdfJoint urdfJoint = linkObject.GetComponent<UrdfJointPrismatic>();
+        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Prismatic, joint);
 
         Assert.AreEqual("custom_name", urdfJoint.jointName);
 
@@ -277,14 +263,38 @@ public class UrdfJointTests
     }
 
     [Test]
+    public void ExportDefaultJointData_Success()
+    {
+        GameObject baseObject = new GameObject("base");
+        GameObject linkObject = new GameObject("link");
+        linkObject.transform.parent = baseObject.transform;
+        linkObject.transform.position = new Vector3(1, 2, 3);
+        linkObject.transform.rotation = Quaternion.Euler(4, 5, 6);
+
+        RosSharp.Urdf.Joint joint = UrdfJoint.ExportDefaultJoint(linkObject.transform);
+
+        Assert.AreEqual("base_link_joint", joint.name);
+        Assert.AreEqual("fixed", joint.type);
+        Assert.AreEqual("base", joint.parent);
+        Assert.AreEqual("link", joint.child);
+
+        Assert.AreEqual(new double[] { 3, -1, 2 }, joint.origin.Xyz);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-6 * Mathf.Deg2Rad, (float)joint.origin.Rpy[0]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(4 * Mathf.Deg2Rad, (float)joint.origin.Rpy[1]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-5 * Mathf.Deg2Rad, (float)joint.origin.Rpy[2]);
+
+        Object.DestroyImmediate(baseObject);
+        Object.DestroyImmediate(linkObject);
+    }
+
+    [Test]
     public void GenerateUniqueJointName_Name()
     {
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
         linkObject.transform.parent = baseObject.transform;
 
-        UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
-        var joint = linkObject.GetComponent<UrdfJoint>();
+        var joint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
 
         Assert.AreEqual(null, joint.jointName);
         joint.GenerateUniqueJointName();
