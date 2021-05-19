@@ -19,7 +19,7 @@ public class UrdfJointTests
 {
 #if UNITY_2020_1_OR_NEWER
     [Test]
-    public void Create_FixedArticulationBody()
+    public void Create_FixedArticulationBody_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Fixed);
@@ -53,7 +53,7 @@ public class UrdfJointTests
 
 #if UNITY_2020_1_OR_NEWER
     [Test]
-    public void Create_ContinuousArticulationBody()
+    public void Create_ContinuousArticulationBody_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Continuous);
@@ -70,7 +70,7 @@ public class UrdfJointTests
 
 #if UNITY_2020_1_OR_NEWER
     [Test]
-    public void Create_FloatingArticulationBody()
+    public void Create_FloatingArticulationBody_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Floating);
@@ -88,7 +88,7 @@ public class UrdfJointTests
 
 #if UNITY_2020_1_OR_NEWER
     [Test]
-    public void Create_PlanarArticulationBody()
+    public void Create_PlanarArticulationBody_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Planar);
@@ -105,7 +105,7 @@ public class UrdfJointTests
 
 #if UNITY_2020_1_OR_NEWER
     [Test]
-    public void Create_RevoluteArticulationBody()
+    public void Create_RevoluteArticulationBody_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
@@ -122,7 +122,7 @@ public class UrdfJointTests
 
 #if UNITY_2020_1_OR_NEWER
     [Test]
-    public void Create_PrismaticArticulationBody()
+    public void Create_PrismaticArticulationBody_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Prismatic);
@@ -139,7 +139,7 @@ public class UrdfJointTests
 
 #if UNITY_2020_1_OR_NEWER
     [Test]
-    public void Create_WithJointData()
+    public void Create_WithJointData_Succeeds()
     {
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
@@ -157,7 +157,7 @@ public class UrdfJointTests
 
 #if UNITY_2020_1_OR_NEWER
     [Test]
-    public void ChangeJointType_FromFixedToRevolute()
+    public void ChangeJointType_FromFixedToRevolute_Succeeds()
     {
         GameObject baseLink = new GameObject("base");
         GameObject linkObject = new GameObject("link");
@@ -181,7 +181,7 @@ public class UrdfJointTests
 #endif
 
     [Test]
-    public void GetJointType_AllJointTypes()
+    public void GetJointType_AllJointTypes_Succeeds()
     {
         Assert.AreEqual(UrdfJoint.JointTypes.Fixed, UrdfJoint.GetJointType("fixed"));
         Assert.AreEqual(UrdfJoint.JointTypes.Continuous, UrdfJoint.GetJointType("continuous"));
@@ -193,20 +193,20 @@ public class UrdfJointTests
     }
 
     [Test]
-    public void GetAxis_JointAxis()
+    public void GetAxis_JointAxis_Succeeds()
     {
         var axis = new RosSharp.Urdf.Joint.Axis(new double[] { 1, 2, 3 });
         Assert.AreEqual(new Vector3(-2, 3, 1), TestUrdfJoint.Axis(axis));
     }
 
     [Test]
-    public void GetDefaultAxis_JointAxis()
+    public void GetDefaultAxis_JointAxis_Succeeds()
     {
         Assert.AreEqual(new Vector3(-1, 0, 0), TestUrdfJoint.DefaultAxis());
     }
 
     [Test]
-    public void SetDynamics_Success()
+    public void SetDynamics_ArbitraryDynamics_Succeeds()
     {
         var dynamics = new RosSharp.Urdf.Joint.Dynamics(1, 2);
         GameObject linkObject = new GameObject("link");
@@ -222,7 +222,7 @@ public class UrdfJointTests
     }
 
     [Test]
-    public void SetDynamics_DefaultDynamics()
+    public void SetDynamics_DefaultDynamics_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         var joint = linkObject.AddComponent<TestUrdfJoint>();
@@ -237,7 +237,7 @@ public class UrdfJointTests
     }
 
     [Test]
-    public void ExportJointData_Success()
+    public void ExportJointData_ArbitraryJointData_Succeeds()
     {
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
@@ -263,7 +263,7 @@ public class UrdfJointTests
     }
 
     [Test]
-    public void ExportDefaultJointData_Success()
+    public void ExportDefaultJointData_DefaultJoint_Succeeds()
     {
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
@@ -288,7 +288,7 @@ public class UrdfJointTests
     }
 
     [Test]
-    public void GenerateUniqueJointName_Name()
+    public void GenerateUniqueJointName_UniqueName_Succeeds()
     {
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
@@ -305,7 +305,7 @@ public class UrdfJointTests
     }
 
     [Test]
-    public void GetAxisData_Success()
+    public void GetAxisData_ArbitraryData_Succeeds()
     {
         Assert.AreEqual(new double[] { 1.234568, 2.345679, 3.456789 },
             TestUrdfJoint.AxisData(new Vector3(1.2345678f, 2.3456789f, 3.4567891f)).xyz);
