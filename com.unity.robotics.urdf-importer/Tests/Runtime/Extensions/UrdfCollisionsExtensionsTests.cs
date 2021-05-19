@@ -46,7 +46,7 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test, TestCaseSource("GeometryData")]
-        public void ExportCollisionsData_Box_DefaultComponents(Geometry geometryBox)
+        public void ExportCollisionsData_DefaultGeometry_DefaultComponents(Geometry geometryBox)
         {
             var parent = new GameObject("Parent").transform;
             var collisions = UrdfCollisionsExtensions.Create(parent, new List<Collision>() {new Collision(geometryBox)});
