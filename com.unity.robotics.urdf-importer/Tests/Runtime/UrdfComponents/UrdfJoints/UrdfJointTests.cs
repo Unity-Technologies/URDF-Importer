@@ -2,15 +2,16 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using RosSharp.Urdf;
+using Joint = RosSharp.Urdf.Joint;
 
 public class TestUrdfJoint : UrdfJoint
 {
     public override JointTypes JointType => throw new System.NotImplementedException();
 
-    public static Vector3 Axis(RosSharp.Urdf.Joint.Axis axis) => GetAxis(axis);
+    public static Vector3 Axis(Joint.Axis axis) => GetAxis(axis);
     public static Vector3 DefaultAxis() => GetDefaultAxis();
-    public static RosSharp.Urdf.Joint.Axis AxisData(Vector3 axis) => GetAxisData(axis);
-    public void Dynamics(RosSharp.Urdf.Joint.Dynamics dynamics) => SetDynamics(dynamics);
+    public static Joint.Axis AxisData(Vector3 axis) => GetAxisData(axis);
+    public void Dynamics(Joint.Dynamics dynamics) => SetDynamics(dynamics);
 }
 
 public class UrdfJointTests
@@ -48,7 +49,7 @@ public class UrdfJointTests
     [Test]
     public void Create_WithOtherTypeOfJointData_FixedArticulationBody()
     {
-        RosSharp.Urdf.Joint joint = new RosSharp.Urdf.Joint(
+        Joint joint = new Joint(
             name: "reference", type: "prismatic", parent: null, child: null);
         GameObject linkObject = new GameObject("link");
         UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Fixed, joint);
@@ -67,7 +68,7 @@ public class UrdfJointTests
         GameObject linkObject = new GameObject("link");
         linkObject.transform.parent = baseObject.transform;
 
-        var joint = new RosSharp.Urdf.Joint("custom_name", "revolute", "base", "link");
+        var joint = new Joint("custom_name", "revolute", "base", "link");
         UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Prismatic, joint);
 
         Assert.AreEqual("custom_name", urdfJoint.jointName);
@@ -115,7 +116,7 @@ public class UrdfJointTests
     [Test]
     public void GetAxis_JointAxis_Succeeds()
     {
-        var axis = new RosSharp.Urdf.Joint.Axis(new double[] { 1, 2, 3 });
+        var axis = new Joint.Axis(new double[] { 1, 2, 3 });
         Assert.AreEqual(new Vector3(-2, 3, 1), TestUrdfJoint.Axis(axis));
     }
 
@@ -128,7 +129,7 @@ public class UrdfJointTests
     [Test]
     public void SetDynamics_ArbitraryDynamics_Succeeds()
     {
-        var dynamics = new RosSharp.Urdf.Joint.Dynamics(1, 2);
+        var dynamics = new Joint.Dynamics(1, 2);
         GameObject linkObject = new GameObject("link");
         var joint = linkObject.AddComponent<TestUrdfJoint>();
         joint.Dynamics(dynamics);
@@ -197,7 +198,7 @@ public class UrdfJointTests
         linkObject.transform.position = position;
         linkObject.transform.rotation = rotation;
 
-        RosSharp.Urdf.Joint joint = UrdfJoint.ExportDefaultJoint(linkObject.transform);
+        Joint joint = UrdfJoint.ExportDefaultJoint(linkObject.transform);
 
         Assert.AreEqual("base_link_joint", joint.name);
         Assert.AreEqual("fixed", joint.type);
