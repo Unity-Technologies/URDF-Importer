@@ -15,7 +15,13 @@ namespace RosSharp.Urdf.Tests
 {
     public class UrdfCollisionsExtensionsTests
     {
-        Geometry geometryBox = new Geometry(box: new Box(new double[] {1, 1, 1}));
+        private static IEnumerable<TestCaseData> GeometryData
+        {
+            get
+            {
+                yield return new TestCaseData(new Geometry(box: new Box(new double[] {1, 1, 1})));
+            }
+        }
 
         [Test]
         public void Create_NullCollisions_DefaultComponents()
@@ -28,8 +34,8 @@ namespace RosSharp.Urdf.Tests
             Object.DestroyImmediate(parent.gameObject);
         }
 
-        [Test]
-        public void Create_WithCollisions_DefaultComponents()
+        [Test, TestCaseSource("GeometryData")]
+        public void Create_WithCollisions_DefaultComponents(Geometry geometryBox)
         {
             var parent = new GameObject("Parent").transform;
             var collisions = UrdfCollisionsExtensions.Create(parent, new List<Collision>() {new Collision(geometryBox)});
@@ -39,8 +45,8 @@ namespace RosSharp.Urdf.Tests
             Object.DestroyImmediate(parent.gameObject);
         }
 
-        [Test]
-        public void ExportCollisionsData_Box_DefaultComponents()
+        [Test, TestCaseSource("GeometryData")]
+        public void ExportCollisionsData_Box_DefaultComponents(Geometry geometryBox)
         {
             var parent = new GameObject("Parent").transform;
             var collisions = UrdfCollisionsExtensions.Create(parent, new List<Collision>() {new Collision(geometryBox)});
