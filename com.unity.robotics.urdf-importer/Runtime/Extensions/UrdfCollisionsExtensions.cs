@@ -20,7 +20,7 @@ namespace RosSharp.Urdf
 { 
     public static class UrdfCollisionsExtensions
     {
-        public static void Create(Transform parent, List<Link.Collision> collisions = null)
+        public static UrdfCollisions Create(Transform parent, List<Link.Collision> collisions = null)
         {
             GameObject collisionsObject = new GameObject("Collisions");
             collisionsObject.transform.SetParentAndAlign(parent);
@@ -36,6 +36,7 @@ namespace RosSharp.Urdf
                     UrdfCollisionExtensions.Create(urdfCollisions.transform, collision);
                 }
             }
+            return urdfCollisions;
         }
         
         public static List<Link.Collision> ExportCollisionsData(this UrdfCollisions urdfCollisions)

@@ -7,6 +7,9 @@ using UnityEditor;
 using UnityEngine.TestTools;
 using RosSharp.Urdf;
 using Object = UnityEngine.Object;
+using Collision = RosSharp.Urdf.Link.Collision;
+using Geometry = RosSharp.Urdf.Link.Geometry;
+using Box = RosSharp.Urdf.Link.Geometry.Box;
 
 namespace RosSharp.Urdf.Tests
 {
@@ -17,9 +20,8 @@ namespace RosSharp.Urdf.Tests
         {
             RuntimeURDF.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
-            UrdfCollisionExtensions.Create(parent, GeometryTypes.Box);
 
-            var collision = parent.Find("unnamed").GetComponent<UrdfCollision>();
+            var collision = UrdfCollisionExtensions.Create(parent, GeometryTypes.Box);
             Assert.IsNotNull(collision);
             Assert.IsTrue(collision.gameObject.activeInHierarchy);
             Assert.AreEqual(GeometryTypes.Box, collision.geometryType);
@@ -34,9 +36,8 @@ namespace RosSharp.Urdf.Tests
             var parent = new GameObject("Parent").transform;
             var copy = new GameObject("Copy").transform;
             copy.transform.localScale = Vector3.one * 2f;
-            UrdfCollisionExtensions.Create(parent, GeometryTypes.Box, copy);
 
-            var collision = parent.Find("unnamed").GetComponent<UrdfCollision>();
+            var collision = UrdfCollisionExtensions.Create(parent, GeometryTypes.Box, copy);
             Assert.IsNotNull(collision);
             Assert.IsTrue(collision.gameObject.activeInHierarchy);
             Assert.AreEqual(GeometryTypes.Box, collision.geometryType);
@@ -50,9 +51,8 @@ namespace RosSharp.Urdf.Tests
         {
             RuntimeURDF.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
-            UrdfCollisionExtensions.Create(parent, GeometryTypes.Mesh);
 
-            var collision = parent.Find("unnamed").GetComponent<UrdfCollision>();
+            var collision = UrdfCollisionExtensions.Create(parent, GeometryTypes.Mesh);
             Assert.IsNotNull(collision);
             Assert.IsTrue(collision.gameObject.activeInHierarchy);
             Assert.AreEqual(GeometryTypes.Mesh, collision.geometryType);
@@ -67,9 +67,8 @@ namespace RosSharp.Urdf.Tests
             var parent = new GameObject("Parent").transform;
             var copy = new GameObject("Copy").transform;
             copy.transform.localScale = Vector3.one * 2f;
-            UrdfCollisionExtensions.Create(parent, GeometryTypes.Mesh, copy);
 
-            var collision = parent.Find("unnamed").GetComponent<UrdfCollision>();
+            var collision = UrdfCollisionExtensions.Create(parent, GeometryTypes.Mesh, copy);
             Assert.IsNotNull(collision);
             Assert.IsTrue(collision.gameObject.activeInHierarchy);
             Assert.AreEqual(GeometryTypes.Mesh, collision.geometryType);
@@ -83,10 +82,9 @@ namespace RosSharp.Urdf.Tests
         {
             RuntimeURDF.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
-            var geometry = new Link.Geometry(box:new Link.Geometry.Box(new double[] {1, 1, 1}));
-            UrdfCollisionExtensions.Create(parent, new Link.Collision(geometry));
+            var geometry = new Geometry(box:new Box(new double[] {1, 1, 1}));
 
-            var collision = parent.Find("unnamed").GetComponent<UrdfCollision>();
+            var collision = UrdfCollisionExtensions.Create(parent, new Collision(geometry));
             Assert.IsNotNull(collision);
             Assert.IsTrue(collision.gameObject.activeInHierarchy);
             Assert.AreEqual(GeometryTypes.Box, collision.geometryType);
@@ -96,14 +94,15 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void ExportCollisionData_DefaultBox()
+        public void ExportCollisionData_DefaultBox_Succeeds()
         {
             RuntimeURDF.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
-            UrdfCollisionExtensions.Create(parent, GeometryTypes.Box);
-            var collisionComponent = parent.Find("unnamed").GetComponent<UrdfCollision>();
+
+            var collisionComponent = UrdfCollisionExtensions.Create(parent, GeometryTypes.Box);
             var exported = UrdfCollisionExtensions.ExportCollisionData(collisionComponent);
-            Assert.IsNotNull(exported);
+            Assert.IsNotNull(exported.geometry.box);
+            Assert.AreEqual(new double[] {1,1,1}, exported.geometry.box.size);
             Assert.IsNull(exported.name);
 
             Object.DestroyImmediate(parent.gameObject);

@@ -18,7 +18,7 @@ namespace RosSharp.Urdf
 {
     public static class UrdfCollisionExtensions
     {
-        public static void Create(Transform parent, GeometryTypes type, Transform visualToCopy = null)
+        public static UrdfCollision Create(Transform parent, GeometryTypes type, Transform visualToCopy = null)
         {
             GameObject collisionObject = new GameObject("unnamed");
             collisionObject.transform.SetParentAndAlign(parent);
@@ -50,9 +50,10 @@ namespace RosSharp.Urdf
 #if UNITY_EDITOR
             UnityEditor.EditorGUIUtility.PingObject(collisionObject);
 #endif
+            return urdfCollision;
         }
 
-        public static void Create(Transform parent, Link.Collision collision)
+        public static UrdfCollision Create(Transform parent, Link.Collision collision)
         {
             GameObject collisionObject = new GameObject("unnamed");
             collisionObject.transform.SetParentAndAlign(parent);
@@ -60,6 +61,7 @@ namespace RosSharp.Urdf
             urdfCollision.geometryType = UrdfGeometry.GetGeometryType(collision.geometry);
             UrdfGeometryCollision.Create(collisionObject.transform, urdfCollision.geometryType, collision.geometry);
             UrdfOrigin.ImportOriginData(collisionObject.transform, collision.origin);
+            return urdfCollision;
         }
     
         public static Link.Collision ExportCollisionData(this UrdfCollision urdfCollision)
