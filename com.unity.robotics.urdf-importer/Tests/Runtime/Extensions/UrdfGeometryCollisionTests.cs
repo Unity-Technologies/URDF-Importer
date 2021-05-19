@@ -7,6 +7,10 @@ using UnityEditor;
 using UnityEngine.TestTools;
 using RosSharp.Urdf;
 using Object = UnityEngine.Object;
+using Collision = RosSharp.Urdf.Link.Collision;
+using Geometry = RosSharp.Urdf.Link.Geometry;
+using Box = RosSharp.Urdf.Link.Geometry.Box;
+using Mesh = RosSharp.Urdf.Link.Geometry.Mesh;
 
 namespace RosSharp.Urdf.Tests
 {
@@ -106,8 +110,8 @@ namespace RosSharp.Urdf.Tests
             
             var parent = new GameObject("Parent").transform;
             string path = "package://meshes/cube.stl";
-            var meshGeometry = new Link.Geometry(mesh: new Link.Geometry.Mesh(path, new double[] {1,1,1}));
-            UrdfCollisionExtensions.Create(parent, new Link.Collision(meshGeometry));
+            var meshGeometry = new Geometry(mesh: new Mesh(path, new double[] {1,1,1}));
+            UrdfCollisionExtensions.Create(parent, new Collision(meshGeometry));
 
             // Verify geometry created in Hierarchy
             var urdfCollision = parent.GetComponentInChildren<UrdfCollision>().transform;
@@ -135,8 +139,8 @@ namespace RosSharp.Urdf.Tests
             
             var parent = new GameObject("Parent").transform;
             string path = "package://meshes/cube.stl";
-            var meshGeometry = new Link.Geometry(mesh: new Link.Geometry.Mesh(path, new double[] {1,1,1}));
-            UrdfCollisionExtensions.Create(parent, new Link.Collision(meshGeometry));
+            var meshGeometry = new Geometry(mesh: new Mesh(path, new double[] {1,1,1}));
+            UrdfCollisionExtensions.Create(parent, new Collision(meshGeometry));
 
             // Verify geometry created in Hierarchy
             var urdfCollision = parent.GetComponentInChildren<UrdfCollision>().transform;
@@ -163,8 +167,8 @@ namespace RosSharp.Urdf.Tests
             
             var parent = new GameObject("Parent").transform;
             string path = "package://meshes/cube.stl";
-            var meshGeometry = new Link.Geometry(mesh: new Link.Geometry.Mesh(path, new double[] {1,1,1}));
-            UrdfCollisionExtensions.Create(parent, new Link.Collision(meshGeometry));
+            var meshGeometry = new Geometry(mesh: new Mesh(path, new double[] {1,1,1}));
+            UrdfCollisionExtensions.Create(parent, new Collision(meshGeometry));
 
             // Verify geometry created in Hierarchy
             var urdfCollision = parent.GetComponentInChildren<UrdfCollision>().transform;
