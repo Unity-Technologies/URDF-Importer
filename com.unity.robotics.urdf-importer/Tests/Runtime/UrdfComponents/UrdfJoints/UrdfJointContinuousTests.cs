@@ -33,4 +33,20 @@ public class UrdfJointContinuousTests
 
         Assert.AreEqual(1, joint.GetPosition());
     }
+
+    [Test]
+    public void GetVelocityTest()
+    {
+        GameObject baseObject = new GameObject("base");
+        GameObject linkObject = new GameObject("link");
+        linkObject.transform.parent = baseObject.transform;
+
+        UrdfJoint.Create(baseObject, UrdfJoint.JointTypes.Fixed);
+        UrdfJoint joint = UrdfJointContinuous.Create(linkObject);
+        ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
+        articulationBody.velocity = new Vector3(1, 2, 3);
+        articulationBody.jointVelocity = new ArticulationReducedSpace(1, 2, 3);
+
+        Assert.AreEqual(1, joint.GetVelocity());
+    }
 }
