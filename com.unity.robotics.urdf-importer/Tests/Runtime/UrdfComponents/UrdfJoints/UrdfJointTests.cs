@@ -173,8 +173,8 @@ public class UrdfJointTests
 
         Assert.IsNull(joint.name);
         Assert.AreEqual("revolute", joint.type);
-        Assert.AreEqual("base", joint.parent);
-        Assert.AreEqual("link", joint.child);
+        Assert.AreEqual(baseObject.name, joint.parent);
+        Assert.AreEqual(linkObject.name, joint.child);
         Assert.AreEqual(new double[] { 3, -1, 2 }, joint.origin.Xyz);
         UnityEngine.Assertions.Assert.AreApproximatelyEqual(-6 * Mathf.Deg2Rad, (float)joint.origin.Rpy[0]);
         UnityEngine.Assertions.Assert.AreApproximatelyEqual(4 * Mathf.Deg2Rad, (float)joint.origin.Rpy[1]);
@@ -197,8 +197,8 @@ public class UrdfJointTests
 
         Assert.AreEqual("base_link_joint", joint.name);
         Assert.AreEqual("fixed", joint.type);
-        Assert.AreEqual("base", joint.parent);
-        Assert.AreEqual("link", joint.child);
+        Assert.AreEqual(baseObject.name, joint.parent);
+        Assert.AreEqual(linkObject.name, joint.child);
 
         Assert.AreEqual(new double[] { 3, -1, 2 }, joint.origin.Xyz);
         UnityEngine.Assertions.Assert.AreApproximatelyEqual(-6 * Mathf.Deg2Rad, (float)joint.origin.Rpy[0]);
