@@ -68,7 +68,15 @@ namespace RosSharp.Urdf
 
         public static string GetFullAssetPath(string relativePath)
         {
-            string fullPath = Application.dataPath + relativePath.Substring("Assets".Length);
+            string fullPath = Application.dataPath;
+            if (relativePath.Substring(0, "Assets".Length) == "Assets")
+            {
+                fullPath += relativePath.Substring("Assets".Length);
+            }
+            else 
+            {
+                fullPath = fullPath.Substring(0, fullPath.Length - "Assets".Length) + relativePath;
+            }
             return fullPath.SetSeparatorChar();
         }
 
