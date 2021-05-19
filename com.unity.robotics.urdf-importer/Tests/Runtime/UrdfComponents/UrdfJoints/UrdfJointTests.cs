@@ -224,9 +224,9 @@ public class UrdfJointTests
 
         var joint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
 
-        Assert.AreEqual(null, joint.jointName);
+        Assert.IsNull(joint.jointName);
         joint.GenerateUniqueJointName();
-        Assert.AreEqual("base_link_joint", joint.jointName);
+        Assert.NotNull(joint.jointName);
 
         Object.DestroyImmediate(baseObject);
         Object.DestroyImmediate(linkObject);
