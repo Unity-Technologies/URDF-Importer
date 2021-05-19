@@ -161,11 +161,14 @@ public class UrdfJointTests
     [Test]
     public void ExportJointData_ArbitraryJointData_Succeeds()
     {
+        Vector3 position = new Vector3(1, 2, 3);
+        Quaternion rotation = Quaternion.Euler(4, 5, 6);
+
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
         linkObject.transform.parent = baseObject.transform;
-        linkObject.transform.position = new Vector3(1, 2, 3);
-        linkObject.transform.rotation = Quaternion.Euler(4, 5, 6);
+        linkObject.transform.position = position;
+        linkObject.transform.rotation = rotation;
 
         UrdfJoint.Create(baseObject, UrdfJoint.JointTypes.Fixed);
         UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
@@ -175,10 +178,10 @@ public class UrdfJointTests
         Assert.AreEqual("revolute", joint.type);
         Assert.AreEqual(baseObject.name, joint.parent);
         Assert.AreEqual(linkObject.name, joint.child);
-        Assert.AreEqual(new double[] { 3, -1, 2 }, joint.origin.Xyz);
-        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-6 * Mathf.Deg2Rad, (float)joint.origin.Rpy[0]);
-        UnityEngine.Assertions.Assert.AreApproximatelyEqual(4 * Mathf.Deg2Rad, (float)joint.origin.Rpy[1]);
-        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-5 * Mathf.Deg2Rad, (float)joint.origin.Rpy[2]);
+        Assert.AreEqual(new double[] { position[2], -position[0], position[1] }, joint.origin.Xyz);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-rotation.eulerAngles[2] * Mathf.Deg2Rad, (float)joint.origin.Rpy[0]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(rotation.eulerAngles[0] * Mathf.Deg2Rad, (float)joint.origin.Rpy[1]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-rotation.eulerAngles[1] * Mathf.Deg2Rad, (float)joint.origin.Rpy[2]);
 
         Object.DestroyImmediate(baseObject);
         Object.DestroyImmediate(linkObject);
@@ -187,11 +190,14 @@ public class UrdfJointTests
     [Test]
     public void ExportDefaultJointData_DefaultJoint_Succeeds()
     {
+        Vector3 position = new Vector3(1, 2, 3);
+        Quaternion rotation = Quaternion.Euler(4, 5, 6);
+
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
         linkObject.transform.parent = baseObject.transform;
-        linkObject.transform.position = new Vector3(1, 2, 3);
-        linkObject.transform.rotation = Quaternion.Euler(4, 5, 6);
+        linkObject.transform.position = position;
+        linkObject.transform.rotation = rotation;
 
         RosSharp.Urdf.Joint joint = UrdfJoint.ExportDefaultJoint(linkObject.transform);
 
@@ -200,10 +206,10 @@ public class UrdfJointTests
         Assert.AreEqual(baseObject.name, joint.parent);
         Assert.AreEqual(linkObject.name, joint.child);
 
-        Assert.AreEqual(new double[] { 3, -1, 2 }, joint.origin.Xyz);
-        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-6 * Mathf.Deg2Rad, (float)joint.origin.Rpy[0]);
-        UnityEngine.Assertions.Assert.AreApproximatelyEqual(4 * Mathf.Deg2Rad, (float)joint.origin.Rpy[1]);
-        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-5 * Mathf.Deg2Rad, (float)joint.origin.Rpy[2]);
+        Assert.AreEqual(new double[] { position[2], -position[0], position[1] }, joint.origin.Xyz);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-rotation.eulerAngles[2] * Mathf.Deg2Rad, (float)joint.origin.Rpy[0]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(rotation.eulerAngles[0] * Mathf.Deg2Rad, (float)joint.origin.Rpy[1]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(-rotation.eulerAngles[1] * Mathf.Deg2Rad, (float)joint.origin.Rpy[2]);
 
         Object.DestroyImmediate(baseObject);
         Object.DestroyImmediate(linkObject);
