@@ -17,24 +17,36 @@ public class TestUrdfJoint : UrdfJoint
 
 public class UrdfJointTests
 {
+
 #if UNITY_2020_1_OR_NEWER
-    [Test]
-    public void Create_FixedArticulationBody_Succeeds()
+    [Test, TestCaseSource("JointTypes")]
+    public void Create_UrdfJoint_Succeeds(UrdfJoint.JointTypes urdfJointType, ArticulationJointType articulationJointType)
     {
         GameObject linkObject = new GameObject("link");
-        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Fixed);
+        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, urdfJointType);
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
 
         Assert.IsNotNull(urdfJoint);
         Assert.IsNotNull(articulationBody);
-        Assert.AreEqual(UrdfJoint.JointTypes.Fixed, urdfJoint.JointType);
-        Assert.AreEqual(ArticulationJointType.FixedJoint, articulationBody.jointType);
+        Assert.AreEqual(urdfJointType, urdfJoint.JointType);
+        Assert.AreEqual(articulationJointType, articulationBody.jointType);
 
         Object.DestroyImmediate(linkObject);
     }
-#endif
 
-#if UNITY_2020_1_OR_NEWER
+    private static IEnumerable<TestCaseData> JointTypes
+    {
+        get
+        {
+            yield return new TestCaseData(UrdfJoint.JointTypes.Fixed, ArticulationJointType.FixedJoint);
+            yield return new TestCaseData(UrdfJoint.JointTypes.Continuous, ArticulationJointType.RevoluteJoint);
+            yield return new TestCaseData(UrdfJoint.JointTypes.Floating, ArticulationJointType.FixedJoint);
+            yield return new TestCaseData(UrdfJoint.JointTypes.Planar, ArticulationJointType.PrismaticJoint);
+            yield return new TestCaseData(UrdfJoint.JointTypes.Prismatic, ArticulationJointType.PrismaticJoint);
+            yield return new TestCaseData(UrdfJoint.JointTypes.Revolute, ArticulationJointType.RevoluteJoint);
+        }
+    }
+
     [Test]
     public void Create_WithOtherTypeOfJointData_FixedArticulationBody()
     {
@@ -49,95 +61,7 @@ public class UrdfJointTests
         Assert.AreEqual(UrdfJoint.JointTypes.Fixed, urdfJoint.JointType);
         Assert.AreEqual(ArticulationJointType.FixedJoint, articulationBody.jointType);
     }
-#endif
 
-#if UNITY_2020_1_OR_NEWER
-    [Test]
-    public void Create_ContinuousArticulationBody_Succeeds()
-    {
-        GameObject linkObject = new GameObject("link");
-        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Continuous);
-        ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
-
-        Assert.IsNotNull(urdfJoint);
-        Assert.IsNotNull(articulationBody);
-        Assert.AreEqual(UrdfJoint.JointTypes.Continuous, urdfJoint.JointType);
-        Assert.AreEqual(ArticulationJointType.RevoluteJoint, articulationBody.jointType);
-
-        Object.DestroyImmediate(linkObject);
-    }
-#endif
-
-#if UNITY_2020_1_OR_NEWER
-    [Test]
-    public void Create_FloatingArticulationBody_Succeeds()
-    {
-        GameObject linkObject = new GameObject("link");
-        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Floating);
-
-        ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
-
-        Assert.IsNotNull(urdfJoint);
-        Assert.IsNotNull(articulationBody);
-        Assert.AreEqual(UrdfJoint.JointTypes.Floating, urdfJoint.JointType);
-        Assert.AreEqual(ArticulationJointType.FixedJoint, articulationBody.jointType);
-
-        Object.DestroyImmediate(linkObject);
-    }
-#endif
-
-#if UNITY_2020_1_OR_NEWER
-    [Test]
-    public void Create_PlanarArticulationBody_Succeeds()
-    {
-        GameObject linkObject = new GameObject("link");
-        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Planar);
-        ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
-
-        Assert.IsNotNull(urdfJoint);
-        Assert.IsNotNull(articulationBody);
-        Assert.AreEqual(UrdfJoint.JointTypes.Planar, urdfJoint.JointType);
-        Assert.AreEqual(ArticulationJointType.PrismaticJoint, articulationBody.jointType);
-
-        Object.DestroyImmediate(linkObject);
-    }
-#endif
-
-#if UNITY_2020_1_OR_NEWER
-    [Test]
-    public void Create_RevoluteArticulationBody_Succeeds()
-    {
-        GameObject linkObject = new GameObject("link");
-        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
-        ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
-
-        Assert.IsNotNull(urdfJoint);
-        Assert.IsNotNull(articulationBody);
-        Assert.AreEqual(UrdfJoint.JointTypes.Revolute, urdfJoint.JointType);
-        Assert.AreEqual(ArticulationJointType.RevoluteJoint, articulationBody.jointType);
-
-        Object.DestroyImmediate(linkObject);
-    }
-#endif
-
-#if UNITY_2020_1_OR_NEWER
-    [Test]
-    public void Create_PrismaticArticulationBody_Succeeds()
-    {
-        GameObject linkObject = new GameObject("link");
-        UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Prismatic);
-        ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
-
-        Assert.IsNotNull(urdfJoint);
-        Assert.IsNotNull(articulationBody);
-        Assert.AreEqual(UrdfJoint.JointTypes.Prismatic, urdfJoint.JointType);
-        Assert.AreEqual(ArticulationJointType.PrismaticJoint, articulationBody.jointType);
-
-        Object.DestroyImmediate(linkObject);
-    }
-#endif
-
-#if UNITY_2020_1_OR_NEWER
     [Test]
     public void Create_WithJointData_Succeeds()
     {
@@ -153,9 +77,7 @@ public class UrdfJointTests
         Object.DestroyImmediate(baseObject);
         Object.DestroyImmediate(linkObject);
     }
-#endif
 
-#if UNITY_2020_1_OR_NEWER
     [Test]
     public void ChangeJointType_FromFixedToRevolute_Succeeds()
     {
