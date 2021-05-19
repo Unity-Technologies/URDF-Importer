@@ -29,9 +29,13 @@ namespace RosSharp.Urdf
             if (visualToCopy != null)
             {
                 if (urdfCollision.geometryType == GeometryTypes.Mesh)
+                {
                     UrdfGeometryCollision.CreateMatchingMeshCollision(collisionObject.transform, visualToCopy);
+                }
                 else
+                {
                     UrdfGeometryCollision.Create(collisionObject.transform, type);
+                }
 
                 //copy transform values from corresponding UrdfVisual
                 collisionObject.transform.position = visualToCopy.position;
@@ -39,7 +43,9 @@ namespace RosSharp.Urdf
                 collisionObject.transform.rotation = visualToCopy.rotation;
             }
             else
+            {
                 UrdfGeometryCollision.Create(collisionObject.transform, type);
+            }
 
 #if UNITY_EDITOR
             UnityEditor.EditorGUIUtility.PingObject(collisionObject);
