@@ -49,16 +49,16 @@ namespace RosSharp.Urdf
         }
 
         /// <summary>
-        /// Returns the current velocity of joint in radians per second
+        /// Returns the current velocity of joint in radians per second in the reduced coordinates
         /// </summary>
         /// <returns>floating point for joint velocity in radians per second</returns>
         public override float GetVelocity()
         {
-            #if UNITY_2020_1_OR_NEWER
-                return unityJoint.velocity[xAxis];
-            #else
+#if UNITY_2020_1_OR_NEWER
+            return unityJoint.jointVelocity[xAxis];
+#else
             return -((HingeJoint)unityJoint).velocity;
-            #endif
+#endif
         }
 
         /// <summary>

@@ -169,11 +169,16 @@ namespace RosSharp.Urdf
 
         protected override void AdjustMovement(Joint joint) 
         {
-            axisofMotion = (joint.axis == null || joint.axis.xyz == null) ? new Vector3(1, 0, 0) : new Vector3((float)joint.axis.xyz[0], (float)joint.axis.xyz[1], (float)joint.axis.xyz[2]);
+            if (joint.axis == null || joint.axis.xyz == null)
+            {
+                joint.axis = new Joint.Axis(new double[] { 1, 0, 0 });
+            }
+            axisofMotion = new Vector3((float)joint.axis.xyz[0], (float)joint.axis.xyz[1], (float)joint.axis.xyz[2]);
             int motionAxis = joint.axis.AxisofMotion();
             Quaternion motion = unityJoint.anchorRotation;
 
             unityJoint.linearLockX = ArticulationDofLock.LockedMotion;
+            unityJoint.maxLinearVelocity = (float)joint.limit.velocity;
             if (joint.limit != null)
             {
                 unityJoint.linearLockY = ArticulationDofLock.LimitedMotion;
@@ -181,6 +186,7 @@ namespace RosSharp.Urdf
                 ArticulationDrive drive = unityJoint.xDrive;
                 drive.upperLimit = (float)joint.limit.upper;
                 drive.lowerLimit = (float)joint.limit.lower;
+                drive.forceLimit = (float)joint.limit.effort;
                 unityJoint.zDrive = drive;
                 unityJoint.yDrive = drive;
             }

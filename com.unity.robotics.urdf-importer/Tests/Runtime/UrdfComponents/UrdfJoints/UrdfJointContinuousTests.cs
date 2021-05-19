@@ -2,10 +2,28 @@ using NUnit.Framework;
 using UnityEngine;
 using RosSharp.Urdf;
 
+public class TestUrdfJointContinuous : UrdfJointContinuous
+{
+    public void TestImportJointData(RosSharp.Urdf.Joint joint)
+    {
+        unityJoint = gameObject.GetComponent<ArticulationBody>();
+        ImportJointData(joint);
+    }
+
+    public RosSharp.Urdf.Joint TestExportSpecificJointData(RosSharp.Urdf.Joint joint)
+    {
+        unityJoint = gameObject.GetComponent<ArticulationBody>();
+        return ExportSpecificJointData(joint);
+    }
+
+    public void SetAxisOfMotion(Vector3 axisofMotion) => this.axisofMotion = axisofMotion;
+    public void Dynamics(RosSharp.Urdf.Joint.Dynamics dynamics) => SetDynamics(dynamics);
+}
+
 public class UrdfJointContinuousTests
 {
     [Test]
-    public void CreateTest()
+    public void Create_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint joint = UrdfJointContinuous.Create(linkObject);
@@ -20,7 +38,7 @@ public class UrdfJointContinuousTests
     }
 
     [Test]
-    public void GetPositionTest()
+    public void GetPositionVelocityEffort_Succeeds()
     {
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
@@ -30,12 +48,19 @@ public class UrdfJointContinuousTests
         UrdfJoint joint = UrdfJointContinuous.Create(linkObject);
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
         articulationBody.jointPosition = new ArticulationReducedSpace(1, 2, 3);
+        articulationBody.jointVelocity = new ArticulationReducedSpace(4, 5, 6);
+        articulationBody.jointForce = new ArticulationReducedSpace(7, 8, 9);
 
         Assert.AreEqual(1, joint.GetPosition());
+        Assert.AreEqual(4, joint.GetVelocity());
+        Assert.AreEqual(7, joint.GetEffort());
+
+        Object.DestroyImmediate(baseObject);
+        Object.DestroyImmediate(linkObject);
     }
 
     [Test]
-    public void GetVelocityTest()
+    public void UpdateJointState_Succeeds()
     {
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
@@ -44,9 +69,68 @@ public class UrdfJointContinuousTests
         UrdfJoint.Create(baseObject, UrdfJoint.JointTypes.Fixed);
         UrdfJoint joint = UrdfJointContinuous.Create(linkObject);
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
-        articulationBody.velocity = new Vector3(1, 2, 3);
-        articulationBody.jointVelocity = new ArticulationReducedSpace(1, 2, 3);
 
-        Assert.AreEqual(1, joint.GetVelocity());
+        Assert.AreEqual(0, articulationBody.xDrive.target);
+        joint.UpdateJointState(1);
+        Assert.AreEqual(1, articulationBody.xDrive.target);
+    }
+
+    [Test]
+    public void ImportJointData_Succeeds()
+    {
+        var joint = new RosSharp.Urdf.Joint(
+            name: "custom_joint", type: "continuous", parent: "base", child: "link",
+            axis: new RosSharp.Urdf.Joint.Axis(new double[] { 1, 2, 3 }),
+            limit: new RosSharp.Urdf.Joint.Limit(4, 5, 6, 7),
+            dynamics: new RosSharp.Urdf.Joint.Dynamics(8, 9));
+
+        GameObject baseObject = new GameObject("base");
+        GameObject linkObject = new GameObject("link");
+        linkObject.transform.parent = baseObject.transform;
+
+        UrdfJoint.Create(baseObject, UrdfJoint.JointTypes.Fixed);
+        TestUrdfJointContinuous urdfJoint = linkObject.AddComponent<TestUrdfJointContinuous>();
+        ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
+        urdfJoint.TestImportJointData(joint);
+
+        Assert.AreEqual(ArticulationDofLock.LockedMotion, articulationBody.linearLockX);
+        Assert.AreEqual(ArticulationDofLock.LockedMotion, articulationBody.linearLockY);
+        Assert.AreEqual(ArticulationDofLock.LockedMotion, articulationBody.linearLockZ);
+        Assert.AreEqual(ArticulationDofLock.FreeMotion, articulationBody.twistLock);
+
+        Quaternion expectedAnchorRotation = new Quaternion();
+        expectedAnchorRotation.SetFromToRotation(new Vector3(1, 0, 0), -new Vector3(-2, 3, 1));
+        Assert.AreEqual(expectedAnchorRotation, articulationBody.anchorRotation);
+
+        Assert.AreEqual(6, articulationBody.xDrive.forceLimit);
+        Assert.AreEqual(7, articulationBody.maxAngularVelocity);
+        Assert.AreEqual(8, articulationBody.linearDamping);
+        Assert.AreEqual(8, articulationBody.angularDamping);
+        Assert.AreEqual(9, articulationBody.jointFriction);
+
+        Object.DestroyImmediate(linkObject);
+        Object.DestroyImmediate(baseObject);
+    }
+
+    [Test]
+    public void ExportSpecificJointData_Succeeds()
+    {
+        GameObject linkObject = new GameObject("link");
+        TestUrdfJointContinuous urdfJoint = linkObject.AddComponent<TestUrdfJointContinuous>();
+        ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
+        urdfJoint.SetAxisOfMotion(new Vector3(1.2345678f, 2.3456789f, 3.4567891f));
+        urdfJoint.Dynamics(new RosSharp.Urdf.Joint.Dynamics(4, 5));
+
+        var joint = new RosSharp.Urdf.Joint(
+            name: "custom_joint", type: "continuous", parent: "base", child: "link");
+        urdfJoint.TestExportSpecificJointData(joint);
+
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(1.234568f, (float)joint.axis.xyz[0]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(2.345679f, (float)joint.axis.xyz[1]);
+        UnityEngine.Assertions.Assert.AreApproximatelyEqual(3.456789f, (float)joint.axis.xyz[2]);
+        Assert.AreEqual(4, joint.dynamics.damping);
+        Assert.AreEqual(5, joint.dynamics.friction);
+
+        Object.DestroyImmediate(linkObject);
     }
 }
