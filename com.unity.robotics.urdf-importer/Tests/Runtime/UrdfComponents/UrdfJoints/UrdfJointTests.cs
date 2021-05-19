@@ -171,7 +171,7 @@ public class UrdfJointTests
         UrdfJoint.Create(linkObject, UrdfJoint.JointTypes.Revolute);
         var joint = linkObject.GetComponent<UrdfJoint>().ExportJointData();
 
-        Assert.AreEqual(null, joint.name);
+        Assert.IsNull(joint.name);
         Assert.AreEqual("revolute", joint.type);
         Assert.AreEqual("base", joint.parent);
         Assert.AreEqual("link", joint.child);
