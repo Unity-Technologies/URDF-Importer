@@ -178,17 +178,22 @@ namespace RosSharp.Urdf
             Quaternion motion = unityJoint.anchorRotation;
 
             unityJoint.linearLockX = ArticulationDofLock.LockedMotion;
-            unityJoint.maxLinearVelocity = (float)joint.limit.velocity;
             if (joint.limit != null)
             {
                 unityJoint.linearLockY = ArticulationDofLock.LimitedMotion;
                 unityJoint.linearLockZ = ArticulationDofLock.LimitedMotion;
-                ArticulationDrive drive = unityJoint.xDrive;
-                drive.upperLimit = (float)joint.limit.upper;
-                drive.lowerLimit = (float)joint.limit.lower;
-                drive.forceLimit = (float)joint.limit.effort;
+                var drive = new ArticulationDrive()
+                {
+                    stiffness = unityJoint.xDrive.stiffness,
+                    damping = unityJoint.xDrive.damping,
+                    forceLimit = (float)joint.limit.effort,
+                    lowerLimit = (float)joint.limit.lower,
+                    upperLimit = (float)joint.limit.upper,
+                };
+                unityJoint.xDrive = drive;
                 unityJoint.zDrive = drive;
                 unityJoint.yDrive = drive;
+                unityJoint.maxLinearVelocity = (float)joint.limit.velocity;
             }
             else
             {

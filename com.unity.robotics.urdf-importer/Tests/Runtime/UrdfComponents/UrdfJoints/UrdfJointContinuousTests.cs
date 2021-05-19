@@ -1,23 +1,24 @@
 using NUnit.Framework;
 using UnityEngine;
 using RosSharp.Urdf;
+using Joint = RosSharp.Urdf.Joint;
 
 public class TestUrdfJointContinuous : UrdfJointContinuous
 {
-    public void TestImportJointData(RosSharp.Urdf.Joint joint)
+    public void TestImportJointData(Joint joint)
     {
         unityJoint = gameObject.GetComponent<ArticulationBody>();
         ImportJointData(joint);
     }
 
-    public RosSharp.Urdf.Joint TestExportSpecificJointData(RosSharp.Urdf.Joint joint)
+    public Joint TestExportSpecificJointData(Joint joint)
     {
         unityJoint = gameObject.GetComponent<ArticulationBody>();
         return ExportSpecificJointData(joint);
     }
 
     public void SetAxisOfMotion(Vector3 axisofMotion) => this.axisofMotion = axisofMotion;
-    public void Dynamics(RosSharp.Urdf.Joint.Dynamics dynamics) => SetDynamics(dynamics);
+    public void Dynamics(Joint.Dynamics dynamics) => SetDynamics(dynamics);
 }
 
 public class UrdfJointContinuousTests
@@ -78,11 +79,11 @@ public class UrdfJointContinuousTests
     [Test]
     public void ImportJointData_Succeeds()
     {
-        var joint = new RosSharp.Urdf.Joint(
+        var joint = new Joint(
             name: "custom_joint", type: "continuous", parent: "base", child: "link",
-            axis: new RosSharp.Urdf.Joint.Axis(new double[] { 1, 2, 3 }),
-            limit: new RosSharp.Urdf.Joint.Limit(4, 5, 6, 7),
-            dynamics: new RosSharp.Urdf.Joint.Dynamics(8, 9));
+            axis: new Joint.Axis(new double[] { 1, 2, 3 }),
+            limit: new Joint.Limit(4, 5, 6, 7),
+            dynamics: new Joint.Dynamics(8, 9));
 
         GameObject baseObject = new GameObject("base");
         GameObject linkObject = new GameObject("link");
@@ -119,9 +120,9 @@ public class UrdfJointContinuousTests
         TestUrdfJointContinuous urdfJoint = linkObject.AddComponent<TestUrdfJointContinuous>();
         ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
         urdfJoint.SetAxisOfMotion(new Vector3(1.2345678f, 2.3456789f, 3.4567891f));
-        urdfJoint.Dynamics(new RosSharp.Urdf.Joint.Dynamics(4, 5));
+        urdfJoint.Dynamics(new Joint.Dynamics(4, 5));
 
-        var joint = new RosSharp.Urdf.Joint(
+        var joint = new Joint(
             name: "custom_joint", type: "continuous", parent: "base", child: "link");
         urdfJoint.TestExportSpecificJointData(joint);
 
