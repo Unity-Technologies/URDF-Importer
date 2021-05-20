@@ -74,7 +74,7 @@ namespace RosSharp.Urdf
         public override float GetVelocity()
         {
 #if UNITY_2020_1_OR_NEWER
-            return unityJoint.velocity[xAxis];
+            return unityJoint.jointVelocity[xAxis];
 #else
             return float.NaN;
 #endif
@@ -132,7 +132,7 @@ namespace RosSharp.Urdf
 
             Vector3 axisofMotionUnity = axisofMotion.Ros2Unity();
             Quaternion Motion = new Quaternion();
-            Motion.SetFromToRotation(new Vector3(1, 0, 0),axisofMotionUnity);
+            Motion.SetFromToRotation(new Vector3(1, 0, 0), axisofMotionUnity);
             unityJoint.anchorRotation = Motion;
 
             if (joint.limit != null)
