@@ -101,16 +101,7 @@ namespace RosSharp.Urdf
         protected override void ImportJointData(Joint joint)
         {
             AdjustMovement(joint);
-            if (joint.dynamics != null)
-            {
-                unityJoint.angularDamping = (double.IsNaN(joint.dynamics.damping)) ? defaultDamping : (float)joint.dynamics.damping;
-                unityJoint.jointFriction = (double.IsNaN(joint.dynamics.friction)) ? defaultFriction : (float)joint.dynamics.friction;
-            }
-            else
-            {
-                unityJoint.angularDamping = 0;
-                unityJoint.jointFriction = 0;
-            }
+            SetDynamics(joint.dynamics);
         }
 
         protected override Joint ExportSpecificJointData(Joint joint)
