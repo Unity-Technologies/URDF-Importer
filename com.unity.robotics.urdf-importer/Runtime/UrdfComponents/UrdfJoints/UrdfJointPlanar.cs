@@ -25,7 +25,7 @@ namespace RosSharp.Urdf
         {
             UrdfJointPlanar urdfJoint = linkObject.AddComponent<UrdfJointPlanar>();
 #if UNITY_2020_1_OR_NEWER
-            urdfJoint.unityJoint = linkObject.AddComponent<ArticulationBody>();
+            urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.PrismaticJoint;
 #else
             urdfJoint.unityJoint = linkObject.AddComponent<ConfigurableJoint>();
@@ -59,19 +59,7 @@ namespace RosSharp.Urdf
         {
 #if UNITY_2020_1_OR_NEWER
             AdjustMovement(joint);
-
-
-
-            if (joint.dynamics != null)
-            {
-                unityJoint.linearDamping = (float)joint.dynamics.damping;
-                unityJoint.jointFriction = (float)joint.dynamics.friction;
-            }
-            else
-            {
-                unityJoint.linearDamping = 0;
-                unityJoint.jointFriction = 0;
-            }
+            SetDynamics(joint.dynamics);
 #else
             ConfigurableJoint configurableJoint = (ConfigurableJoint)unityJoint;
             Vector3 normal = (joint.axis != null) ? GetAxis(joint.axis) : GetDefaultAxis();
@@ -91,6 +79,31 @@ namespace RosSharp.Urdf
             if (joint.limit != null)
                 configurableJoint.linearLimit = GetLinearLimit(joint.limit);
 #endif
+        }
+
+        private static JointDrive GetJointDrive(Joint.Dynamics dynamics)
+        {
+            return new JointDrive
+            {
+                maximumForce = float.MaxValue,
+                positionDamper = (float)dynamics.damping,
+                positionSpring = (float)dynamics.friction
+            };
+        }
+
+        private static JointSpring GetJointSpring(Joint.Dynamics dynamics)
+        {
+            return new JointSpring
+            {
+                damper = (float)dynamics.damping,
+                spring = (float)dynamics.friction,
+                targetPosition = 0
+            };
+        }
+
+        private static SoftJointLimit GetLinearLimit(Joint.Limit limit)
+        {
+            return new SoftJointLimit { limit = (float)limit.upper };
         }
 
         #region Export
