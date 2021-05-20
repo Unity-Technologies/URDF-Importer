@@ -229,6 +229,8 @@ namespace RosSharp.Tests
 
             child01.gameObject.AddComponent<BoxCollider>();
             Assert.AreEqual(child01, parent.FirstChildByQuery(x => x.GetComponent<BoxCollider>() != null));
+
+            Object.DestroyImmediate(parent.gameObject);
         }
     }
 }

@@ -19,7 +19,7 @@ using Object = UnityEngine.Object;
 
 namespace RosSharp
 {
-    public static class BuiltInExtensions
+    internal static class BuiltInExtensions
     {
         private const int RoundDigits = 6;
 
