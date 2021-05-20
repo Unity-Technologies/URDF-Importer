@@ -51,5 +51,7 @@ jobs:
           VALIDATE_MARKDOWN: false
           VALIDATE_XML: false
           VALIDATE_YAML: false
-          DEFAULT_BRANCH: master
+          VALIDATE_JSCPD: false
+          VALIDATE_JSON: fasle
+          DEFAULT_BRANCH: dev
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
