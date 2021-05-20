@@ -10,9 +10,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/ 
+*/
 
-using System;
 using UnityEngine;
 
 namespace RosSharp.Urdf
@@ -50,7 +49,7 @@ namespace RosSharp.Urdf
 
         public override float GetPosition()
         {
-            Vector3 distanceFromAnchor = unityJoint.transform.localPosition ;
+            Vector3 distanceFromAnchor = unityJoint.transform.localPosition;
             Debug.Log("'ArticulationBody' does not contain a definition for 'connectedAnchor' and no accessible extension method 'connectedAnchor'");
             return distanceFromAnchor.magnitude;
         }
@@ -151,7 +150,7 @@ namespace RosSharp.Urdf
 #endif
         }
 
-        protected override bool IsJointAxisDefined() 
+        protected override bool IsJointAxisDefined()
         {
 #if UNITY_2020_1_OR_NEWER
             Debug.Log("Cannot convert type 'UnityEngine.ArticulationBody' to 'UnityEngine.ConfigurableJoint'");
@@ -167,7 +166,7 @@ namespace RosSharp.Urdf
 #endif
         }
 
-        protected override void AdjustMovement(Joint joint) 
+        protected override void AdjustMovement(Joint joint)
         {
             if (joint.axis == null || joint.axis.xyz == null)
             {
@@ -218,7 +217,4 @@ namespace RosSharp.Urdf
 
         #endregion
     }
-
-
 }
-
