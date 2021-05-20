@@ -19,7 +19,7 @@ using Object = UnityEngine.Object;
 
 namespace RosSharp
 {
-    public static class TransformExtensions
+    public static class BuiltInExtensions
     {
         private const int RoundDigits = 6;
 
@@ -66,7 +66,7 @@ namespace RosSharp
 
         public static void MoveChildTransformToParent(this Transform parent, bool transferRotation = true)
         {
-            //Detach child in order to get a transform indenpendent from parent
+            //Detach child in order to get a transform independent from parent
             Transform childTransform = parent.GetChild(0);
             parent.DetachChildren();
 
@@ -80,10 +80,15 @@ namespace RosSharp
                 childTransform.localRotation = Quaternion.identity;
             }
 
+            // Reattach child
             childTransform.parent = parent;
 
             childTransform.localPosition = Vector3.zero;
             childTransform.localScale = Vector3.one;
+            if (transferRotation) 
+            {
+                childTransform.localRotation = Quaternion.identity;
+            }
         }
 
         public static double[] ToRosRPY(this Vector3 transform)
@@ -191,14 +196,7 @@ namespace RosSharp
 
         public static bool EqualsDelta(this double first, double second, double delta)
         {
-            if (Math.Abs(first - second) <= Math.Abs(delta * first))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (Math.Abs(first - second) <= delta);
         }
 
         /// <summary>
@@ -242,19 +240,6 @@ namespace RosSharp
         }
 
         /// <summary>
-        /// Function overload of ToString method of Matrix3x3 to achieve unrounded print of the matrix
-        /// </summary>
-        /// <param name="first">Matrix to be printed</param>
-        /// <returns></returns>
-        public static string ToString(this Matrix4x4 first)
-        {
-            return ("Matrix : " + first[0, 0] + " " + first[0, 1] + " " + first[0, 2] + " " + first[0, 3] + " " +
-                first[1, 0] + " " + first[1, 1] + " " + first[1, 2] + " " + first[1, 3] + " " +
-                first[2, 0] + " " + first[2, 1] + " " + first[2, 2] + " " + first[2, 3] + " " +
-                first[3, 0] + " " + first[3, 1] + " " + first[3, 2] + " " + first[3, 3]);
-        }
-
-        /// <summary>
         /// Recursively searches the entire children hierachy (depth first) to find the child of the game object that matches the query
         /// </summary>
         /// <param name="parent"></param>
@@ -262,8 +247,10 @@ namespace RosSharp
         /// <returns>The first child of the game object that matches the query</returns>
         public static Transform FirstChildByQuery(this Transform parent, Func<Transform, bool> query)
         {
+            Debug.Log($"parent is {parent}");
             if (parent.childCount == 0)
             {
+                Debug.Log("had no children, returning null");
                 return null;
             }
 
@@ -271,12 +258,15 @@ namespace RosSharp
             for (int i = 0; i < parent.childCount; i++)
             {
                 var child = parent.GetChild(i);
+                Debug.Log($"child is {child}");
                 if (query(child))
                 {
+                    Debug.Log($"returning above child {child}");
                     return child;
                 }
                 result = FirstChildByQuery(child, query);
             }
+            Debug.Log($"returning at end of function {result}");
             return result;
         }
     }

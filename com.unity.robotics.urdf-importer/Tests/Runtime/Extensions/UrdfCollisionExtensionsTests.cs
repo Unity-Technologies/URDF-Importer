@@ -78,7 +78,7 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void Create_LinkCollision_DefaultBox()
+        public void Create_LinkCollision_DefaultGeometry()
         {
             RuntimeURDF.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
@@ -94,7 +94,7 @@ namespace RosSharp.Urdf.Tests
         }
 
         [Test]
-        public void ExportCollisionData_DefaultBox_Succeeds()
+        public void ExportCollisionData_DefaultGeometry_Succeeds()
         {
             RuntimeURDF.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
