@@ -27,7 +27,7 @@ public class TestUrdfJointRevolute : UrdfJointRevolute
 public class UrdfJointRevoluteTests
 {
     [Test]
-    public void UrdfJointRevoluteTestsSimplePasses()
+    public void Create_UrdfJointRevolute_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint joint = UrdfJointRevolute.Create(linkObject);
@@ -60,7 +60,6 @@ public class UrdfJointRevoluteTests
         Assert.AreEqual(7, joint.GetEffort());
 
         Object.DestroyImmediate(baseObject);
-        Object.DestroyImmediate(linkObject);
     }
 
     [Test]
@@ -77,6 +76,8 @@ public class UrdfJointRevoluteTests
         Assert.AreEqual(0, articulationBody.xDrive.target);
         joint.UpdateJointState(1);
         Assert.AreEqual(1 * Mathf.Rad2Deg, articulationBody.xDrive.target);
+
+        Object.DestroyImmediate(baseObject);
     }
 
     [Test]
@@ -114,7 +115,6 @@ public class UrdfJointRevoluteTests
         Assert.AreEqual(8, articulationBody.angularDamping);
         Assert.AreEqual(9, articulationBody.jointFriction);
 
-        Object.DestroyImmediate(linkObject);
         Object.DestroyImmediate(baseObject);
     }
 

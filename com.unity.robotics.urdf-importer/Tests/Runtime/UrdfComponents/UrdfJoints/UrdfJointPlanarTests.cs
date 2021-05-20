@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
 using RosSharp.Urdf;
+using UnityEngine;
 using Joint = RosSharp.Urdf.Joint;
 
 public class TestUrdfJointPlanar : UrdfJointPlanar
@@ -28,7 +28,7 @@ public class TestUrdfJointPlanar : UrdfJointPlanar
 public class UrdfJointPlanarTests
 {
     [Test]
-    public void Create_Succeeds()
+    public void Create_UrdfJointPlanar_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint joint = UrdfJointPlanar.Create(linkObject);
@@ -56,7 +56,6 @@ public class UrdfJointPlanarTests
         Assert.AreEqual(linkObject.transform.localPosition.magnitude, joint.GetPosition());
 
         Object.DestroyImmediate(baseObject);
-        Object.DestroyImmediate(linkObject);
     }
 
     [Test, TestCaseSource("AxisType")]
@@ -80,7 +79,6 @@ public class UrdfJointPlanarTests
         UnityEngine.Assertions.Assert.AreApproximatelyEqual(expectedAnchorRotation.y, articulationBody.anchorRotation.y);
         UnityEngine.Assertions.Assert.AreApproximatelyEqual(expectedAnchorRotation.z, articulationBody.anchorRotation.z);
 
-        Object.DestroyImmediate(linkObject);
         Object.DestroyImmediate(baseObject);
     }
 
@@ -127,7 +125,6 @@ public class UrdfJointPlanarTests
         Assert.AreEqual(6, articulationBody.zDrive.forceLimit);
         Assert.AreEqual(7, articulationBody.maxLinearVelocity);
 
-        Object.DestroyImmediate(linkObject);
         Object.DestroyImmediate(baseObject);
     }
 

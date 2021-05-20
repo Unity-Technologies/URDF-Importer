@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 using RosSharp.Urdf;
+using UnityEngine;
 using Joint = RosSharp.Urdf.Joint;
 
 public class TestUrdfJointPrismatic : UrdfJointPrismatic
@@ -27,7 +24,7 @@ public class TestUrdfJointPrismatic : UrdfJointPrismatic
 public class UrdfJointPrismaticTests
 {
     [Test]
-    public void Create_Succeeds()
+    public void Create_UrdfJointPrismatic_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint joint = UrdfJointPrismatic.Create(linkObject);
@@ -60,7 +57,6 @@ public class UrdfJointPrismaticTests
         Assert.AreEqual(7, joint.GetEffort());
 
         Object.DestroyImmediate(baseObject);
-        Object.DestroyImmediate(linkObject);
     }
 
     [Test]
@@ -77,6 +73,8 @@ public class UrdfJointPrismaticTests
         Assert.AreEqual(0, articulationBody.xDrive.target);
         joint.UpdateJointState(1);
         Assert.AreEqual(1, articulationBody.xDrive.target);
+
+        Object.DestroyImmediate(baseObject);
     }
 
     [Test]
@@ -113,7 +111,6 @@ public class UrdfJointPrismaticTests
         Assert.AreEqual(8, articulationBody.angularDamping);
         Assert.AreEqual(9, articulationBody.jointFriction);
 
-        Object.DestroyImmediate(linkObject);
         Object.DestroyImmediate(baseObject);
     }
 

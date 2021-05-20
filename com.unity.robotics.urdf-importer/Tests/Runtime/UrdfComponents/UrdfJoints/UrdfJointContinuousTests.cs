@@ -1,6 +1,6 @@
 using NUnit.Framework;
-using UnityEngine;
 using RosSharp.Urdf;
+using UnityEngine;
 using Joint = RosSharp.Urdf.Joint;
 
 public class TestUrdfJointContinuous : UrdfJointContinuous
@@ -24,7 +24,7 @@ public class TestUrdfJointContinuous : UrdfJointContinuous
 public class UrdfJointContinuousTests
 {
     [Test]
-    public void Create_Succeeds()
+    public void Create_UrdfJointContinuous_Succeeds()
     {
         GameObject linkObject = new GameObject("link");
         UrdfJoint joint = UrdfJointContinuous.Create(linkObject);
@@ -57,7 +57,6 @@ public class UrdfJointContinuousTests
         Assert.AreEqual(7, joint.GetEffort());
 
         Object.DestroyImmediate(baseObject);
-        Object.DestroyImmediate(linkObject);
     }
 
     [Test]
@@ -74,6 +73,8 @@ public class UrdfJointContinuousTests
         Assert.AreEqual(0, articulationBody.xDrive.target);
         joint.UpdateJointState(1);
         Assert.AreEqual(1, articulationBody.xDrive.target);
+
+        Object.DestroyImmediate(baseObject);
     }
 
     [Test]
@@ -109,7 +110,6 @@ public class UrdfJointContinuousTests
         Assert.AreEqual(8, articulationBody.angularDamping);
         Assert.AreEqual(9, articulationBody.jointFriction);
 
-        Object.DestroyImmediate(linkObject);
         Object.DestroyImmediate(baseObject);
     }
 
