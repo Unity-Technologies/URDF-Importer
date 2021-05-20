@@ -247,10 +247,8 @@ namespace RosSharp
         /// <returns>The first child of the game object that matches the query</returns>
         public static Transform FirstChildByQuery(this Transform parent, Func<Transform, bool> query)
         {
-            Debug.Log($"parent is {parent}");
             if (parent.childCount == 0)
             {
-                Debug.Log("had no children, returning null");
                 return null;
             }
 
@@ -258,15 +256,12 @@ namespace RosSharp
             for (int i = 0; i < parent.childCount; i++)
             {
                 var child = parent.GetChild(i);
-                Debug.Log($"child is {child}");
                 if (query(child))
                 {
-                    Debug.Log($"returning above child {child}");
                     return child;
                 }
                 result = FirstChildByQuery(child, query);
             }
-            Debug.Log($"returning at end of function {result}");
             return result;
         }
     }
