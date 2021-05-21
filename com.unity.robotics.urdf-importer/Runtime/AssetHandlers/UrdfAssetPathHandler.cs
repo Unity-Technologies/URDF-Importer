@@ -132,11 +132,15 @@ namespace RosSharp.Urdf
         private static void MoveMaterialsToNewLocation(string oldPackageRoot)
         {
             if (RuntimeURDF.AssetDatabase_IsValidFolder(Path.Combine(oldPackageRoot, MaterialFolderName)))
+            {
                 RuntimeURDF.AssetDatabase_MoveAsset(
                     Path.Combine(oldPackageRoot, MaterialFolderName),
                     Path.Combine(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName));
+            }
             else
+            {
                 RuntimeURDF.AssetDatabase_CreateFolder(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName);
+            }
         }
 
         public static string GetMaterialAssetPath(string materialName)
