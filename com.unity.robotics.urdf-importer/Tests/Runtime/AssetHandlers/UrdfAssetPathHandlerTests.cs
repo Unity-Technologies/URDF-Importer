@@ -12,17 +12,19 @@ namespace RosSharp.Tests
 {
     public class UrdfAssetPathHandlerTests
     {
-        string assetRoot = "Assets/Tests/Runtime/UrdfAssetPathHandler";
-        string packageRoot = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/UrdfAssetPathHandler";
+        string assetRoot;
+        string packageRoot;
 
         [SetUp]
         public void SetUp()
         {
+            assetRoot = "Assets/Tests/Runtime/UrdfAssetPathHandler";
+            packageRoot = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/UrdfAssetPathHandler";
+
             RuntimeURDF.runtimeModeEnabled = false;
             AssetDatabase.CreateFolder("Assets", "Tests");
             AssetDatabase.CreateFolder("Assets/Tests", "Runtime");
             AssetDatabase.CreateFolder("Assets/Tests/Runtime", "UrdfAssetPathHandler");
-
             AssetDatabase.CreateFolder("Packages/com.unity.robotics.urdf-importer/Tests/Runtime", "UrdfAssetPathHandler");
         }
         
@@ -31,11 +33,9 @@ namespace RosSharp.Tests
         {
             // Force runtime mode to set testing package root
             RuntimeURDF.runtimeModeEnabled = true;
-            UrdfAssetPathHandler.SetPackageRoot(assetRoot); // set oldPackagePath
-            UrdfAssetPathHandler.SetPackageRoot(assetRoot, true); // correctPackageRoot
-            RuntimeURDF.runtimeModeEnabled = false;
+            UrdfAssetPathHandler.SetPackageRoot(assetRoot); // Set oldPackagePath
+            UrdfAssetPathHandler.SetPackageRoot(assetRoot, true); // Run correctPackageRoot
             Assert.AreEqual(assetRoot, UrdfAssetPathHandler.GetPackageRoot());
-            // Assert.IsTrue(AssetDatabase.IsValidFolder(Path.Combine(assetRoot, "Materials"))); // Folder isn't created when runtime enabled
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace RosSharp.Tests
         public void GetRelativeAssetPath_Runtime_Success()
         {
             RuntimeURDF.runtimeModeEnabled = true;
-            // Check starting with Application.dataPath
+            // Starting with Application.dataPath
             Assert.AreEqual("Assets/Valid/Path", UrdfAssetPathHandler.GetRelativeAssetPath($"{Application.dataPath}/Valid/Path"));
             // Not starting with dataPath
             Assert.AreEqual("Assets/Valid/Path", UrdfAssetPathHandler.GetRelativeAssetPath($"Assets/Valid/Path"));
@@ -67,7 +67,7 @@ namespace RosSharp.Tests
         }
         
         [Test]
-        public void GetRelativeAssetPathFromUrdfPath_CubeUrdfs_Success()
+        public void GetRelativeAssetPathFromUrdfPath_CubeUrdf_Success()
         {
             string urdfRoot = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube";
             // Force runtime mode to set testing package root
