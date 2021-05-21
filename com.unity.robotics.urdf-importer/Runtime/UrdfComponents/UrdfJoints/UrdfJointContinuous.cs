@@ -24,7 +24,7 @@ namespace RosSharp.Urdf
         {
             UrdfJointContinuous urdfJoint = linkObject.AddComponent<UrdfJointContinuous>();
 #if UNITY_2020_1_OR_NEWER
-            urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>(); 
+            urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.RevoluteJoint;
 #else
             urdfJoint.unityJoint = linkObject.AddComponent<HingeJoint>();
@@ -33,7 +33,7 @@ namespace RosSharp.Urdf
             return urdfJoint;
         }
 
-#region Runtime
+        #region Runtime
         /// <summary>
         /// Returns the current position of the joint in radians
         /// </summary>
@@ -49,16 +49,16 @@ namespace RosSharp.Urdf
         }
 
         /// <summary>
-        /// Returns the current velocity of joint in radians per second
+        /// Returns the current velocity of joint in radians per second in the reduced coordinates
         /// </summary>
         /// <returns>floating point for joint velocity in radians per second</returns>
         public override float GetVelocity()
         {
-            #if UNITY_2020_1_OR_NEWER
-                return unityJoint.velocity[xAxis];
-            #else
+#if UNITY_2020_1_OR_NEWER
+            return unityJoint.jointVelocity[xAxis];
+#else
             return -((HingeJoint)unityJoint).velocity;
-            #endif
+#endif
         }
 
         /// <summary>
@@ -67,11 +67,11 @@ namespace RosSharp.Urdf
         /// <returns>floating point in Nm</returns>
         public override float GetEffort()
         {
-            #if UNITY_2020_1_OR_NEWER
-                return unityJoint.jointForce[xAxis];
-            #else
+#if UNITY_2020_1_OR_NEWER
+            return unityJoint.jointForce[xAxis];
+#else
                 return -((HingeJoint)unityJoint).motor.force;
-            #endif
+#endif
 
         }
 
@@ -121,7 +121,7 @@ namespace RosSharp.Urdf
         /// Reads axis joint information and rotation to the articulation body to produce the required motion
         /// </summary>
         /// <param name="joint">Structure containing joint information</param>
-        protected override void AdjustMovement(Joint joint) 
+        protected override void AdjustMovement(Joint joint)
         {
             axisofMotion = joint.axis.xyz.ToVector3();
             unityJoint.linearLockX = ArticulationDofLock.LockedMotion;
@@ -147,4 +147,3 @@ namespace RosSharp.Urdf
 
     }
 }
-
