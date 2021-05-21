@@ -10,9 +10,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/ 
+*/
 
-using System;
 using UnityEngine;
 
 namespace RosSharp.Urdf
@@ -50,7 +49,7 @@ namespace RosSharp.Urdf
 
         public override float GetPosition()
         {
-            Vector3 distanceFromAnchor = unityJoint.transform.localPosition ;
+            Vector3 distanceFromAnchor = unityJoint.transform.localPosition;
             Debug.Log("'ArticulationBody' does not contain a definition for 'connectedAnchor' and no accessible extension method 'connectedAnchor'");
             return distanceFromAnchor.magnitude;
         }
@@ -151,7 +150,7 @@ namespace RosSharp.Urdf
 #endif
         }
 
-        protected override bool IsJointAxisDefined() 
+        protected override bool IsJointAxisDefined()
         {
 #if UNITY_2020_1_OR_NEWER
             Debug.Log("Cannot convert type 'UnityEngine.ArticulationBody' to 'UnityEngine.ConfigurableJoint'");
@@ -167,9 +166,13 @@ namespace RosSharp.Urdf
 #endif
         }
 
-        protected override void AdjustMovement(Joint joint) 
+        protected override void AdjustMovement(Joint joint)
         {
-            axisofMotion = (joint.axis == null || joint.axis.xyz == null) ? new Vector3(1, 0, 0) : new Vector3((float)joint.axis.xyz[0], (float)joint.axis.xyz[1], (float)joint.axis.xyz[2]);
+            if (joint.axis == null || joint.axis.xyz == null)
+            {
+                joint.axis = new Joint.Axis(new double[] { 1, 0, 0 });
+            }
+            axisofMotion = new Vector3((float)joint.axis.xyz[0], (float)joint.axis.xyz[1], (float)joint.axis.xyz[2]);
             int motionAxis = joint.axis.AxisofMotion();
             Quaternion motion = unityJoint.anchorRotation;
 
@@ -178,11 +181,18 @@ namespace RosSharp.Urdf
             {
                 unityJoint.linearLockY = ArticulationDofLock.LimitedMotion;
                 unityJoint.linearLockZ = ArticulationDofLock.LimitedMotion;
-                ArticulationDrive drive = unityJoint.xDrive;
-                drive.upperLimit = (float)joint.limit.upper;
-                drive.lowerLimit = (float)joint.limit.lower;
+                var drive = new ArticulationDrive()
+                {
+                    stiffness = unityJoint.xDrive.stiffness,
+                    damping = unityJoint.xDrive.damping,
+                    forceLimit = (float)joint.limit.effort,
+                    lowerLimit = (float)joint.limit.lower,
+                    upperLimit = (float)joint.limit.upper,
+                };
+                unityJoint.xDrive = drive;
                 unityJoint.zDrive = drive;
                 unityJoint.yDrive = drive;
+                unityJoint.maxLinearVelocity = (float)joint.limit.velocity;
             }
             else
             {
@@ -207,7 +217,4 @@ namespace RosSharp.Urdf
 
         #endregion
     }
-
-
 }
-
