@@ -40,7 +40,6 @@ namespace RosSharp.Tests
         public void GetRelativeAssetPath_Nonruntime_NullValues()
         {
             RuntimeURDF.runtimeModeEnabled = false;
-            // Everything returns null during non-runtime
             Assert.AreEqual("Invalid/Asset/Path", UrdfAssetPathHandler.GetRelativeAssetPath("Invalid/Asset/Path"));
             Assert.AreEqual($"{assetRoot}/TestAsset.txt", UrdfAssetPathHandler.GetRelativeAssetPath($"{assetRoot}/TestAsset.txt"));
             Assert.AreEqual($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs", UrdfAssetPathHandler.GetRelativeAssetPath($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs"));
@@ -63,7 +62,8 @@ namespace RosSharp.Tests
             string projectPath = Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length);
             Assert.AreEqual($"{projectPath}Packages/com.unity.robotics.urdf-importer/Tests/Runtime/UrdfAssetPathHandler", UrdfAssetPathHandler.GetFullAssetPath(packageRoot));
         }
-        
+
+#if UNITY_EDITOR
         [Test]
         public void GetRelativeAssetPathFromUrdfPath_CubeUrdf_Success()
         {
@@ -76,6 +76,7 @@ namespace RosSharp.Tests
             Assert.AreEqual($"{urdfRoot}/meshes/cube.prefab", UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath("package://meshes/cube.stl"));
             Assert.AreEqual($"{urdfRoot}/meshes/cube.prefab", UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath("../meshes/cube.stl"));
         }
+#endif
 
         [Test]
         public void IsValidAssetPath_Nonruntime_Success()

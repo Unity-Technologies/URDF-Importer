@@ -89,6 +89,7 @@ namespace RosSharp.Urdf.Tests
             Object.DestroyImmediate(robot);
         }
 
+#if UNITY_EDITOR
         [Test]
         public void ExportRobotToUrdf_NoParameters_Success()
         {
@@ -103,6 +104,7 @@ namespace RosSharp.Urdf.Tests
 
             Object.DestroyImmediate(emptyRobot);
         }
+#endif
 
         [Test]
         public void CreateTag_RobotTag_Success()
@@ -129,7 +131,7 @@ namespace RosSharp.Urdf.Tests
         public void TearDown()
         {
             List<string> outFailedPaths = new List<string>();
-            AssetDatabase.DeleteAssets(new string[] {assetRoot, "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/Materials", "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset", "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset.meta"}, outFailedPaths);
+            AssetDatabase.DeleteAssets(new string[] {"Assets/Tests", "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/Materials", "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset", "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset.meta"}, outFailedPaths);
         }
     }
 }
