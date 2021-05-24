@@ -18,7 +18,7 @@ CodeFormatTest:
         - dotnet tool install -g JetBrains.ReSharper.GlobalTools
         - git clone https://github.com/Unity-Technologies/com.unity.coding.git
         - mkdir codeResults
-        - jb inspectcode ./TestUrdfImporter/TestUrdfImporter.sln -o=codeResults --profile="./com.unity.coding/UnityCoding/Packages/com.unity.coding/Coding~/Configs/JetBrains/Unity.Global.DotSettings"
+        - dotnet tool run jb inspectcode ./TestUrdfImporter/TestUrdfImporter.sln -o=codeResults --profile="./com.unity.coding/UnityCoding/Packages/com.unity.coding/Coding~/Configs/JetBrains/Unity.Global.DotSettings"
     triggers:
         cancel_old_ci: true
         expression: |
