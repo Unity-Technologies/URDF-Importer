@@ -50,19 +50,22 @@ namespace RosSharp.Urdf
         
         public static string GetRelativeAssetPath(string absolutePath)
         {
+            string assetPath = absolutePath;
             var absolutePathUnityFormat = absolutePath.SetSeparatorChar();
             if (!absolutePathUnityFormat.StartsWith(Application.dataPath.SetSeparatorChar()))
             {
 #if UNITY_EDITOR
                 if (!RuntimeURDF.IsRuntimeMode())
                 {
-                    return null;
+                    assetPath = absolutePath.Substring(Application.dataPath.Length - "Assets".Length);
                 }
 #endif
-                return absolutePath; // so that it works in runtime
+                return assetPath; // so that it works in runtime
             }
-
-            var assetPath = "Assets" + absolutePath.Substring(Application.dataPath.Length);
+            else 
+            {
+                assetPath = "Assets" + absolutePath.Substring(Application.dataPath.Length);
+            }
             return assetPath.SetSeparatorChar();
         }
 
