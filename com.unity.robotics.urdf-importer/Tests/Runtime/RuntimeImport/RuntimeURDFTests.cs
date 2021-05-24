@@ -5,7 +5,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.TestTools;
-using RosSharp.Urdf;
+using Unity.Robotics.UrdfImporter;
 
 public class RuntimeURDFTests
 {

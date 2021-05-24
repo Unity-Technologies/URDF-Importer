@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using RosSharp.Urdf;
-using Joint = RosSharp.Urdf.Joint;
+using Unity.Robotics.UrdfImporter;
+using Joint = Unity.Robotics.UrdfImporter.Joint;
 
 public class TestUrdfJointRevolute : UrdfJointRevolute
 {

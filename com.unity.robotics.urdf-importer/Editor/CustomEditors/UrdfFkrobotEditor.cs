@@ -1,8 +1,8 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using RosSharp.Control;
+using Unity.Robotics.UrdfImporter.Control;
 
-namespace RosSharp.Urdf.Editor
+namespace Unity.Robotics.UrdfImporter.Editor
 {
     [CustomEditor(typeof(FKRobot), true)]
     public class UrdfFkrobotEditor : UnityEditor.Editor

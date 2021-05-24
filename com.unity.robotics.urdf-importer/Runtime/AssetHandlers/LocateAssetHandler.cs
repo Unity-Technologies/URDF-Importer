@@ -16,7 +16,7 @@ using System.IO;
 using System;
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class LocateAssetHandler
     {

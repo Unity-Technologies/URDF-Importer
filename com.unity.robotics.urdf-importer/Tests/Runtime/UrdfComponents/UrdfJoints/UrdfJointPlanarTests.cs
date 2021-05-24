@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using RosSharp.Urdf;
+using Unity.Robotics.UrdfImporter;
 using UnityEngine;
-using Joint = RosSharp.Urdf.Joint;
+using Joint = Unity.Robotics.UrdfImporter.Joint;
 
 public class TestUrdfJointPlanar : UrdfJointPlanar
 {

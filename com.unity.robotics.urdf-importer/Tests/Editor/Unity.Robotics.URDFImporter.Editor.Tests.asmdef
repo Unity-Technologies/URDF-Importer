@@ -1,10 +1,10 @@
 {
-    "name": "Unity.Robotics.URDFImporter.Editor.Tests",
+    "name": "Unity.Robotics.UrdfImporter.Editor.Tests",
     "rootNamespace": "Unity.Robotics.EditorTests.URDFImporter",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Unity.Robotics.URDFImporter.Editor"
+        "Unity.Robotics.UrdfImporter.Editor"
     ],
     "includePlatforms": [
         "Editor"

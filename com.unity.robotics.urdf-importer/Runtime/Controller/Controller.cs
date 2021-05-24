@@ -2,7 +2,7 @@
 using Unity.Robotics;
 using UnityEngine;
 
-namespace RosSharp.Control
+namespace Unity.Robotics.UrdfImporter.Control
 {
     public enum RotationDirection { None = 0, Positive = 1, Negative = -1 };
     public enum ControlType { PositionControl };

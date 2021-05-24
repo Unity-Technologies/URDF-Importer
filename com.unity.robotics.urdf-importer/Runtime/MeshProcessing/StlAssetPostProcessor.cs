@@ -16,7 +16,7 @@ using UnityEngine;
 using System.Linq;
 using System.IO;
 
-namespace RosSharp
+namespace Unity.Robotics.UrdfImporter
 {
     using Unity.Robotics;
 #if UNITY_EDITOR
@@ -70,7 +70,7 @@ namespace RosSharp
 
         private static GameObject CreateStlParent(string stlFile)
         {
-            Mesh[] meshes = Urdf.StlImporter.ImportMesh(stlFile);
+            Mesh[] meshes = StlImporter.ImportMesh(stlFile);
             if (meshes == null)
                 return null;
 
@@ -107,7 +107,7 @@ namespace RosSharp
         
         public static GameObject CreateStlGameObjectRuntime(string stlFile)
         {
-            Mesh[] meshes = Urdf.StlImporter.ImportMesh(stlFile);
+            Mesh[] meshes = StlImporter.ImportMesh(stlFile);
             if (meshes == null)
             {
                 return null;

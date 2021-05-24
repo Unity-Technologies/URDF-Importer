@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using RosSharp;
+using Unity.Robotics.UrdfImporter;
 
 public class Matrix3x3Tests
 {
