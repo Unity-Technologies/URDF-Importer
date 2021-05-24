@@ -22,10 +22,8 @@ namespace RosSharp.Tests
             packageRoot = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/UrdfAssetPathHandler";
 
             RuntimeURDF.runtimeModeEnabled = false;
-            AssetDatabase.CreateFolder("Assets", "Tests");
-            AssetDatabase.CreateFolder("Assets/Tests", "Runtime");
-            AssetDatabase.CreateFolder("Assets/Tests/Runtime", "UrdfAssetPathHandler");
-            AssetDatabase.CreateFolder("Packages/com.unity.robotics.urdf-importer/Tests/Runtime", "UrdfAssetPathHandler");
+            Directory.CreateDirectory(assetRoot);
+            Directory.CreateDirectory(packageRoot);
         }
         
         [Test]
