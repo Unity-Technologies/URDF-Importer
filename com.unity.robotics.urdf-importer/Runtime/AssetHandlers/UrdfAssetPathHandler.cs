@@ -57,10 +57,12 @@ namespace RosSharp.Urdf
 #if UNITY_EDITOR
                 if (!RuntimeURDF.IsRuntimeMode())
                 {
-                    assetPath = absolutePath.Substring(Application.dataPath.Length - "Assets".Length);
+                    if (absolutePath.Length > Application.dataPath.Length)
+                    {
+                        assetPath = absolutePath.Substring(Application.dataPath.Length - "Assets".Length);
+                    }
                 }
 #endif
-                return assetPath; // so that it works in runtime
             }
             else 
             {
@@ -123,7 +125,7 @@ namespace RosSharp.Urdf
 #if UNITY_EDITOR
             if (!RuntimeURDF.IsRuntimeMode())
             {
-                return GetRelativeAssetPath(path) != null;
+                return Directory.Exists(path) || File.Exists(path);
             }
 #endif
             //RuntimeImporter. TODO: check if the path really exists

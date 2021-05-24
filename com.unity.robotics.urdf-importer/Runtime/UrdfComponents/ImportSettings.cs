@@ -18,7 +18,7 @@ namespace RosSharp
             vHACD,
         }
 
-        public axisType choosenAxis = axisType.yAxis;
+        public axisType chosenAxis = axisType.yAxis;
         public convexDecomposer convexMethod = convexDecomposer.vHACD;
 
         public int linksLoaded = 0;

@@ -46,7 +46,7 @@ public class RuntimeURDFImporter : MonoBehaviour
 
         ImportSettings settings = new ImportSettings
         {
-            choosenAxis = ImportSettings.axisType.yAxis,
+            chosenAxis = ImportSettings.axisType.yAxis,
             convexMethod = useVHACD ? ImportSettings.convexDecomposer.vHACD : ImportSettings.convexDecomposer.unity,
         };
 

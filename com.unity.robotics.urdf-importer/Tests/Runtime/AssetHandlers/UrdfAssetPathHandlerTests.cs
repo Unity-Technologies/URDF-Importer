@@ -41,9 +41,9 @@ namespace RosSharp.Tests
         {
             RuntimeURDF.runtimeModeEnabled = false;
             // Everything returns null during non-runtime
-            Assert.IsNull(UrdfAssetPathHandler.GetRelativeAssetPath("Invalid/Asset/Path"));
-            Assert.IsNull(UrdfAssetPathHandler.GetRelativeAssetPath($"{assetRoot}/TestAsset.txt"));
-            Assert.IsNull(UrdfAssetPathHandler.GetRelativeAssetPath($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs"));
+            Assert.AreEqual("Invalid/Asset/Path", UrdfAssetPathHandler.GetRelativeAssetPath("Invalid/Asset/Path"));
+            Assert.AreEqual($"{assetRoot}/TestAsset.txt", UrdfAssetPathHandler.GetRelativeAssetPath($"{assetRoot}/TestAsset.txt"));
+            Assert.AreEqual($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs", UrdfAssetPathHandler.GetRelativeAssetPath($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs"));
         }
 
         [Test]
@@ -83,10 +83,9 @@ namespace RosSharp.Tests
             RuntimeURDF.runtimeModeEnabled = false;
             AssetDatabase.CreateAsset(new TextAsset("TestAsset"), $"{assetRoot}/TestAsset.txt");
 
-            // Everything returns null during non-runtime
             Assert.IsFalse(UrdfAssetPathHandler.IsValidAssetPath("Invalid/Asset/Path"));
-            Assert.IsFalse(UrdfAssetPathHandler.IsValidAssetPath($"{assetRoot}/TestAsset.txt"));
-            Assert.IsFalse(UrdfAssetPathHandler.IsValidAssetPath($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs"));
+            Assert.IsTrue(UrdfAssetPathHandler.IsValidAssetPath($"{assetRoot}/TestAsset.txt"));
+            Assert.IsTrue(UrdfAssetPathHandler.IsValidAssetPath($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs"));
 
             RuntimeURDF.runtimeModeEnabled = true;
             // Everything returns true during runtime
@@ -116,8 +115,7 @@ namespace RosSharp.Tests
         public void TearDown()
         {
             List<string> outFailedPaths = new List<string>();
-            AssetDatabase.DeleteAssets(new string[] {"Assets/Tests"}, outFailedPaths);
-            AssetDatabase.DeleteAssets(new string[] {"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/UrdfAssetPathHandler"}, outFailedPaths);
+            AssetDatabase.DeleteAssets(new string[] {"Assets/Tests", "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/UrdfAssetPathHandler"}, outFailedPaths);
         }
     }
 }

@@ -38,8 +38,8 @@ namespace RosSharp.Urdf.Editor
             //Select the original up axis of the imported mesh
             GUILayout.Space(5);
             EditorGUILayout.BeginHorizontal();
-            settings.choosenAxis = (ImportSettings.axisType)EditorGUILayout.EnumPopup(
-                "Select Axis Type" , settings.choosenAxis);
+            settings.chosenAxis = (ImportSettings.axisType)EditorGUILayout.EnumPopup(
+                "Select Axis Type" , settings.chosenAxis);
             EditorGUILayout.EndHorizontal();
 
             //Window title

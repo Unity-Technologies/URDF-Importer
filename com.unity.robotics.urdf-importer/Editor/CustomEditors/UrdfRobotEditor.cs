@@ -28,7 +28,7 @@ namespace RosSharp.Urdf.Editor
 
         public void OnEnable()
         {
-            axisType = serializedObject.FindProperty("choosenAxis");
+            axisType = serializedObject.FindProperty("chosenAxis");
         }
         public override void OnInspectorGUI()
         {
