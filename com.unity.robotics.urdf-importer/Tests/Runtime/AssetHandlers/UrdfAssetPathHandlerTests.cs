@@ -37,17 +37,17 @@ namespace RosSharp.Tests
         }
 
         [Test]
-        public void GetRelativeAssetPath_Nonruntime_NullValues()
+        public void GetRelativeAssetPath_Nonruntime_Success()
         {
             RuntimeURDF.runtimeModeEnabled = false;
             Assert.AreEqual("Invalid/Asset/Path", UrdfAssetPathHandler.GetRelativeAssetPath("Invalid/Asset/Path"));
             Assert.AreEqual($"{assetRoot}/TestAsset.txt", UrdfAssetPathHandler.GetRelativeAssetPath($"{assetRoot}/TestAsset.txt"));
-            Assert.AreEqual($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs", UrdfAssetPathHandler.GetRelativeAssetPath($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs"));
+#if UNITY_EDITOR
+            Assert.AreEqual($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs", UrdfAssetPathHandler.GetRelativeAssetPath($"{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs"));
+#endif
         }
 
-#if UNITY_EDITOR
         [Test]
-        [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor, RuntimePlatform.LinuxEditor)]
         public void GetRelativeAssetPath_Runtime_Success()
         {
             RuntimeURDF.runtimeModeEnabled = true;
@@ -56,7 +56,6 @@ namespace RosSharp.Tests
             // Not starting with dataPath
             Assert.AreEqual("Assets/Valid/Path", UrdfAssetPathHandler.GetRelativeAssetPath($"Assets/Valid/Path"));
         }
-#endif
 
         [Test]
         public void GetFullAssetPath_AssetAndPackageRoot_Success()

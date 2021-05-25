@@ -91,17 +91,16 @@ namespace RosSharp.Urdf.Tests
 
 #if UNITY_EDITOR
         [Test]
-        [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor, RuntimePlatform.LinuxEditor)]
-        public void ExportRobotToUrdf_NoParameters_Success()
+        public void ExportRobotToUrdf_NoParameterCreate_Success()
         {
             UrdfRobotExtensions.Create();
             var emptyRobot = GameObject.Find("Robot");
             var robot = emptyRobot.GetComponent<UrdfRobot>();
             robot.ExportRobotToUrdf(assetRoot);
 
-            Assert.IsTrue(Directory.Exists($"{assetRoot}/meshes"));
-            Assert.IsTrue(Directory.Exists($"{assetRoot}/Resources"));
-            Assert.IsTrue(File.Exists($"{assetRoot}/Robot.urdf"));
+            Assert.IsTrue(AssetDatabase.IsValidFolder($"{assetRoot}/meshes"));
+            Assert.IsTrue(AssetDatabase.IsValidFolder($"{assetRoot}/Resources"));
+            Assert.IsTrue(AssetDatabase.FindAssets("Robot", new string[] {assetRoot}).Length > 0);
 
             Object.DestroyImmediate(emptyRobot);
         }
