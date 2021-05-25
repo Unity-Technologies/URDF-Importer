@@ -91,6 +91,7 @@ namespace RosSharp.Urdf.Tests
 
 #if UNITY_EDITOR
         [Test]
+        [UnityPlatform(RuntimePlatform.OSXEditor, RuntimePlatform.WindowsEditor, RuntimePlatform.LinuxEditor)]
         public void ExportRobotToUrdf_NoParameters_Success()
         {
             UrdfRobotExtensions.Create();
