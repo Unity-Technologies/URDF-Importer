@@ -12,7 +12,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using UnityEngine;
 
 
@@ -60,11 +59,11 @@ namespace RosSharp.Urdf
         /// <returns>floating point number for joint position in meters</returns>
         public override float GetPosition()
         {
-            #if UNITY_2020_1_OR_NEWER
-                return unityJoint.jointPosition[xAxis];
-            #else
+#if UNITY_2020_1_OR_NEWER
+            return unityJoint.jointPosition[xAxis];
+#else
             return Vector3.Dot(unityJoint.transform.localPosition - unityJoint.connectedAnchor, unityJoint.axis);
-            #endif
+#endif
         }
 
         /// <summary>
@@ -74,7 +73,7 @@ namespace RosSharp.Urdf
         public override float GetVelocity()
         {
 #if UNITY_2020_1_OR_NEWER
-            return unityJoint.velocity[xAxis];
+            return unityJoint.jointVelocity[xAxis];
 #else
             return float.NaN;
 #endif
@@ -109,23 +108,14 @@ namespace RosSharp.Urdf
 #endif
         }
 
-#endregion
+        #endregion
 
-#region Import
+        #region Import
 
         protected override void ImportJointData(Joint joint)
         {
             AdjustMovement(joint);
-            if (joint.dynamics != null)
-            {
-                unityJoint.angularDamping = (double.IsNaN(joint.dynamics.damping)) ? defaultDamping : (float)joint.dynamics.damping;
-                unityJoint.jointFriction = (double.IsNaN(joint.dynamics.friction)) ? defaultFriction : (float)joint.dynamics.friction;
-            }
-            else
-            {
-                unityJoint.angularDamping = 0;
-                unityJoint.jointFriction = 0;
-            }
+            SetDynamics(joint.dynamics);
         }
 
         /// <summary>
@@ -134,14 +124,14 @@ namespace RosSharp.Urdf
         /// <param name="joint">Structure containing joint information</param>
         protected override void AdjustMovement(Joint joint) // Test this function
         {
-            axisofMotion = (joint.axis != null && joint.axis.xyz != null) ? joint.axis.xyz.ToVector3() : new Vector3(1,0,0);
+            axisofMotion = (joint.axis != null && joint.axis.xyz != null) ? joint.axis.xyz.ToVector3() : new Vector3(1, 0, 0);
             unityJoint.linearLockX = (joint.limit != null) ? ArticulationDofLock.LimitedMotion : ArticulationDofLock.FreeMotion;
             unityJoint.linearLockY = ArticulationDofLock.LockedMotion;
             unityJoint.linearLockZ = ArticulationDofLock.LockedMotion;
 
             Vector3 axisofMotionUnity = axisofMotion.Ros2Unity();
             Quaternion Motion = new Quaternion();
-            Motion.SetFromToRotation(new Vector3(1, 0, 0),axisofMotionUnity);
+            Motion.SetFromToRotation(new Vector3(1, 0, 0), axisofMotionUnity);
             unityJoint.anchorRotation = Motion;
 
             if (joint.limit != null)
@@ -159,7 +149,7 @@ namespace RosSharp.Urdf
             }
         }
 
-#endregion
+        #endregion
 
 
         #region Export
@@ -195,11 +185,11 @@ namespace RosSharp.Urdf
         {
 #if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = GetComponent<ArticulationBody>().xDrive;
-            #if UNITY_2020_2_OR_NEWER
+#if UNITY_2020_2_OR_NEWER
             return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, unityJoint.maxLinearVelocity);
-            #elif UNITY_2020_1
+#elif UNITY_2020_1
             return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, maxLinearVelocity);
-            #endif
+#endif
 #else
             PrismaticJointLimitsManager prismaticLimits = GetComponent<PrismaticJointLimitsManager>();
             return new Joint.Limit(
@@ -210,7 +200,6 @@ namespace RosSharp.Urdf
 #endif
         }
 
-#endregion
+        #endregion
     }
 }
-

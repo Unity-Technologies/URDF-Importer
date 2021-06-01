@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using Unity.Robotics;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace RosSharp.Control
 {
@@ -29,7 +28,7 @@ namespace RosSharp.Control
         public float acceleration = 5f;// Units: m/s^2 / degree/s^2
 
         [Tooltip("Color to highlight the currently selected join")]
-        public Color highLightColor = new Color(255, 0, 0, 255);
+        public Color highLightColor = new Color(1.0f, 0, 0, 1.0f);
 
         void Start()
         {
@@ -50,35 +49,30 @@ namespace RosSharp.Control
             StoreJointColors(selectedIndex);
         }
 
+        void SetSelectedJointIndex(int index)
+        {
+            if (articulationChain.Length > 0) 
+            {
+                selectedIndex = (index + articulationChain.Length) % articulationChain.Length;
+            }
+        }
+
         void Update()
         {
             bool SelectionInput1 = Input.GetKeyDown("right");
             bool SelectionInput2 = Input.GetKeyDown("left");
 
+            SetSelectedJointIndex(selectedIndex); // to make sure it is in the valid range
             UpdateDirection(selectedIndex);
 
             if (SelectionInput2)
             {
-                if (selectedIndex == 1)
-                {
-                    selectedIndex = articulationChain.Length - 1;
-                }
-                else
-                {
-                    selectedIndex = selectedIndex - 1;
-                }
+                SetSelectedJointIndex(selectedIndex - 1);
                 Highlight(selectedIndex);
             }
             else if (SelectionInput1)
             {
-                if (selectedIndex == articulationChain.Length - 1)
-                {
-                    selectedIndex = 1;
-                }
-                else
-                {
-                    selectedIndex = selectedIndex + 1;
-                }
+                SetSelectedJointIndex(selectedIndex + 1);
                 Highlight(selectedIndex);
             }
 
@@ -91,7 +85,7 @@ namespace RosSharp.Control
         /// <param name="selectedIndex">Index of the link selected in the Articulation Chain</param>
         private void Highlight(int selectedIndex)
         {
-            if (selectedIndex == previousIndex)
+            if (selectedIndex == previousIndex || selectedIndex < 0 || selectedIndex >= articulationChain.Length) 
             {
                 return;
             }
@@ -108,19 +102,16 @@ namespace RosSharp.Control
             // set the color of the selected join meshes to the highlight color
             foreach (var mesh in rendererList)
             {
-                if (IsHDR())
-                {
-                    mesh.material.SetColor("_BaseColor", highLightColor);
-                }
-                else
-                {
-                    mesh.material.color = highLightColor;
-                }
+                MaterialExtensions.SetMaterialColor(mesh.material, highLightColor);
             }
         }
 
         void DisplaySelectedJoint(int selectedIndex)
         {
+            if (selectedIndex < 0 || selectedIndex >= articulationChain.Length) 
+            {
+                return;
+            }
             selectedJoint = articulationChain[selectedIndex].name + " (" + selectedIndex + ")";
         }
 
@@ -130,6 +121,11 @@ namespace RosSharp.Control
         /// <param name="jointIndex">Index of the link selected in the Articulation Chain</param>
         private void UpdateDirection(int jointIndex)
         {
+            if (jointIndex < 0 || jointIndex >= articulationChain.Length) 
+            {
+                return;
+            }
+
             float moveDirection = Input.GetAxis("Vertical");
             JointControl current = articulationChain[jointIndex].GetComponent<JointControl>();
             if (previousIndex != jointIndex)
@@ -139,8 +135,10 @@ namespace RosSharp.Control
                 previousIndex = jointIndex;
             }
 
-            if (current.controltype != control)
+            if (current.controltype != control) 
+            {
                 UpdateControlType(current);
+            }
 
             if (moveDirection > 0)
             {
@@ -166,14 +164,7 @@ namespace RosSharp.Control
             prevColor = new Color[materialLists.Length];
             for (int counter = 0; counter < materialLists.Length; counter++)
             {
-                if (IsHDR())
-                {
-                    prevColor[counter] = materialLists[counter].material.GetColor("_BaseColor");
-                }
-                else
-                {
-                    prevColor[counter] = materialLists[counter].sharedMaterial.GetColor("_Color");
-                }
+                prevColor[counter] = MaterialExtensions.GetMaterialColor(materialLists[counter]);
             }
         }
 
@@ -186,14 +177,7 @@ namespace RosSharp.Control
             Renderer[] previousRendererList = articulationChain[index].transform.GetChild(0).GetComponentsInChildren<Renderer>();
             for (int counter = 0; counter < previousRendererList.Length; counter++)
             {
-                if (IsHDR())
-                {
-                    previousRendererList[counter].material.SetColor("_BaseColor", prevColor[counter]);
-                }
-                else
-                {
-                    previousRendererList[counter].material.color = prevColor[counter];
-                }
+                MaterialExtensions.SetMaterialColor(previousRendererList[counter].material, prevColor[counter]);
             }
         }
 
@@ -207,14 +191,6 @@ namespace RosSharp.Control
                 drive.damping = damping;
                 joint.joint.xDrive = drive;
             }
-        }
-
-        /// Checks if current render pipeline is HDR 
-        /// Used for setting the color of highlighted joint
-        private bool IsHDR()
-        {
-            //TODO: should we also return true for Universal Render pipeline?
-            return GraphicsSettings.renderPipelineAsset != null && GraphicsSettings.renderPipelineAsset.GetType().ToString().Contains("HighDefinition");
         }
 
         public void OnGUI()

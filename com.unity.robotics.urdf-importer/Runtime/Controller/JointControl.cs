@@ -33,22 +33,22 @@ public class JointControl : MonoBehaviour
         acceleration = controller.acceleration;
 
 
-        if(joint.jointType != ArticulationJointType.FixedJoint)
+        if (joint.jointType != ArticulationJointType.FixedJoint)
         {
             if (controltype == RosSharp.Control.ControlType.PositionControl)
             {
                 ArticulationDrive currentDrive = joint.xDrive;
                 float newTargetDelta = (int)direction * Time.fixedDeltaTime * speed;
 
-                if(joint.jointType == ArticulationJointType.RevoluteJoint)
+                if (joint.jointType == ArticulationJointType.RevoluteJoint)
                 {
-                    if(joint.twistLock == ArticulationDofLock.LimitedMotion)
+                    if (joint.twistLock == ArticulationDofLock.LimitedMotion)
                     {
-                        if(newTargetDelta + currentDrive.target > currentDrive.upperLimit)
+                        if (newTargetDelta + currentDrive.target > currentDrive.upperLimit)
                         {
                             currentDrive.target = currentDrive.upperLimit;
                         }
-                        else if(newTargetDelta + currentDrive.target < currentDrive.lowerLimit)
+                        else if (newTargetDelta + currentDrive.target < currentDrive.lowerLimit)
                         {
                             currentDrive.target = currentDrive.lowerLimit;
                         }
@@ -64,15 +64,15 @@ public class JointControl : MonoBehaviour
                     }
                 }
 
-                else if(joint.jointType == ArticulationJointType.PrismaticJoint)
+                else if (joint.jointType == ArticulationJointType.PrismaticJoint)
                 {
-                    if(joint.linearLockX == ArticulationDofLock.LimitedMotion)
+                    if (joint.linearLockX == ArticulationDofLock.LimitedMotion)
                     {
-                        if(newTargetDelta + currentDrive.target > currentDrive.upperLimit)
+                        if (newTargetDelta + currentDrive.target > currentDrive.upperLimit)
                         {
                             currentDrive.target = currentDrive.upperLimit;
                         }
-                        else if(newTargetDelta + currentDrive.target < currentDrive.lowerLimit)
+                        else if (newTargetDelta + currentDrive.target < currentDrive.lowerLimit)
                         {
                             currentDrive.target = currentDrive.lowerLimit;
                         }
