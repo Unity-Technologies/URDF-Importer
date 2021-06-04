@@ -33,19 +33,21 @@ namespace RosSharp
             {
                 foreach (var stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
                 {
-                    if (stlFile.StartsWith("Assets"))
+                    var stlFileLowercase = stlFile.ToLower();
+                    if (stlFileLowercase.StartsWith("assets"))
                     {
                         Debug.Log($"Detected an stl file at {stlFile} - creating a mesh prefab.");
                         createStlPrefab(stlFile);
                     }
-                    else if (stlFile.StartsWith("Packages"))
+                    else if (stlFileLowercase.StartsWith("packages"))
                     {
-                        Debug.Log($"Found an stl file at {stlFile} - ignoring because it's a Package asset");
+                        Debug.Log($"Found an stl file at {stlFile} - " + 
+                            "skipping post-processing because it's a Package asset");
                     }
                     else
                     {
                         Debug.LogWarning($"Found an stl file at {stlFile} - " + 
-                            "ignoring because we don't know how to handle an asset in this location.");
+                            "skipping post-processing because we don't know how to handle an asset in this location.");
                     }
                 }
             }
