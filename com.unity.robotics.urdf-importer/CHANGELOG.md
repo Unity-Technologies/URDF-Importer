@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Removed
 
 ### Fixed
+ - Bug where-in URDF Importer would throw an error when installed via Package Manager because it can't save prefabs to its own directories 
 
 
 ## [0.4.0-preview] - 2021-05-27
