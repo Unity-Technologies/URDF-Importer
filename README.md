@@ -14,7 +14,7 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 <img src = "images~/Package_manager_add.png">
 
-3. Enter the git URL for the URDF Importer with the latest version tag (currently v0.3.0) `https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.3.0` in the text box and press `Enter`.
+3. Enter the git URL for the URDF Importer with the latest version tag (currently v0.4.0) `https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.4.0` in the text box and press `Enter`.
 
 4. Click `Import URDF`.
 
@@ -50,11 +50,12 @@ If you wish to contribute, be sure to review our [contribution guidelines](CONTR
 and [code of conduct](CODE_OF_CONDUCT.md).
 
 ## Support
-For general questions, feedback, or feature requests, connect directly with the 
-Robotics team at [unity-robotics@unity3d.com](mailto:unity-robotics@unity3d.com).
+For questions or discussions about Unity Robotics package installations or how to best set up and integrate your robotics projects, please create a new thread on the [Unity Robotics forum](https://forum.unity.com/forums/robotics.623/) and make sure to include as much detail as possible.
 
-For bugs or other issues, please file a GitHub issue and the Robotics team will 
-investigate the issue as soon as possible.
+For feature requests, bugs, or other issues, please file a [GitHub issue](https://github.com/Unity-Technologies/URDF-Importer/issues) using the provided templates and the Robotics team will investigate as soon as possible.
+
+For any other questions or feedback, connect directly with the 
+Robotics team at [unity-robotics@unity3d.com](mailto:unity-robotics@unity3d.com).
 
 ## License
 [Apache License 2.0](LICENSE)

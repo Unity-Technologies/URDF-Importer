@@ -26,14 +26,29 @@ namespace RosSharp
     public class StlAssetPostProcessor
 #endif    
     {
-        private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
+        static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
         {
 #if UNITY_EDITOR
             if (!RuntimeURDF.IsRuntimeMode())
             {
-                foreach (string stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
+                foreach (var stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
                 {
-                    createStlPrefab(stlFile);
+                    var stlFileLowercase = stlFile.ToLower();
+                    if (stlFileLowercase.StartsWith("assets"))
+                    {
+                        Debug.Log($"Detected an stl file at {stlFile} - creating a mesh prefab.");
+                        createStlPrefab(stlFile);
+                    }
+                    else if (stlFileLowercase.StartsWith("packages"))
+                    {
+                        Debug.Log($"Found an stl file at {stlFile} - " + 
+                            "skipping post-processing because it's a Package asset");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Found an stl file at {stlFile} - " + 
+                            "skipping post-processing because we don't know how to handle an asset in this location.");
+                    }
                 }
             }
 #endif

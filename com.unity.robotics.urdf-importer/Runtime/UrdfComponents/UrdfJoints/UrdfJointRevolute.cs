@@ -12,7 +12,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-using System;
 using UnityEngine;
 
 namespace RosSharp.Urdf
@@ -20,12 +19,12 @@ namespace RosSharp.Urdf
     public class UrdfJointRevolute : UrdfJoint
     {
         public override JointTypes JointType => JointTypes.Revolute;
-        
+
         public static UrdfJoint Create(GameObject linkObject)
         {
             UrdfJointRevolute urdfJoint = linkObject.AddComponent<UrdfJointRevolute>();
-            #if UNITY_2020_1_OR_NEWER
-            urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>(); 
+#if UNITY_2020_1_OR_NEWER
+            urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.RevoluteJoint;
 
 #else
@@ -46,7 +45,7 @@ namespace RosSharp.Urdf
         /// <returns>floating point number for joint position in radians</returns>
         public override float GetPosition()
         {
-            #if UNITY_2020_1_OR_NEWER
+#if UNITY_2020_1_OR_NEWER
             return ((ArticulationBody)unityJoint).jointPosition[xAxis];
 #else
                         return -((HingeJoint)unityJoint).angle * Mathf.Deg2Rad;
@@ -59,11 +58,11 @@ namespace RosSharp.Urdf
         /// <returns>floating point for joint velocity in radians per second</returns>
         public override float GetVelocity()
         {
-            #if UNITY_2020_1_OR_NEWER
-                return ((ArticulationBody)unityJoint).jointVelocity[xAxis];
-            #else
+#if UNITY_2020_1_OR_NEWER
+            return ((ArticulationBody)unityJoint).jointVelocity[xAxis];
+#else
                         return -((HingeJoint)unityJoint).velocity * Mathf.Deg2Rad;
-            #endif
+#endif
         }
 
         /// <summary>
@@ -72,11 +71,11 @@ namespace RosSharp.Urdf
         /// <returns>floating point in Nm</returns>
         public override float GetEffort()
         {
-            #if UNITY_2020_1_OR_NEWER
-                return unityJoint.jointForce[xAxis];
-            #else
+#if UNITY_2020_1_OR_NEWER
+            return unityJoint.jointForce[xAxis];
+#else
                         return -((HingeJoint)unityJoint).motor.force;
-            #endif
+#endif
         }
 
 
@@ -96,21 +95,12 @@ namespace RosSharp.Urdf
 #endif
         }
 
-#endregion
+        #endregion
 
         protected override void ImportJointData(Joint joint)
         {
             AdjustMovement(joint);
-            if (joint.dynamics != null)
-            {
-                unityJoint.angularDamping = (double.IsNaN(joint.dynamics.damping)) ? defaultDamping : (float)joint.dynamics.damping;
-                unityJoint.jointFriction = (double.IsNaN(joint.dynamics.friction)) ? defaultFriction : (float)joint.dynamics.friction;
-            }
-            else
-            {
-                unityJoint.angularDamping = 0;
-                unityJoint.jointFriction = 0;
-            }
+            SetDynamics(joint.dynamics);
         }
 
         protected override Joint ExportSpecificJointData(Joint joint)
@@ -159,7 +149,7 @@ namespace RosSharp.Urdf
         /// Reads axis joint information and rotation to the articulation body to produce the required motion
         /// </summary>
         /// <param name="joint">Structure containing joint information</param>
-        protected override void AdjustMovement(Joint joint) 
+        protected override void AdjustMovement(Joint joint)
         {
             axisofMotion = (joint.axis != null && joint.axis.xyz != null) ? joint.axis.xyz.ToVector3() : new Vector3(1, 0, 0);
             unityJoint.linearLockX = ArticulationDofLock.LimitedMotion;
@@ -178,7 +168,7 @@ namespace RosSharp.Urdf
                 drive.upperLimit = (float)(joint.limit.upper * Mathf.Rad2Deg);
                 drive.lowerLimit = (float)(joint.limit.lower * Mathf.Rad2Deg);
                 drive.forceLimit = (float)(joint.limit.effort);
-                unityJoint.maxAngularVelocity = (float)(joint.limit.velocity); 
+                unityJoint.maxAngularVelocity = (float)(joint.limit.velocity);
                 drive.damping = unityJoint.xDrive.damping;
                 drive.stiffness = unityJoint.xDrive.stiffness;
                 unityJoint.xDrive = drive;
