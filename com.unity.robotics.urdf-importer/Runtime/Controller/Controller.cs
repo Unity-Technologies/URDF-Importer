@@ -160,11 +160,14 @@ namespace RosSharp.Control
         /// <param name="index">Index of the part in the Articulation chain</param>
         private void StoreJointColors(int index)
         {
-            Renderer[] materialLists = articulationChain[index].transform.GetChild(0).GetComponentsInChildren<Renderer>();
-            prevColor = new Color[materialLists.Length];
-            for (int counter = 0; counter < materialLists.Length; counter++)
+            if (articulationChain.Length > 0)
             {
-                prevColor[counter] = MaterialExtensions.GetMaterialColor(materialLists[counter]);
+                Renderer[] materialLists = articulationChain[index].transform.GetChild(0).GetComponentsInChildren<Renderer>();
+                prevColor = new Color[materialLists.Length];
+                for (int counter = 0; counter < materialLists.Length; counter++)
+                {
+                    prevColor[counter] = MaterialExtensions.GetMaterialColor(materialLists[counter]);
+                }
             }
         }
 

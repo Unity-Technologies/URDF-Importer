@@ -25,6 +25,7 @@ namespace RosSharp.Urdf
             UrdfLink urdfLink = linkObject.AddComponent<UrdfLink>();
             UrdfVisualsExtensions.Create(linkObject.transform, link?.visuals);
             UrdfCollisionsExtensions.Create(linkObject.transform, link?.collisions);
+            UrdfSensorsExtensions.Create(linkObject.transform, link?.sensors);
 
             if (link != null)
             {

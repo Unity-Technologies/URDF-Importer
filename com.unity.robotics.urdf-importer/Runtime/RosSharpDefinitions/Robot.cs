@@ -32,7 +32,7 @@ namespace RosSharp.Urdf
 
         public List<Link> links;
         public List<Joint> joints;
-        public List<Sensor> sensors;
+        
         public List<Plugin> plugins;
         public List<Tuple<string, string>> ignoreCollisionPair;
 
@@ -49,7 +49,7 @@ namespace RosSharp.Urdf
             links = ReadLinks(node);
             joints = ReadJoints(node);
             plugins = ReadPlugins(node);
-            sensors = ReadSensors(node);
+            
             ignoreCollisionPair = ReadDisableCollision(node);
             
 
@@ -107,14 +107,6 @@ namespace RosSharp.Urdf
                 from child in node.Elements("joint")
                 select new Joint(child);
             return joints.ToList();
-        }
-
-        private static List<Sensor> ReadSensors(XElement node)
-        {
-            var sensors =
-                from child in node.Elements("sensor")
-                select new Sensor(child);
-            return sensors.ToList(); 
         }
 
         private List<Plugin> ReadPlugins(XElement node)

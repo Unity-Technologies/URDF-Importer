@@ -119,5 +119,10 @@ namespace  RosSharp.Urdf.Sensors.Test
             Assert.AreEqual(testSensor.elements["sensor/plugin@filename"],"test_filename");
 
         }
+
+        public void SensorImport()
+        {
+            //UrdfRobotExtensions.Create()
+        }
     }
 }

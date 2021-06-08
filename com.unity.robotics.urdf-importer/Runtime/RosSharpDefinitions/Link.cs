@@ -26,12 +26,14 @@ namespace RosSharp.Urdf
         public List<Visual> visuals;
         public List<Collision> collisions;
         public List<Joint> joints;
+        public List<Sensor> sensors;
 
         public Link(XElement node)
         {
             name = (string)node.Attribute("name");  // required
             inertial = (node.Element("inertial") != null) ? new Inertial(node.Element("inertial")) : null;  // optional     
             visuals = readVisuals(node); // multiple
+            sensors = ReadSensors(node);
             collisions = readCollisions(node); // optional   
         }
 
@@ -74,6 +76,14 @@ namespace RosSharp.Urdf
                 from child in node.Elements("visual")
                 select new Visual(child);
             return visuals.ToList();
+        }
+        
+        private static List<Sensor> ReadSensors(XElement node)
+        {
+            var sensors =
+                from child in node.Elements("sensor")
+                select new Sensor(child);
+            return sensors.ToList(); 
         }
 
         public class Inertial
