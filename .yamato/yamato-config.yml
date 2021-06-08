@@ -8,7 +8,7 @@ variables:
 commands:
     - git submodule update --init --recursive
     - python3 -m pip install unity-downloader-cli --index-url https://artifactory.prd.it.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade
-    - unity-downloader-cli -u 2020.2.0b9 -c editor -c StandaloneSupport-IL2CPP -c Linux --wait --published
+    - unity-downloader-cli -u 2020.3.11f1 -c editor -c StandaloneSupport-IL2CPP -c Linux --wait --published
     - git clone git@github.cds.internal.unity3d.com:unity/utr.git utr
     - utr/utr --testproject=./TestUrdfImporter --editor-location=.Editor --reruncount=0 --artifacts_path=test-results --suite=playmode --suite=editor --platform=Editor --enable-code-coverage --coverage-results-path=../test-results --coverage-options="assemblyFilters:+Unity.Robotics.UrdfImporter,+Unity.Robotics.UrdfImporter.Editor;generateHtmlReport;generateBadgeReport;generateAdditionalMetrics"
     # check test coverage
