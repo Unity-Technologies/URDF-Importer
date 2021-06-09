@@ -33,7 +33,17 @@ namespace RosSharp.Urdf
             }
 
             sensorObject.name = sensor.elements[nameKey];
-            GameObject sensorGameObject = await SensorFactory.InstantiateSensor(sensor.elements[typeKey], sensor.elements);
+            GameObject sensorGameObject;
+            if (Application.isPlaying)
+            {
+                sensorGameObject = await SensorFactory.InstantiateSensor(sensor.elements[typeKey], sensor.elements);
+            }
+            else
+            {
+                 Task<GameObject> loadOperation = SensorFactory.InstantiateSensor(sensor.elements[typeKey], sensor.elements);
+                 sensorGameObject = loadOperation.Result;
+            }
+
             sensorGameObject.transform.SetParentAndAlign(sensorObject);
         }
     }
