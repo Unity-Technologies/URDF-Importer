@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace RosSharp.Urdf
@@ -20,19 +19,7 @@ namespace RosSharp.Urdf
             {
                 foreach (Sensor sensor in sensors)
                 {
-#if UNITY_EDITOR
-                    if (Application.isPlaying)
-                    {
-                        UrdfSensorExtension.Create(urdfSensors.transform, sensor);
-                    }
-                    else
-                    {
-                        Task<UrdfSensor> sensorLoadOperation = UrdfSensorExtension.Create(urdfSensors.transform, sensor);
-                        sensorLoadOperation.Wait();
-                    }
-#else
                     UrdfSensorExtension.Create(urdfSensors.transform, sensor);
-#endif
                 }
             }
 

@@ -1,6 +1,4 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Robotics.Sensors;
 
@@ -11,18 +9,18 @@ namespace RosSharp.Urdf
         const string k_PoseKey = "sensor/pose";
         const string k_NameKey = "sensor@name";
         const string k_TypeKey = "sensor@type";
-        const string k_pluginkey = "sensor/plugin@name";
-        public static async Task<UrdfSensor> Create(Transform parent, Sensor sensor)
+        const string k_PluginKey = "sensor/plugin@name";
+        public static UrdfSensor Create(Transform parent, Sensor sensor)
         {
             GameObject sensorObject = new GameObject("unnamed");
             sensorObject.transform.SetParentAndAlign(parent);
             UrdfSensor urdfSensor = sensorObject.AddComponent<UrdfSensor>();
             urdfSensor.sensorType = sensor.elements[k_TypeKey];
-            await ImportSensorData(sensorObject.transform, sensor);
+            ImportSensorData(sensorObject.transform, sensor);
             return urdfSensor;
         }
 
-        static async Task ImportSensorData(Transform sensorObject, Sensor sensor)
+        static void ImportSensorData(Transform sensorObject, Sensor sensor)
         {
             if (sensor.elements.ContainsKey(k_PoseKey))
             {
@@ -36,43 +34,15 @@ namespace RosSharp.Urdf
 
             sensorObject.name = sensor.elements[k_NameKey];
             GameObject sensorGameObject;
-            
-#if UNITY_EDITOR
-            if (Application.isPlaying)
+            if (sensor.elements.ContainsKey(k_PluginKey) && String.IsNullOrEmpty(sensor.elements[k_PluginKey]))
             {
-                if (sensor.elements.ContainsKey(k_pluginkey) && String.IsNullOrEmpty(sensor.elements[k_pluginkey]))
-                {
-                    sensorGameObject = await SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements[k_pluginkey],sensor.elements);
-                }
-                else
-                {
-                    sensorGameObject = await SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements);
-                }
+                sensorGameObject = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements[k_PluginKey],sensor.elements);
             }
             else
             {
-                Task<GameObject> loadOperation;
-                if (sensor.elements.ContainsKey(k_pluginkey) && String.IsNullOrEmpty(sensor.elements[k_pluginkey]))
-                {
-                    loadOperation = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements[k_pluginkey],sensor.elements);
-                }
-                else
-                {
-                    loadOperation = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements);
-                }
-                loadOperation.Wait();
-                sensorGameObject = loadOperation.Result;
+                sensorGameObject = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements);
             }
-#else
-            if (sensor.elements.ContainsKey(k_pluginkey) && String.IsNullOrEmpty(sensor.elements[k_pluginkey]))
-            {
-                sensorGameObject = await SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements[k_pluginkey],sensor.elements);
-            }
-            else
-            {
-                sensorGameObject = await SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements);
-            }
-#endif
+
             sensorGameObject.transform.SetParentAndAlign(sensorObject);
         }
     }
