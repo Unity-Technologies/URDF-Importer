@@ -19,7 +19,14 @@ namespace RosSharp.Urdf
             {
                 foreach (Sensor sensor in sensors)
                 {
-                    UrdfSensorExtension.Create(urdfSensors.transform, sensor);
+                    try
+                    {
+                        UrdfSensorExtension.Create(urdfSensors.transform, sensor);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"Failed loading `{sensor.name}`");
+                    }
                 }
             }
 
