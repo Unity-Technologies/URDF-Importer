@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace RosSharp.Control{
+namespace Unity.Robotics.UrdfImporter.Control{
     public class FKRobot : MonoBehaviour
     {
         private GameObject robot;

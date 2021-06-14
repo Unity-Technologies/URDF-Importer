@@ -5,13 +5,13 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.TestTools;
-using RosSharp.Urdf;
+using Unity.Robotics.UrdfImporter;
 using Object = UnityEngine.Object;
-using Collision = RosSharp.Urdf.Link.Collision;
-using Geometry = RosSharp.Urdf.Link.Geometry;
-using Box = RosSharp.Urdf.Link.Geometry.Box;
+using Collision = Unity.Robotics.UrdfImporter.Link.Collision;
+using Geometry = Unity.Robotics.UrdfImporter.Link.Geometry;
+using Box = Unity.Robotics.UrdfImporter.Link.Geometry.Box;
 
-namespace RosSharp.Urdf.Tests
+namespace Unity.Robotics.UrdfImporter.Tests
 {
     public class UrdfCollisionsExtensionsTests
     {

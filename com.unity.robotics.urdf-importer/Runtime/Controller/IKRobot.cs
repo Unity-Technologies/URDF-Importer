@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // TODO: Check matrix access type across the board;
-namespace RosSharp.Control
+namespace Unity.Robotics.UrdfImporter.Control
 {
     public class IKRobot : MonoBehaviour
     {

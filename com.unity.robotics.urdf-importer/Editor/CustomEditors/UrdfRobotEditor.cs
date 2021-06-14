@@ -16,7 +16,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace RosSharp.Urdf.Editor
+namespace Unity.Robotics.UrdfImporter.Editor
 {
     [CustomEditor(typeof(UrdfRobot))]
     public class UrdfRobotEditor : UnityEditor.Editor
@@ -65,19 +65,19 @@ namespace RosSharp.Urdf.Editor
             serializedObject.ApplyModifiedProperties();
             UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
 
-            if (urdfRobot.GetComponent<RosSharp.Control.Controller>() == null || urdfRobot.GetComponent<RosSharp.Control.FKRobot>() == null)
+            if (urdfRobot.GetComponent<Unity.Robotics.UrdfImporter.Control.Controller>() == null || urdfRobot.GetComponent<Unity.Robotics.UrdfImporter.Control.FKRobot>() == null)
             {
                 GUILayout.Label("Components", EditorStyles.boldLabel);
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button(urdfRobot.GetComponent<RosSharp.Control.Controller>() == null? "Add Controller": "Remove Controller"))
+                if (GUILayout.Button(urdfRobot.GetComponent<Unity.Robotics.UrdfImporter.Control.Controller>() == null? "Add Controller": "Remove Controller"))
                 {
                     urdfRobot.AddController();
                 }
-                if (urdfRobot.GetComponent<RosSharp.Control.FKRobot>() == null)
+                if (urdfRobot.GetComponent<Unity.Robotics.UrdfImporter.Control.FKRobot>() == null)
                 {
                     if (GUILayout.Button("Add Forward Kinematics"))
                     {
-                        urdfRobot.gameObject.AddComponent<RosSharp.Control.FKRobot>();
+                        urdfRobot.gameObject.AddComponent<Unity.Robotics.UrdfImporter.Control.FKRobot>();
                     }
                 }
                 GUILayout.EndHorizontal();

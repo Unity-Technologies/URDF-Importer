@@ -15,7 +15,7 @@ limitations under the License.
 using System.IO;
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfMeshExportHandler
     {

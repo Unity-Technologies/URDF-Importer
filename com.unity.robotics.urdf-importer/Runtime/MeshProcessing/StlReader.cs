@@ -17,7 +17,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class StlReader
     {

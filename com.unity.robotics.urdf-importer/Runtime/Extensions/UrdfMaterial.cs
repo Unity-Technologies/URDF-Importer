@@ -19,7 +19,7 @@ using Unity.Robotics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfMaterial
     {

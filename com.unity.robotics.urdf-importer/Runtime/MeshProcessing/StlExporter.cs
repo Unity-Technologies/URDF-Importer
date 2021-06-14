@@ -15,7 +15,7 @@ limitations under the License.
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public class StlExporter
     {
