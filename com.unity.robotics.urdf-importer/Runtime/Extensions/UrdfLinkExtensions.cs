@@ -60,7 +60,10 @@ namespace RosSharp.Urdf
                     UrdfJoint.Create(urdfLink.gameObject, UrdfJoint.GetJointType(joint.type), joint);
             }
             else if (joint != null)
+            {
+                UrdfInertial.Create(urdfLink.gameObject);
                 UrdfJoint.Create(urdfLink.gameObject, UrdfJoint.GetJointType(joint.type), joint);
+            }
 
         } 
         
