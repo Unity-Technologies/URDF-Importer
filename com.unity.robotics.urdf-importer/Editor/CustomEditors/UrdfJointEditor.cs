@@ -15,7 +15,7 @@ limitations under the License.
 using UnityEditor;
 using UnityEngine;
 
-namespace RosSharp.Urdf.Editor
+namespace Unity.Robotics.UrdfImporter.Editor
 {
     [CustomEditor(typeof(UrdfJoint), true)]
     public class UrdfJointEditor : UnityEditor.Editor

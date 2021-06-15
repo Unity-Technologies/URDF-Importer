@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using RosSharp.Urdf;
+using Unity.Robotics.UrdfImporter;
 using MeshProcess;
 
 public class VHACDTests

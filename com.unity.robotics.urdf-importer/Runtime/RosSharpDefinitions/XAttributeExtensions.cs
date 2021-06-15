@@ -18,7 +18,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Globalization;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class XAttributeExtensions
     {
