@@ -15,7 +15,7 @@ limitations under the License.
 using System;
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
 #if UNITY_2020_1_OR_NEWER
     [RequireComponent(typeof(ArticulationBody))]

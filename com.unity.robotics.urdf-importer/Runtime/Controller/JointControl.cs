@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using RosSharp;
+using Unity.Robotics.UrdfImporter;
 
 public class JointControl : MonoBehaviour
 {
-    RosSharp.Control.Controller controller;
+    Unity.Robotics.UrdfImporter.Control.Controller controller;
 
-    public RosSharp.Control.RotationDirection direction;
-    public RosSharp.Control.ControlType controltype;
+    public Unity.Robotics.UrdfImporter.Control.RotationDirection direction;
+    public Unity.Robotics.UrdfImporter.Control.ControlType controltype;
     public float speed ;
     public float torque ;
     public float acceleration;
@@ -18,7 +18,7 @@ public class JointControl : MonoBehaviour
     void Start()
     {
         direction = 0;
-        controller = (RosSharp.Control.Controller)this.GetComponentInParent(typeof(RosSharp.Control.Controller));
+        controller = (Unity.Robotics.UrdfImporter.Control.Controller)this.GetComponentInParent(typeof(Unity.Robotics.UrdfImporter.Control.Controller));
         joint = this.GetComponent<ArticulationBody>();
         controller.UpdateControlType(this);
         speed = controller.speed;
@@ -35,7 +35,7 @@ public class JointControl : MonoBehaviour
 
         if (joint.jointType != ArticulationJointType.FixedJoint)
         {
-            if (controltype == RosSharp.Control.ControlType.PositionControl)
+            if (controltype == Unity.Robotics.UrdfImporter.Control.ControlType.PositionControl)
             {
                 ArticulationDrive currentDrive = joint.xDrive;
                 float newTargetDelta = (int)direction * Time.fixedDeltaTime * speed;

@@ -21,7 +21,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfRobotExtensions
     {
@@ -36,7 +36,7 @@ namespace RosSharp.Urdf
 
             robotGameObject.tag = tagName;
             robotGameObject.AddComponent<UrdfRobot>();
-            robotGameObject.AddComponent<RosSharp.Control.Controller>();
+            robotGameObject.AddComponent<Unity.Robotics.UrdfImporter.Control.Controller>();
 
             UrdfPlugins.Create(robotGameObject.transform);
 
@@ -102,10 +102,10 @@ namespace RosSharp.Urdf
 
             im.robotGameObject.AddComponent<UrdfRobot>();
 
-            im.robotGameObject.AddComponent<RosSharp.Control.Controller>();
+            im.robotGameObject.AddComponent<Unity.Robotics.UrdfImporter.Control.Controller>();
             if (RuntimeURDF.IsRuntimeMode()) 
             {// In runtime mode, we have to disable controller while robot is being constructed.
-                im.robotGameObject.GetComponent<RosSharp.Control.Controller>().enabled = false;
+                im.robotGameObject.GetComponent<Unity.Robotics.UrdfImporter.Control.Controller>().enabled = false;
             }
 
             im.robotGameObject.GetComponent<UrdfRobot>().SetAxis(im.settings.choosenAxis);
