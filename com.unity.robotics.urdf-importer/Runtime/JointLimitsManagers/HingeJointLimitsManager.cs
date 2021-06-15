@@ -14,7 +14,7 @@ limitations under the License.
 
 using UnityEngine;
 
-namespace RosSharp
+namespace Unity.Robotics.UrdfImporter
 {
     [RequireComponent(typeof(HingeJoint))]
     [ExecuteInEditMode]
@@ -155,7 +155,7 @@ namespace RosSharp
             return jointLimits;
         }
 
-        public void InitializeLimits(Urdf.Joint.Limit limit, HingeJoint joint)
+        public void InitializeLimits(Joint.Limit limit, HingeJoint joint)
         {
             LargeAngleLimitMin = (float)limit.lower * Mathf.Rad2Deg;
             LargeAngleLimitMax = (float)limit.upper * Mathf.Rad2Deg;

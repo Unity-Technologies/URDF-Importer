@@ -16,7 +16,7 @@ using System;
 using UnityEngine;
 using UnityMeshImporter;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public class UrdfGeometryVisual : UrdfGeometry
     {

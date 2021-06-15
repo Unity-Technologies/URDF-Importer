@@ -18,7 +18,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public class StlWriter
     {

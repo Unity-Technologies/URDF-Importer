@@ -5,10 +5,10 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.TestTools;
-using RosSharp.Urdf;
+using Unity.Robotics.UrdfImporter;
 using Object = UnityEngine.Object;
 
-namespace RosSharp.Tests
+namespace Unity.Robotics.UrdfImporter.Tests
 {
     public class UrdfAssetPathHandlerTests
     {

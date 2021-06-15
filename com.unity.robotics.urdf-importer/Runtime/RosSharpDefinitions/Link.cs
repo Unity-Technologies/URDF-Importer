@@ -17,7 +17,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public class Link
     {
