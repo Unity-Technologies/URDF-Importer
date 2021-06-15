@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public class UrdfSensors:MonoBehaviour
     {

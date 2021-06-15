@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Unity.Robotics.Sensors;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfSensorExtension
     {
