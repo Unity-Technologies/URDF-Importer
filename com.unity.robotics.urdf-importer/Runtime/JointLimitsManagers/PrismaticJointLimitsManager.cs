@@ -14,7 +14,7 @@ limitations under the License.
 
 using UnityEngine;
 
-namespace RosSharp
+namespace Unity.Robotics.UrdfImporter
 {
     public class PrismaticJointLimitsManager : MonoBehaviour
     {
@@ -69,7 +69,7 @@ namespace RosSharp
             return softJointLimit;
         }
 
-        public void InitializeLimits(Urdf.Joint.Limit limit)
+        public void InitializeLimits(Joint.Limit limit)
         {
             PositionLimitMax = (float)limit.upper;
             PositionLimitMin = (float)limit.lower;

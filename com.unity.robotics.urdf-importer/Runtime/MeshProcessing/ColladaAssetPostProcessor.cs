@@ -17,7 +17,7 @@ using System.Globalization;
 using UnityEngine;
 using System.IO;
 
-namespace RosSharp
+namespace Unity.Robotics.UrdfImporter
 {
 #if UNITY_EDITOR
     using UnityEditor;
