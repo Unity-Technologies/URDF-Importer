@@ -6,9 +6,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
-using Controller = RosSharp.Control.Controller;
+using Unity.Robotics.UrdfImporter.Control;
 
-namespace RosSharp.Urdf.Tests
+namespace Unity.Robotics.UrdfImporter.Tests
 {
     public class UrdfRobotExtensionsTests
     {
@@ -96,11 +96,15 @@ namespace RosSharp.Urdf.Tests
             UrdfRobotExtensions.Create();
             var emptyRobot = GameObject.Find("Robot");
             var robot = emptyRobot.GetComponent<UrdfRobot>();
+            LogAssert.ignoreFailingMessages = true;
+
             robot.ExportRobotToUrdf(assetRoot);
 
             Assert.IsTrue(AssetDatabase.IsValidFolder($"{assetRoot}/meshes"));
             Assert.IsTrue(AssetDatabase.IsValidFolder($"{assetRoot}/Resources"));
             Assert.IsTrue(AssetDatabase.FindAssets("Robot", new string[] {assetRoot}).Length > 0);
+            
+            LogAssert.ignoreFailingMessages = false;
 
             Object.DestroyImmediate(emptyRobot);
         }
