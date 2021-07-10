@@ -117,12 +117,12 @@ namespace Unity.Robotics.UrdfImporter
             return gameObject;
         }
         
-        private static string GetMeshAssetPath(string stlFile, int i)
+        public static string GetMeshAssetPath(string stlFile, int i)
         {
             return stlFile.Substring(0, stlFile.Length - 4) + "_" + i.ToString() + ".asset";
         }
 
-        private static string GetPrefabAssetPath(string stlFile)
+        public static string GetPrefabAssetPath(string stlFile)
         {
             return stlFile.Substring(0, stlFile.Length - 4) + ".prefab";
         }
