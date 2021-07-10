@@ -54,7 +54,7 @@ namespace Unity.Robotics.UrdfImporter.Editor
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(10);
-            settings.overwriteExistingPrefabs = GUILayout.Toggle (settings.overwriteExistingPrefabs, "Overwrite Existing Prefabs");
+            settings.overwriteExistingPrefabs = GUILayout.Toggle(settings.overwriteExistingPrefabs, "Overwrite Existing Prefabs");
             
             //Import Robot button
             GUILayout.Space(10);

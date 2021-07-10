@@ -9,7 +9,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
     public class StlAssetPostProcessorTests
     {
         const string k_AssetRoot = "Assets/Tests/Runtime/StlAssetPostProcessorTests";
-        const string k_StlCubeSourcePath = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube.stl";//"Assets/meshes/cube.stl";
+        const string k_StlCubeSourcePath = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube.stl";
         string m_StlCubeCopyPath;
 
         [SetUp]
