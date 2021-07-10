@@ -23,9 +23,20 @@ namespace Unity.Robotics.UrdfImporter
         public static T FindUrdfAsset<T>(string urdfFileName) where T : UnityEngine.Object
         {
             string fileAssetPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName);
+
+            // check if it is an asset tha requires post processing (AIRO-908)
+            var originalUrdfPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName, false);
+            if (originalUrdfPath.ToLower().EndsWith(".stl"))
+            {// it is an asset that requires post processing
+                if (UrdfRobotExtensions.importsettings.overwriteExistingPrefabs || !RuntimeURDF.AssetExists(fileAssetPath))
+                {// post process again to (re)create prefabs
+                    StlAssetPostProcessor.PostprocessStlFile(originalUrdfPath);
+                }                
+            }
+
             T assetObject = RuntimeURDF.AssetDatabase_LoadAssetAtPath<T>(fileAssetPath);
 
-            if (assetObject != null)
+            if (assetObject)
                 return assetObject;
 
             //If asset was not found, let user choose whether to search for

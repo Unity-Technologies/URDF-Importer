@@ -28,59 +28,66 @@ namespace Unity.Robotics.UrdfImporter
     {
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
         {
+            const bool enableStlPostprocessing = false; // AIRO-908 
 #if UNITY_EDITOR
-            if (!RuntimeURDF.IsRuntimeMode())
+            if (!RuntimeURDF.IsRuntimeMode() && enableStlPostprocessing)
             {
                 foreach (var stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
                 {
-                    var stlFileLowercase = stlFile.ToLower();
-                    if (stlFileLowercase.StartsWith("assets"))
-                    {
-                        Debug.Log($"Detected an stl file at {stlFile} - creating a mesh prefab.");
-                        createStlPrefab(stlFile);
-                    }
-                    else if (stlFileLowercase.StartsWith("packages"))
-                    {
-                        Debug.Log($"Found an stl file at {stlFile} - " + 
-                            "skipping post-processing because it's a Package asset");
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Found an stl file at {stlFile} - " + 
-                            "skipping post-processing because we don't know how to handle an asset in this location.");
-                    }
+                    PostprocessStlFile(stlFile);
                 }
             }
 #endif
         }
 
-        private static void createStlPrefab(string stlFile)
+        public static void PostprocessStlFile(string stlFile)
+        {
+            var stlFileLowercase = stlFile.ToLower();
+            if (stlFileLowercase.StartsWith("assets"))
+            {
+                Debug.Log($"Detected an stl file at {stlFile} - creating a mesh prefab.");
+                CreateStlPrefab(stlFile);
+            }
+            else if (stlFileLowercase.StartsWith("packages"))
+            {
+                Debug.Log($"Found an stl file at {stlFile} - " + 
+                          "skipping post-processing because it's a Package asset");
+            }
+            else
+            {
+                Debug.LogWarning($"Found an stl file at {stlFile} - " + 
+                                 "skipping post-processing because we don't know how to handle an asset in this location.");
+            }
+        }
+
+        private static void CreateStlPrefab(string stlFile)
         {
             GameObject gameObject = CreateStlParent(stlFile);
-            if (gameObject == null)
+            if (!gameObject)
             {
+                Debug.LogWarning($"Could not create a mesh prefab for {stlFile}");
                 return;
             }
 
-            RuntimeURDF.PrefabUtility_SaveAsPrefabAsset(gameObject, getPrefabAssetPath(stlFile));
+            RuntimeURDF.PrefabUtility_SaveAsPrefabAsset(gameObject, GetPrefabAssetPath(stlFile));
             Object.DestroyImmediate(gameObject);
         }
 
-        private static Material defaultDiffuse = null;
+        private static Material s_DefaultDiffuse = null;
         private static Material GetDefaultDiffuseMaterial() 
         {
 #if UNITY_EDITOR
             // also save the material in the Assets
             if (!RuntimeURDF.IsRuntimeMode() && MaterialExtensions.GetRenderPipelineType() == MaterialExtensions.RenderPipelineType.Standard)
             {
-                defaultDiffuse = RuntimeURDF.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+                s_DefaultDiffuse = RuntimeURDF.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
             }
 #endif
-            if (defaultDiffuse == null) 
+            if (s_DefaultDiffuse) 
             {   // Could't use the "Default-Diffuse.mat", either because of HDRP or runtime. so let's create one.
-                defaultDiffuse = MaterialExtensions.CreateBasicMaterial();
+                s_DefaultDiffuse = MaterialExtensions.CreateBasicMaterial();
             }
-            return defaultDiffuse;
+            return s_DefaultDiffuse;
         }
 
         private static GameObject CreateStlParent(string stlFile)
@@ -94,7 +101,7 @@ namespace Unity.Robotics.UrdfImporter
 
             for (int i = 0; i < meshes.Length; i++)
             {
-                string meshAssetPath = getMeshAssetPath(stlFile, i);
+                string meshAssetPath = GetMeshAssetPath(stlFile, i);
                 RuntimeURDF.AssetDatabase_CreateAsset(meshes[i], meshAssetPath);
                 GameObject gameObject = CreateStlGameObject(meshAssetPath, material);
                 gameObject.transform.SetParent(parent.transform, false);
@@ -110,12 +117,12 @@ namespace Unity.Robotics.UrdfImporter
             return gameObject;
         }
         
-        private static string getMeshAssetPath(string stlFile, int i)
+        private static string GetMeshAssetPath(string stlFile, int i)
         {
             return stlFile.Substring(0, stlFile.Length - 4) + "_" + i.ToString() + ".asset";
         }
 
-        private static string getPrefabAssetPath(string stlFile)
+        private static string GetPrefabAssetPath(string stlFile)
         {
             return stlFile.Substring(0, stlFile.Length - 4) + ".prefab";
         }
@@ -134,7 +141,7 @@ namespace Unity.Robotics.UrdfImporter
             
             for (int i = 0; i < meshes.Length; i++)
             {
-                GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(getMeshAssetPath(stlFile, i)));
+                GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(GetMeshAssetPath(stlFile, i)));
                 gameObject.AddComponent<MeshFilter>().sharedMesh = meshes[i];
                 gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
                 gameObject.transform.SetParent(parent.transform, false);
