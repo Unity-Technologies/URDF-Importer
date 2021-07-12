@@ -26,6 +26,8 @@ namespace Unity.Robotics.UrdfImporter
     public class StlAssetPostProcessor
 #endif    
     {
+        private static Material s_DefaultDiffuse = null;
+        
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
         {
             const bool enableStlPostprocessing = false; // AIRO-908 
@@ -73,7 +75,6 @@ namespace Unity.Robotics.UrdfImporter
             Object.DestroyImmediate(gameObject);
         }
 
-        private static Material s_DefaultDiffuse = null;
         private static Material GetDefaultDiffuseMaterial() 
         {
 #if UNITY_EDITOR
