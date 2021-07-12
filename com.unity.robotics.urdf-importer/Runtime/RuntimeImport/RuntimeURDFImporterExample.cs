@@ -10,7 +10,7 @@ using UnityEngine;
 /// Example component for using the runtime urdf import funcionality.
 /// To use, attach to a gameobject and use the GUI to load a URDF.
 /// </summary>
-public class RuntimeURDFImporter : MonoBehaviour
+public class RuntimeURDFImporterExample : MonoBehaviour
 {
     public string urdfFilepath;
     public bool setImmovableLink = true;
