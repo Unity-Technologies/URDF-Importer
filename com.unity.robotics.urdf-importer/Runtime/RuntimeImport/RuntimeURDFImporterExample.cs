@@ -9,16 +9,26 @@ using UnityEngine;
 /// <summary>
 /// Example component for using the runtime urdf import funcionality.
 /// To use, attach to a gameobject and use the GUI to load a URDF.
+///
+/// Notes:
+/// 1- this component is just for demonstration and testing
+///    and is not intended to be used as an actual component in a final product.
+/// 2- The runtime import is currently only works in builds created using
+///    Mono scripting backend and will not fully work on projects built with
+///    IL2CPP due to the dependency to Assimpnet plugin.
+///    However URDF files that only use STL format for both visual and collision meshes,
+///    can still be imported in runtime in standalone IL2CPP builds  
 /// </summary>
 public class RuntimeURDFImporterExample : MonoBehaviour
 {
     public string urdfFilepath;
     public bool setImmovableLink = true;
-    public bool useVHACD = false;
+    public bool useVHACD = false; // this is not yet fully functional in runtime.
     public bool showProgress = false; // this is not stable in runtime.
     public bool clearOnLoad = true;
 
     public string immovableLinkName = "base_link";
+    // The values below are tested to work with the niryo_one URDF:
     private float controllerStiffness = 10000;
     private float controllerDamping = 100;
     private float controllerForceLimit = 1000;
