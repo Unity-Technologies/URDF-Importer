@@ -8,7 +8,7 @@ using System;
 using System.Numerics;
 
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public class Sensor
     {
