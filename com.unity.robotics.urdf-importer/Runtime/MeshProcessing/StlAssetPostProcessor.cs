@@ -18,29 +18,15 @@ using System.IO;
 
 namespace Unity.Robotics.UrdfImporter
 {
-    using Unity.Robotics;
-#if UNITY_EDITOR
-    using UnityEditor;
-    public class StlAssetPostProcessor : AssetPostprocessor
-#else
+    /// <summary>
+    /// Utility functions for processing STL mesh files.
+    /// Note that no post processing is done on STL files anymore when they are added to the project
+    /// As such StlAssetPostProcessor no longer drives from AssetPostProcessor and the OnPostprocessAllAssets()
+    /// function is removed. 
+    /// </summary>
     public class StlAssetPostProcessor
-#endif    
     {
         private static Material s_DefaultDiffuse = null;
-        
-        static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
-        {
-            const bool enableStlPostprocessing = false; // AIRO-908 
-#if UNITY_EDITOR
-            if (!RuntimeURDF.IsRuntimeMode() && enableStlPostprocessing)
-            {
-                foreach (var stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
-                {
-                    PostprocessStlFile(stlFile);
-                }
-            }
-#endif
-        }
 
         public static void PostprocessStlFile(string stlFile)
         {
