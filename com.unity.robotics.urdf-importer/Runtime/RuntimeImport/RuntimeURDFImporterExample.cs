@@ -11,13 +11,15 @@ using UnityEngine;
 /// To use, attach to a gameobject and use the GUI to load a URDF.
 ///
 /// Notes:
-/// 1- this component is just for demonstration and testing
-///    and is not intended to be used as an actual component in a final product.
-/// 2- The runtime import is currently only works in builds created using
-///    Mono scripting backend and will not fully work on projects built with
-///    IL2CPP due to the dependency to Assimpnet plugin.
-///    However URDF files that only use STL format for both visual and collision meshes,
-///    can still be imported in runtime in standalone IL2CPP builds  
+/// 
+/// - This component is for demonstration and testing only
+///   and is not intended to be used as is in a final product.
+/// 
+/// - The runtime import feature is currently only functional in builds created using
+///   Mono scripting backend and will not fully work in standalone builds created with
+///   IL2CPP due to the dependency to Assimpnet plugin for loading collada meshes.
+///   However URDF files that only use STL format for both visual and collision meshes
+///   can still be imported in runtime in standalone IL2CPP builds.  
 /// </summary>
 public class RuntimeURDFImporterExample : MonoBehaviour
 {
