@@ -5,19 +5,19 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.TestTools;
-using RosSharp.Urdf;
+using Unity.Robotics.UrdfImporter;
 using Object = UnityEngine.Object;
-using Collision = RosSharp.Urdf.Link.Collision;
-using Geometry = RosSharp.Urdf.Link.Geometry;
-using Box = RosSharp.Urdf.Link.Geometry.Box;
-using Cylinder = RosSharp.Urdf.Link.Geometry.Cylinder;
-using Sphere = RosSharp.Urdf.Link.Geometry.Sphere;
-using Mesh = RosSharp.Urdf.Link.Geometry.Mesh;
+using Collision = Unity.Robotics.UrdfImporter.Link.Collision;
+using Geometry = Unity.Robotics.UrdfImporter.Link.Geometry;
+using Box = Unity.Robotics.UrdfImporter.Link.Geometry.Box;
+using Cylinder = Unity.Robotics.UrdfImporter.Link.Geometry.Cylinder;
+using Sphere = Unity.Robotics.UrdfImporter.Link.Geometry.Sphere;
+using Mesh = Unity.Robotics.UrdfImporter.Link.Geometry.Mesh;
 
 /// Sample STL from Obijuan.cube, Public domain, via Wikimedia Commons
 /// https://commons.wikimedia.org/wiki/File:3D_model_of_a_Cube.stl
 
-namespace RosSharp.Urdf.Tests
+namespace Unity.Robotics.UrdfImporter.Tests
 {
     public class UrdfGeometryTests
     {

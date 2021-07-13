@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using MeshProcess;
 using System.IO;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public class UrdfGeometryCollision : UrdfGeometry
     {

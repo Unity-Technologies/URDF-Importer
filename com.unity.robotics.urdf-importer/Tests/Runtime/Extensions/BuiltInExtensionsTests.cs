@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 
-namespace RosSharp.Tests
+namespace Unity.Robotics.UrdfImporter.Tests
 {
     public class BuiltInExtensionsTests
     {

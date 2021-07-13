@@ -14,7 +14,7 @@ limitations under the License.
 
 using UnityEditor;
 
-namespace RosSharp.Urdf.Editor
+namespace Unity.Robotics.UrdfImporter.Editor
 {
     public static class UrdfRobotCreatorMenuItem
     {

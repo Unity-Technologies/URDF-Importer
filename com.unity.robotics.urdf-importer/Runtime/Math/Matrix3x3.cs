@@ -15,7 +15,7 @@ limitations under the License.
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RosSharp
+namespace Unity.Robotics.UrdfImporter
 {
     public class Matrix3x3
     {

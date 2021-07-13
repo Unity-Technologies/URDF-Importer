@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public class UrdfComparator
     {

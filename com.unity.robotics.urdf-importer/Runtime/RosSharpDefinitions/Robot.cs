@@ -21,7 +21,7 @@ using System.Xml.Linq;
 using System;
 
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public class Robot
     {

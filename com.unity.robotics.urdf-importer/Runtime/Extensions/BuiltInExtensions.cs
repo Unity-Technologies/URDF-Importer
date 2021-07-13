@@ -17,7 +17,7 @@ using System.IO;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace RosSharp
+namespace Unity.Robotics.UrdfImporter
 {
     internal static class BuiltInExtensions
     {
