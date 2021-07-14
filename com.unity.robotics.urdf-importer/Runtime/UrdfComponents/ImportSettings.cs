@@ -21,6 +21,8 @@ namespace Unity.Robotics.UrdfImporter
         public axisType choosenAxis = axisType.yAxis;
         public convexDecomposer convexMethod = convexDecomposer.vHACD;
 
+        public bool OverwriteExistingPrefabs { get; set; } = false;
+
         public int linksLoaded = 0;
         public int totalLinks = 0;
 

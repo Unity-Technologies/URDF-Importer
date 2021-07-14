@@ -53,6 +53,9 @@ namespace Unity.Robotics.UrdfImporter.Editor
                 "Mesh Decomposer", settings.convexMethod);
             EditorGUILayout.EndHorizontal();
 
+            GUILayout.Space(10);
+            settings.OverwriteExistingPrefabs = GUILayout.Toggle(settings.OverwriteExistingPrefabs, "Overwrite Existing Prefabs");
+            
             //Import Robot button
             GUILayout.Space(10);
             if (GUILayout.Button("Import URDF"))
