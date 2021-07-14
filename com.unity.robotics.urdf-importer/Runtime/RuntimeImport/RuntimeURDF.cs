@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -233,4 +234,21 @@ public static class RuntimeURDF
         }
 #endif
     }
+    
+    public static bool AssetExists(string assetPath, bool ignoreCase = false)
+    {
+#if UNITY_EDITOR
+        string[] foldersToSearch = {Path.GetDirectoryName(assetPath)};
+        var assetName = Path.GetFileNameWithoutExtension(assetPath);
+        foreach (var guid2 in AssetDatabase_FindAssets(assetName, foldersToSearch))
+        {
+            var possiblePath = RuntimeURDF.AssetDatabase_GUIDToAssetPath(guid2);
+            if (string.Equals(possiblePath, assetPath, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+#endif
+        return false;
+    }    
 }

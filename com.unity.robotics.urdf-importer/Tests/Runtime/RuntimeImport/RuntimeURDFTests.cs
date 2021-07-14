@@ -150,6 +150,25 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.IsNotNull(RuntimeURDF.PrefabUtility_InstantiatePrefab(testObject));
         }
 
+        [Test]
+        public void AssetExists_True()
+        {
+            RuntimeURDF.SetRuntimeMode(false);
+            Assert.IsTrue(RuntimeURDF.AssetExists($"{createAssetPath}/TestAsset.prefab"));
+            Assert.IsTrue(RuntimeURDF.AssetExists($"{createAssetPath}/tEstAsset.Prefab", true));
+        }
+        
+        [Test]
+        public void AssetExists_False()
+        {
+            RuntimeURDF.SetRuntimeMode(false);
+            Assert.IsFalse(RuntimeURDF.AssetExists($"{createAssetPath}/tEstAsset.Prefab")); // case
+            Assert.IsFalse(RuntimeURDF.AssetExists($"{createAssetPath}/TestAsset.prefabs", true));
+            Assert.IsFalse(RuntimeURDF.AssetExists($"{createAssetPath}/TestAsset.prefa", true));
+            Assert.IsFalse(RuntimeURDF.AssetExists($"{createAssetPath}/estAsset.prefab", true));
+            Assert.IsFalse(RuntimeURDF.AssetExists($"{createAssetPath}/sub/TestAsset.prefab", true));
+        }
+        
         [TearDown]
         public void TearDown()
         {
