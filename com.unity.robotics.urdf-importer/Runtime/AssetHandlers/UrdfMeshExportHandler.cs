@@ -70,7 +70,8 @@ namespace Unity.Robotics.UrdfImporter
         {
             //Get material from Collada prefab
             Material material = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Material>(prefabPath);
-            if (material == null || material.mainTexture == null) return;
+            if (material == null || material.mainTexture == null)
+                return;
 
             //Get relative subfolder where texture is, compared to the DAE file.
             string commonFolder = Path.GetDirectoryName(prefabPath).SetSeparatorChar();
