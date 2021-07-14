@@ -18,7 +18,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void Create_GeometryBox_DefaultGeometry()
         {
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
 
             var collision = UrdfCollisionExtensions.Create(parent, GeometryTypes.Box);
@@ -32,7 +32,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void Create_GeometryBoxWithVisual_NondefaultScale()
         {
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
             var copy = new GameObject("Copy").transform;
             copy.transform.localScale = Vector3.one * 2f;
@@ -49,7 +49,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void Create_GeometryMesh_DefaultGeometry()
         {
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
 
             var collision = UrdfCollisionExtensions.Create(parent, GeometryTypes.Mesh);
@@ -63,7 +63,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void Create_GeometryMeshWithVisual_NondefaultScale()
         {
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
             var copy = new GameObject("Copy").transform;
             copy.transform.localScale = Vector3.one * 2f;
@@ -80,7 +80,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void Create_LinkCollision_DefaultGeometry()
         {
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
             var geometry = new Geometry(box:new Box(new double[] {1, 1, 1}));
 
@@ -96,7 +96,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void ExportCollisionData_DefaultGeometry_Succeeds()
         {
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
 
             var collisionComponent = UrdfCollisionExtensions.Create(parent, GeometryTypes.Box);

@@ -10,7 +10,7 @@ using UnityEditor;
 /// This is to reduce the usage of #if UNITY_EDITOR in the code and have a consistent way of skipping editor only code. 
 /// Also to allow having the option of running the runtime mode code in editor.
 /// </summary>
-public static class RuntimeURDF
+public static class RuntimeUrdf
 {
 #if UNITY_EDITOR
     public static bool runtimeModeEnabled = false;
@@ -242,7 +242,7 @@ public static class RuntimeURDF
         var assetName = Path.GetFileNameWithoutExtension(assetPath);
         foreach (var guid2 in AssetDatabase_FindAssets(assetName, foldersToSearch))
         {
-            var possiblePath = RuntimeURDF.AssetDatabase_GUIDToAssetPath(guid2);
+            var possiblePath = RuntimeUrdf.AssetDatabase_GUIDToAssetPath(guid2);
             if (string.Equals(possiblePath, assetPath, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
             {
                 return true;

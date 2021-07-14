@@ -32,7 +32,7 @@ namespace Unity.Robotics.UrdfImporter
         public void OnPreprocessModel()
         {
 #if UNITY_EDITOR
-            if (!RuntimeURDF.IsRuntimeMode())
+            if (!RuntimeUrdf.IsRuntimeMode())
             {
                 ModelImporter modelImporter = (ModelImporter)assetImporter;
                 isCollada = Path.GetExtension(modelImporter.assetPath).ToLowerInvariant() == ".dae";

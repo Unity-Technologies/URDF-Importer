@@ -16,7 +16,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         public void SetUp()
         {
             m_StlCubeCopyPath = k_AssetRoot + "/cube.stl";
-            RuntimeURDF.SetRuntimeMode(false);
+            RuntimeUrdf.SetRuntimeMode(false);
             Directory.CreateDirectory(k_AssetRoot);
         }
         
@@ -25,20 +25,20 @@ namespace Unity.Robotics.UrdfImporter.Tests
         {
             // make a new copy of the stl file
             Assert.IsTrue(AssetDatabase.CopyAsset(k_StlCubeSourcePath, m_StlCubeCopyPath));
-            Assert.IsTrue(RuntimeURDF.AssetExists(m_StlCubeCopyPath));
+            Assert.IsTrue(RuntimeUrdf.AssetExists(m_StlCubeCopyPath));
 
             // make sure the .asset file is not automatically created
             var meshAssetPath =  StlAssetPostProcessor.GetMeshAssetPath(m_StlCubeCopyPath, 0);            
-            Assert.IsFalse(RuntimeURDF.AssetExists(meshAssetPath));
+            Assert.IsFalse(RuntimeUrdf.AssetExists(meshAssetPath));
 
             // make sure the .prefab file is not automatically created
             var prefabPath = StlAssetPostProcessor.GetPrefabAssetPath(m_StlCubeCopyPath);
-            Assert.IsFalse(RuntimeURDF.AssetExists(prefabPath));
+            Assert.IsFalse(RuntimeUrdf.AssetExists(prefabPath));
             
             // make sure the .asset and .prefab file are created when requested
             StlAssetPostProcessor.PostprocessStlFile(m_StlCubeCopyPath);
-            Assert.IsTrue(RuntimeURDF.AssetExists(meshAssetPath));
-            Assert.IsTrue(RuntimeURDF.AssetExists(prefabPath));
+            Assert.IsTrue(RuntimeUrdf.AssetExists(meshAssetPath));
+            Assert.IsTrue(RuntimeUrdf.AssetExists(prefabPath));
         }
         
         [TearDown]
