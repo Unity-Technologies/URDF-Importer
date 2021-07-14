@@ -60,10 +60,10 @@ namespace Unity.Robotics.UrdfImporter
         private static GameObject CreateMeshVisual(Link.Geometry.Mesh mesh)
         {
 #if UNITY_EDITOR
-            if (!RuntimeURDF.IsRuntimeMode())
+            if (!RuntimeUrdf.IsRuntimeMode())
             {
                 GameObject meshObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
-                return meshObject == null ? null : (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(meshObject);
+                return meshObject == null ? null : (GameObject)RuntimeUrdf.PrefabUtility_InstantiatePrefab(meshObject);
             }
 #endif
             return CreateMeshVisualRuntime(mesh);

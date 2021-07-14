@@ -14,8 +14,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Changed
  - STL files will not be automatically processed to create .prefab files when copied into the Assets directory or when assets are reimported. Instead the processing happens during the URDF import and required .prefab files will be created if they don't exist already or if the "Overwrite Existing Prefabs" option is checked in the URDF Import settings dialog.
-
-- Renamed RuntimeURDFImporter to RuntimeURDFImporterExample for clarification
+- Renamed "URDF" to "Urdf" in class names, function names and source filenames.
+- Renamed RuntimeURDFImporter to RuntimeUrdfImporterExample for clarification
 
 ### Deprecated
 

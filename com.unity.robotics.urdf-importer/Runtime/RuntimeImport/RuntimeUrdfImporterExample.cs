@@ -37,7 +37,7 @@ public class RuntimeUrdfImporterExample : MonoBehaviour
     private GameObject currentRobot = null;
     private bool isLoading = false;
 
-    private IEnumerator LoadURDF()
+    private IEnumerator LoadUrdf()
     {
         isLoading = true;
         if (string.IsNullOrEmpty(urdfFilepath))
@@ -117,7 +117,7 @@ public class RuntimeUrdfImporterExample : MonoBehaviour
         showProgress = GUI.Toggle(new Rect(10, 125, 200, 25), showProgress, "Show Progress (experimental)");
         if (!isLoading && GUI.Button(new Rect(530, 50, 150, 25), "Load UDRF File"))
         {
-            StartCoroutine(LoadURDF());
+            StartCoroutine(LoadUrdf());
         }
     }    
 }

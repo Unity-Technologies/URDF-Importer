@@ -57,7 +57,7 @@ namespace Unity.Robotics.UrdfImporter
                 return;
             }
 
-            RuntimeURDF.PrefabUtility_SaveAsPrefabAsset(gameObject, GetPrefabAssetPath(stlFile));
+            RuntimeUrdf.PrefabUtility_SaveAsPrefabAsset(gameObject, GetPrefabAssetPath(stlFile));
             Object.DestroyImmediate(gameObject);
         }
 
@@ -65,9 +65,9 @@ namespace Unity.Robotics.UrdfImporter
         {
 #if UNITY_EDITOR
             // also save the material in the Assets
-            if (!RuntimeURDF.IsRuntimeMode() && MaterialExtensions.GetRenderPipelineType() == MaterialExtensions.RenderPipelineType.Standard)
+            if (!RuntimeUrdf.IsRuntimeMode() && MaterialExtensions.GetRenderPipelineType() == MaterialExtensions.RenderPipelineType.Standard)
             {
-                s_DefaultDiffuse = RuntimeURDF.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+                s_DefaultDiffuse = RuntimeUrdf.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
             }
 #endif
             if (s_DefaultDiffuse) 
@@ -89,7 +89,7 @@ namespace Unity.Robotics.UrdfImporter
             for (int i = 0; i < meshes.Length; i++)
             {
                 string meshAssetPath = GetMeshAssetPath(stlFile, i);
-                RuntimeURDF.AssetDatabase_CreateAsset(meshes[i], meshAssetPath);
+                RuntimeUrdf.AssetDatabase_CreateAsset(meshes[i], meshAssetPath);
                 GameObject gameObject = CreateStlGameObject(meshAssetPath, material);
                 gameObject.transform.SetParent(parent.transform, false);
             }
@@ -99,7 +99,7 @@ namespace Unity.Robotics.UrdfImporter
         private static GameObject CreateStlGameObject(string meshAssetPath, Material material)
         {
             GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(meshAssetPath));
-            gameObject.AddComponent<MeshFilter>().sharedMesh = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Mesh>(meshAssetPath);
+            gameObject.AddComponent<MeshFilter>().sharedMesh = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Mesh>(meshAssetPath);
             gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
             return gameObject;
         }
