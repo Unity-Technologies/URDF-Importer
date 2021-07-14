@@ -19,7 +19,7 @@ using UnityEngine;
 ///   However URDF files that only use STL format for both visual and collision meshes
 ///   can still be imported in runtime in standalone IL2CPP builds.  
 /// </summary>
-public class RuntimeURDFImporterExample : MonoBehaviour
+public class RuntimeUrdfImporterExample : MonoBehaviour
 {
     public string urdfFilepath;
     public bool setImmovableLink = true;
