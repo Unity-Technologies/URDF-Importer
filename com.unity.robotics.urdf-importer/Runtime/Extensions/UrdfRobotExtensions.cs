@@ -68,12 +68,12 @@ namespace Unity.Robotics.UrdfImporter
             ImportPipelineData im = new ImportPipelineData();
             im.settings = settings;
             im.loadStatus = loadStatus;
-            im.wasRuntimeMode = RuntimeURDF.IsRuntimeMode();
+            im.wasRuntimeMode = RuntimeUrdf.IsRuntimeMode();
             im.forceRuntimeMode = forceRuntimeMode;
 
             if (forceRuntimeMode) 
             {
-                RuntimeURDF.SetRuntimeMode(true);
+                RuntimeUrdf.SetRuntimeMode(true);
             }
 
             im.robot = new Robot(filename);
@@ -83,7 +83,7 @@ namespace Unity.Robotics.UrdfImporter
                 Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
                 if (forceRuntimeMode) 
                 { // set runtime mode back to what it was
-                    RuntimeURDF.SetRuntimeMode(im.wasRuntimeMode);
+                    RuntimeUrdf.SetRuntimeMode(im.wasRuntimeMode);
                 }
                 return null;
             }
@@ -104,7 +104,7 @@ namespace Unity.Robotics.UrdfImporter
             im.robotGameObject.AddComponent<UrdfRobot>();
 
             im.robotGameObject.AddComponent<Unity.Robotics.UrdfImporter.Control.Controller>();
-            if (RuntimeURDF.IsRuntimeMode()) 
+            if (RuntimeUrdf.IsRuntimeMode()) 
             {// In runtime mode, we have to disable controller while robot is being constructed.
                 im.robotGameObject.GetComponent<Unity.Robotics.UrdfImporter.Control.Controller>().enabled = false;
             }
@@ -154,7 +154,7 @@ namespace Unity.Robotics.UrdfImporter
 
             if (im.forceRuntimeMode) 
             { // set runtime mode back to what it was
-                RuntimeURDF.SetRuntimeMode(im.wasRuntimeMode);
+                RuntimeUrdf.SetRuntimeMode(im.wasRuntimeMode);
             }
         }
 
@@ -349,7 +349,7 @@ namespace Unity.Robotics.UrdfImporter
         public static void CreateTag()
         {
 #if UNITY_EDITOR
-            if (RuntimeURDF.IsRuntimeMode())
+            if (RuntimeUrdf.IsRuntimeMode())
             {
                 // This is to make the behavior consistent with Runtime mode
                 // as tags cannot be created in a Standalone build.

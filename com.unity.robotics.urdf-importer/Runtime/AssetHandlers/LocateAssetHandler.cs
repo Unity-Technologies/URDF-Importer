@@ -28,13 +28,13 @@ namespace Unity.Robotics.UrdfImporter
             var originalUrdfPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName, false);
             if (originalUrdfPath.ToLower().EndsWith(".stl"))
             {// it is an asset that requires post processing
-                if (UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeURDF.AssetExists(fileAssetPath, true))
+                if (UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeUrdf.AssetExists(fileAssetPath, true))
                 {// post process again to (re)create prefabs
                     StlAssetPostProcessor.PostprocessStlFile(originalUrdfPath);
                 }                
             }
 
-            T assetObject = RuntimeURDF.AssetDatabase_LoadAssetAtPath<T>(fileAssetPath);
+            T assetObject = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<T>(fileAssetPath);
 
             if (assetObject)
                 return assetObject;
@@ -42,7 +42,7 @@ namespace Unity.Robotics.UrdfImporter
             //If asset was not found, let user choose whether to search for
             //or ignore the missing asset.
             string invalidPath = fileAssetPath ?? urdfFileName;
-            int option = RuntimeURDF.EditorUtility_DisplayDialogComplex("Urdf Importer: Asset Not Found",
+            int option = RuntimeUrdf.EditorUtility_DisplayDialogComplex("Urdf Importer: Asset Not Found",
                 "Current root folder: " + UrdfAssetPathHandler.GetPackageRoot() +
                 "\n\nExpected asset path: " + invalidPath,
                 "Locate Asset",
@@ -60,7 +60,7 @@ namespace Unity.Robotics.UrdfImporter
                     break;
             }
 
-            assetObject = (T) RuntimeURDF.AssetDatabase_LoadAssetAtPath(fileAssetPath, typeof(T));
+            assetObject = (T) RuntimeUrdf.AssetDatabase_LoadAssetAtPath(fileAssetPath, typeof(T));
             if (assetObject != null)
                 return assetObject;
 
@@ -70,7 +70,7 @@ namespace Unity.Robotics.UrdfImporter
 
         private static string LocateRootAssetFolder<T>(string urdfFileName) where T : UnityEngine.Object
         {
-            string newAssetPath = RuntimeURDF.EditorUtility_OpenFolderPanel(
+            string newAssetPath = RuntimeUrdf.EditorUtility_OpenFolderPanel(
                 "Locate package root folder",
                 Path.Combine(Path.GetDirectoryName(Application.dataPath), "Assets"),
                 "");
@@ -90,7 +90,7 @@ namespace Unity.Robotics.UrdfImporter
         {
             string fileExtension = Path.GetExtension(invalidPath)?.Replace(".", "");
 
-            string newPath = RuntimeURDF.EditorUtility_OpenFilePanel(
+            string newPath = RuntimeUrdf.EditorUtility_OpenFilePanel(
                 "Couldn't find asset at " + invalidPath + ". Select correct file.",
                 UrdfAssetPathHandler.GetPackageRoot(),
                 fileExtension);
@@ -100,7 +100,7 @@ namespace Unity.Robotics.UrdfImporter
 
         private static void ChooseFailureOption(string urdfFilePath)
         {
-            if (!RuntimeURDF.EditorUtility_DisplayDialog(
+            if (!RuntimeUrdf.EditorUtility_DisplayDialog(
                 "Urdf Importer: Missing Asset",
                 "Missing asset " + Path.GetFileName(urdfFilePath) +
                 " was ignored or could not be found.\n\nContinue URDF Import?",

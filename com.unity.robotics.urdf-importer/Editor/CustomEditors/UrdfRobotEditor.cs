@@ -104,7 +104,7 @@ namespace Unity.Robotics.UrdfImporter.Editor
             GUILayout.Space(5);
             if (GUILayout.Button("Compare URDF Files"))
             {
-                CompareURDF window = (CompareURDF)EditorWindow.GetWindow(typeof(CompareURDF));
+                CompareUrdf window = (CompareUrdf)EditorWindow.GetWindow(typeof(CompareUrdf));
                 window.minSize = new Vector2(500, 200);
                 window.GetEditorPrefs();
                 window.Show();
