@@ -22,7 +22,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             urdfFile = $"{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/cube.urdf";
 
             Directory.CreateDirectory(assetRoot);
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
         }
 
         [Test]
