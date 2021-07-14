@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Robotics.UrdfImporter;
 using Unity.Robotics.UrdfImporter.Control;
-using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 
 /// <summary>
