@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Linq;
+using Unity.Robotics.UrdfImporter.Control;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -25,7 +26,6 @@ namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfRobotExtensions
     {
-        static string tagName = "robot";
         static string collisionObjectName = "Collisions";
         public static ImportSettings importsettings;
 
@@ -34,7 +34,7 @@ namespace Unity.Robotics.UrdfImporter
             CreateTag();
             GameObject robotGameObject = new GameObject("Robot");
 
-            robotGameObject.tag = tagName;
+            SetTag(robotGameObject);
             robotGameObject.AddComponent<UrdfRobot>();
             robotGameObject.AddComponent<Unity.Robotics.UrdfImporter.Control.Controller>();
 
@@ -97,8 +97,9 @@ namespace Unity.Robotics.UrdfImporter
            
             importsettings = im.settings;
             im.settings.totalLinks = im.robot.links.Count;
+
             CreateTag();
-            im.robotGameObject.tag = tagName;
+            SetTag(im.robotGameObject);
 
             im.robotGameObject.AddComponent<UrdfRobot>();
 
@@ -348,6 +349,13 @@ namespace Unity.Robotics.UrdfImporter
         public static void CreateTag()
         {
 #if UNITY_EDITOR
+            if (RuntimeUrdf.IsRuntimeMode())
+            {
+                // This is to make the behavior consistent with Runtime mode
+                // as tags cannot be created in a Standalone build.
+                return;
+            }
+
             // Open tag manager
             SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
             SerializedProperty tagsProp = tagManager.FindProperty("tags");
@@ -358,7 +366,7 @@ namespace Unity.Robotics.UrdfImporter
             for (int i = 0; i < tagsProp.arraySize; i++)
             {
                 SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
-                if (t.stringValue.Equals(tagName))
+                if (t.stringValue.Equals(FKRobot.k_TagName))
                 {
                     found = true; 
                     break; 
@@ -370,11 +378,37 @@ namespace Unity.Robotics.UrdfImporter
             {
                 tagsProp.InsertArrayElementAtIndex(0);
                 SerializedProperty n = tagsProp.GetArrayElementAtIndex(0);
-                n.stringValue = tagName;
+                n.stringValue = FKRobot.k_TagName;
             }
 
-            tagManager.ApplyModifiedProperties();
+            tagManager.ApplyModifiedProperties();                
 #endif
+        }
+
+        static void SetTag(GameObject go)
+        {
+            try
+            {
+                GameObject.FindWithTag(FKRobot.k_TagName);
+            }
+            catch (Exception)
+            {
+                Debug.LogError($"Unable to find tag '{FKRobot.k_TagName}'." + 
+                               $"Add a tag '{FKRobot.k_TagName}' in the Project Settings in Unity Editor.");
+                return;
+            }
+            
+            if (!go)
+                return;
+
+            try
+            {
+                go.tag = FKRobot.k_TagName;
+            }
+            catch (Exception)
+            {
+                Debug.LogError($"Unable to set the GameObject '{go.name}' tag to '{FKRobot.k_TagName}'.");
+            }
         }
     }
 }
