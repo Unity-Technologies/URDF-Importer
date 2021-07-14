@@ -52,7 +52,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         public void ExportGeometryData_Cylinder_DefaultGeometry()
         {
             // Force runtime mode to avoid creating asset file
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             var parent = new GameObject("Parent").transform;
             UrdfGeometryCollision.Create(parent, GeometryTypes.Cylinder);
 
@@ -90,9 +90,9 @@ namespace Unity.Robotics.UrdfImporter.Tests
         public void ExportGeometryData_MeshUnityDecomposer_DefaultGeometry()
         {
             // Force runtime mode to set testing package root
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/");
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             UrdfRobotExtensions.importsettings = ImportSettings.DefaultSettings();
             UrdfRobotExtensions.importsettings.convexMethod = ImportSettings.convexDecomposer.unity;
             

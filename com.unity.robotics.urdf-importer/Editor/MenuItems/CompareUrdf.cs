@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Unity.Robotics.UrdfImporter.Editor
 {
-    public class CompareURDF : EditorWindow
+    public class CompareUrdf : EditorWindow
     {
         public UrdfComparator comparator;
         public string originalFile = "";

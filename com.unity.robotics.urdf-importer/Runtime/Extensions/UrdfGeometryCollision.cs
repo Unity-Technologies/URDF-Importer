@@ -63,7 +63,7 @@ namespace Unity.Robotics.UrdfImporter
 
         private static GameObject CreateMeshCollider(Link.Geometry.Mesh mesh)
         {
-            if (!RuntimeURDF.IsRuntimeMode())
+            if (!RuntimeUrdf.IsRuntimeMode())
             {
                 GameObject prefabObject = LocateAssetHandler.FindUrdfAsset<GameObject>(mesh.filename);
                 if (prefabObject == null)
@@ -72,7 +72,7 @@ namespace Unity.Robotics.UrdfImporter
                     return null;
                 }
 
-                GameObject meshObject = (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(prefabObject);
+                GameObject meshObject = (GameObject)RuntimeUrdf.PrefabUtility_InstantiatePrefab(prefabObject);
                 ConvertMeshToColliders(meshObject, location:mesh.filename);
 
                 return meshObject;
@@ -118,14 +118,14 @@ namespace Unity.Robotics.UrdfImporter
             GameObject go = filter.gameObject;
             var collider = filter.sharedMesh;
             // Only create an asset if not runtime import
-            if (!RuntimeURDF.IsRuntimeMode())
+            if (!RuntimeUrdf.IsRuntimeMode())
             {
                 var packageRoot = UrdfAssetPathHandler.GetPackageRoot();
-                var filePath = RuntimeURDF.AssetDatabase_GUIDToAssetPath(RuntimeURDF.AssetDatabase_CreateFolder($"{packageRoot}", "meshes"));
+                var filePath = RuntimeUrdf.AssetDatabase_GUIDToAssetPath(RuntimeUrdf.AssetDatabase_CreateFolder($"{packageRoot}", "meshes"));
                 var name =$"{filePath}/Cylinder.asset";
                 Debug.Log($"Creating new cylinder file: {name}");
-                RuntimeURDF.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
-                RuntimeURDF.AssetDatabase_SaveAssets();    
+                RuntimeUrdf.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
+                RuntimeUrdf.AssetDatabase_SaveAssets();    
             }
             MeshCollider current = go.AddComponent<MeshCollider>();
             current.sharedMesh = collider;
@@ -142,12 +142,12 @@ namespace Unity.Robotics.UrdfImporter
             }
 
             GameObject objectToCopy = visualToCopy.GetChild(0).gameObject;
-            GameObject prefabObject = (GameObject)RuntimeURDF.PrefabUtility_GetCorrespondingObjectFromSource(objectToCopy);
+            GameObject prefabObject = (GameObject)RuntimeUrdf.PrefabUtility_GetCorrespondingObjectFromSource(objectToCopy);
 
             GameObject collisionObject;
             if (prefabObject != null)
             {
-                collisionObject = (GameObject)RuntimeURDF.PrefabUtility_InstantiatePrefab(prefabObject);
+                collisionObject = (GameObject)RuntimeUrdf.PrefabUtility_InstantiatePrefab(prefabObject);
             }
             else
             {
@@ -182,7 +182,7 @@ namespace Unity.Robotics.UrdfImporter
                 string templateFileName = "";
                 string filePath = "";
                 int meshIndex = 0;
-                if (!RuntimeURDF.IsRuntimeMode() && location != null)
+                if (!RuntimeUrdf.IsRuntimeMode() && location != null)
                 {
                     string meshFilePath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(location, false);
                     templateFileName = Path.GetFileNameWithoutExtension(meshFilePath);
@@ -196,13 +196,13 @@ namespace Unity.Robotics.UrdfImporter
                     List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);
                     foreach (Mesh collider in colliderMeshes)
                     {
-                        if (!RuntimeURDF.IsRuntimeMode())
+                        if (!RuntimeUrdf.IsRuntimeMode())
                         {
                             meshIndex++;
                             string name = $"{filePath}/{templateFileName}_{meshIndex}.asset";
                             Debug.Log($"Creating new mesh file: {name}");
-                            RuntimeURDF.AssetDatabase_CreateAsset(collider, name);
-                            RuntimeURDF.AssetDatabase_SaveAssets();
+                            RuntimeUrdf.AssetDatabase_CreateAsset(collider, name);
+                            RuntimeUrdf.AssetDatabase_SaveAssets();
                         }
                         MeshCollider current = child.AddComponent<MeshCollider>();
                         current.sharedMesh = collider;
