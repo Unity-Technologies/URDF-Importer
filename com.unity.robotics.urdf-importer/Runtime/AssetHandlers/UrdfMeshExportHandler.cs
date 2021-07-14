@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/ 
+*/
 
 using System.IO;
 using UnityEngine;
@@ -45,7 +45,7 @@ namespace Unity.Robotics.UrdfImporter
                     }
                 }
             }
-            
+
             if (foundExistingColladaOrStl)
                 return CopyMeshToExportDestination(prefabPath);
 
@@ -70,8 +70,8 @@ namespace Unity.Robotics.UrdfImporter
         {
             //Get material from Collada prefab
             Material material = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Material>(prefabPath);
-            if (material.mainTexture == null) return;
-            
+            if (material == null || material.mainTexture == null) return;
+
             //Get relative subfolder where texture is, compared to the DAE file.
             string commonFolder = Path.GetDirectoryName(prefabPath).SetSeparatorChar();
             string texturePath = RuntimeUrdf.AssetDatabase_GetAssetPath(material.mainTexture).SetSeparatorChar();
@@ -81,7 +81,7 @@ namespace Unity.Robotics.UrdfImporter
             string newTexturePath = Path.Combine(newFolderLocation, relativeLocation);
 
             Directory.CreateDirectory(Path.GetDirectoryName(newTexturePath));
-            
+
             CopyFileToNewLocation(UrdfAssetPathHandler.GetFullAssetPath(texturePath), newTexturePath);
         }
 
