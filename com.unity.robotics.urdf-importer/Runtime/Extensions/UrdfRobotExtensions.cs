@@ -80,7 +80,8 @@ namespace Unity.Robotics.UrdfImporter
 
             if (!UrdfAssetPathHandler.IsValidAssetPath(im.robot.filename))
             {
-                Debug.LogError($"URDF file and resources must be placed in project folder:\n{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}");
+                Debug.LogError("URDF file and resources must be placed in project folder:" +
+                    $"\n{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}");
                 if (forceRuntimeMode) 
                 { // set runtime mode back to what it was
                     RuntimeUrdf.SetRuntimeMode(im.wasRuntimeMode);

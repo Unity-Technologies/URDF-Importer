@@ -1,12 +1,13 @@
-using System.IO;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using NUnit.Framework;
+using Unity.Robotics.UrdfImporter.Control;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
-using Unity.Robotics.UrdfImporter.Control;
 
 namespace Unity.Robotics.UrdfImporter.Tests
 {
@@ -19,7 +20,9 @@ namespace Unity.Robotics.UrdfImporter.Tests
         public void SetUp()
         {
             assetRoot = "Assets/Tests/Runtime/UrdfRobotExtensionsTests";
-            urdfFile = $"{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/cube.urdf";
+            urdfFile =
+                $"{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}" +
+                "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/cube.urdf";
 
             Directory.CreateDirectory(assetRoot);
             RuntimeUrdf.runtimeModeEnabled = false;
@@ -42,7 +45,8 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [UnityTest]
         public IEnumerator CreateCoroutine_FromFileDefaultSettings_Success()
         {
-            var coroutineCreate = UrdfRobotExtensions.Create(urdfFile, ImportSettings.DefaultSettings(), forceRuntimeMode: true);
+            var coroutineCreate =
+                UrdfRobotExtensions.Create(urdfFile, ImportSettings.DefaultSettings(), forceRuntimeMode: true);
             yield return coroutineCreate;
 
             var robotGO = coroutineCreate.Current;
@@ -75,15 +79,20 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void CorrectAxis_CubeUrdf_Success()
         {
-            var robot = UrdfRobotExtensions.CreateRuntime($"{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/cube.urdf", ImportSettings.DefaultSettings());
+            var robot = UrdfRobotExtensions.CreateRuntime(
+                $"{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}" +
+                "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/cube.urdf",
+                ImportSettings.DefaultSettings());
             Assert.AreEqual(ImportSettings.axisType.yAxis, robot.GetComponent<UrdfRobot>().chosenAxis);
             UrdfRobotExtensions.CorrectAxis(robot);
             Assert.IsTrue(Vector3.zero == robot.GetComponentInChildren<UrdfVisual>().transform.localEulerAngles);
-            Assert.IsTrue(Quaternion.Euler(0, 0, 0) == robot.GetComponentInChildren<UrdfCollision>().transform.localRotation);
+            Assert.IsTrue(Quaternion.Euler(0, 0, 0) ==
+                robot.GetComponentInChildren<UrdfCollision>().transform.localRotation);
 
             robot.GetComponent<UrdfRobot>().chosenAxis = ImportSettings.axisType.zAxis;
             UrdfRobotExtensions.CorrectAxis(robot);
-            Assert.IsTrue(Quaternion.Euler(-90, 0, 90) == robot.GetComponentInChildren<UrdfVisual>().transform.localRotation);
+            Assert.IsTrue(Quaternion.Euler(-90, 0, 90) ==
+                robot.GetComponentInChildren<UrdfVisual>().transform.localRotation);
             Assert.IsTrue(Vector3.zero == robot.GetComponentInChildren<UrdfCollision>().transform.localEulerAngles);
 
             Object.DestroyImmediate(robot);
@@ -102,8 +111,8 @@ namespace Unity.Robotics.UrdfImporter.Tests
 
             Assert.IsTrue(AssetDatabase.IsValidFolder($"{assetRoot}/meshes"));
             Assert.IsTrue(AssetDatabase.IsValidFolder($"{assetRoot}/Resources"));
-            Assert.IsTrue(AssetDatabase.FindAssets("Robot", new string[] {assetRoot}).Length > 0);
-            
+            Assert.IsTrue(AssetDatabase.FindAssets("Robot", new[] { assetRoot }).Length > 0);
+
             LogAssert.ignoreFailingMessages = false;
 
             Object.DestroyImmediate(emptyRobot);
@@ -114,17 +123,18 @@ namespace Unity.Robotics.UrdfImporter.Tests
         public void CreateTag_RobotTag_Success()
         {
             // Open tag manager
-            SerializedObject tagManager = new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
-            SerializedProperty tagsProp = tagManager.FindProperty("tags");
+            var tagManager =
+                new SerializedObject(AssetDatabase.LoadAllAssetsAtPath("ProjectSettings/TagManager.asset")[0]);
+            var tagsProp = tagManager.FindProperty("tags");
 
-            bool found = false;
-            for (int i = 0; i < tagsProp.arraySize; i++)
+            var found = false;
+            for (var i = 0; i < tagsProp.arraySize; i++)
             {
-                SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
+                var t = tagsProp.GetArrayElementAtIndex(i);
                 if (t.stringValue.Equals("robot"))
                 {
-                    found = true; 
-                    break; 
+                    found = true;
+                    break;
                 }
             }
 
@@ -134,8 +144,15 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [TearDown]
         public void TearDown()
         {
-            List<string> outFailedPaths = new List<string>();
-            AssetDatabase.DeleteAssets(new string[] {"Assets/Tests", "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/Materials", "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset", "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset.meta"}, outFailedPaths);
+            var outFailedPaths = new List<string>();
+            AssetDatabase.DeleteAssets(
+                new[]
+                {
+                    "Assets/Tests",
+                    "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/Materials",
+                    "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset",
+                    "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset.meta"
+                }, outFailedPaths);
         }
     }
 }
