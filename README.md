@@ -1,7 +1,5 @@
 # URDF Importer 
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
 URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org/urdf/XML) format in a Unity scene. URDF defines the geometry, visual meshes, kinematic and dynamic attributes of a Robot. Importer parses a URDF file and imports it into Unity using PhyX 4.0 articulation bodies.
 
 # Using the Package
@@ -14,7 +12,7 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 <img src = "images~/Package_manager_add.png">
 
-3. Enter the git URL for the URDF Importer with the latest version tag (currently v0.4.0) `https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.4.0` in the text box and press `Enter`.
+3. Paste the link to the URDF github, https://github.com/Unity-Technologies/URDF-Importer.git repository in the text box and press `Enter`. 
 
 4. Click `Import URDF`.
 
@@ -35,27 +33,11 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 # Tutorials
 
-Instructions for using URDF importer can be found [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/tutorials/urdf_importer/urdf_tutorial.md).
+Instructions for using URDF importer can be found [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/master/tutorials/urdf_importer/urdf_tutorial.md).
+
 
 ## ROS#
 
 Special thanks to the Siemens [ROS# Project Team]( https://github.com/siemens/ros-sharp/wiki/Info_Acknowledgements) for driving the ROS-Unity Integration Open Source since 2017.
 
 This repo is a fork of [ROS#](https://github.com/siemens/ros-sharp) and was a great starting point for our development.
-
-## Community and Feedback
-
-The Unity Robotics projects are open-source and we encourage and welcome contributions. 
-If you wish to contribute, be sure to review our [contribution guidelines](CONTRIBUTING.md) 
-and [code of conduct](CODE_OF_CONDUCT.md).
-
-## Support
-For questions or discussions about Unity Robotics package installations or how to best set up and integrate your robotics projects, please create a new thread on the [Unity Robotics forum](https://forum.unity.com/forums/robotics.623/) and make sure to include as much detail as possible.
-
-For feature requests, bugs, or other issues, please file a [GitHub issue](https://github.com/Unity-Technologies/URDF-Importer/issues) using the provided templates and the Robotics team will investigate as soon as possible.
-
-For any other questions or feedback, connect directly with the 
-Robotics team at [unity-robotics@unity3d.com](mailto:unity-robotics@unity3d.com).
-
-## License
-[Apache License 2.0](LICENSE)
