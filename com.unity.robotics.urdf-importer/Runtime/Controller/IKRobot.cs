@@ -15,7 +15,12 @@ namespace Unity.Robotics.UrdfImporter.Control
         public float mDelta = .001f;
         void Start()
         {
-            robot = GameObject.FindWithTag("robot");
+            robot = FKRobot.FindRobotObject();
+            if (!robot)
+            {
+                return;
+            }
+
             Fk = robot.GetComponent<FKRobot>();
             jacobian = new float[6, Fk.jointChain.Count];
         }
