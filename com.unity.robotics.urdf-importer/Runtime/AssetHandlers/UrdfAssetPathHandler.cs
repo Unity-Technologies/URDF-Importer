@@ -15,7 +15,7 @@ limitations under the License.
 using System.IO;
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfAssetPathHandler
     {
@@ -30,9 +30,9 @@ namespace RosSharp.Urdf
 
             packageRoot = GetRelativeAssetPath(newPath);
 
-            if (!RuntimeURDF.AssetDatabase_IsValidFolder(Path.Combine(packageRoot, MaterialFolderName)))
+            if (!RuntimeUrdf.AssetDatabase_IsValidFolder(Path.Combine(packageRoot, MaterialFolderName)))
             {
-                RuntimeURDF.AssetDatabase_CreateFolder(packageRoot, MaterialFolderName);
+                RuntimeUrdf.AssetDatabase_CreateFolder(packageRoot, MaterialFolderName);
             }
 
             if (correctingIncorrectPackageRoot)
@@ -54,7 +54,7 @@ namespace RosSharp.Urdf
             if (!absolutePathUnityFormat.StartsWith(Application.dataPath.SetSeparatorChar()))
             {
 #if UNITY_EDITOR
-                if (!RuntimeURDF.IsRuntimeMode())
+                if (!RuntimeUrdf.IsRuntimeMode())
                 {
                     return null;
                 }
@@ -118,7 +118,7 @@ namespace RosSharp.Urdf
         public static bool IsValidAssetPath(string path)
         {
 #if UNITY_EDITOR
-            if (!RuntimeURDF.IsRuntimeMode())
+            if (!RuntimeUrdf.IsRuntimeMode())
             {
                 return GetRelativeAssetPath(path) != null;
             }
@@ -131,15 +131,15 @@ namespace RosSharp.Urdf
 
         private static void MoveMaterialsToNewLocation(string oldPackageRoot)
         {
-            if (RuntimeURDF.AssetDatabase_IsValidFolder(Path.Combine(oldPackageRoot, MaterialFolderName)))
+            if (RuntimeUrdf.AssetDatabase_IsValidFolder(Path.Combine(oldPackageRoot, MaterialFolderName)))
             {
-                RuntimeURDF.AssetDatabase_MoveAsset(
+                RuntimeUrdf.AssetDatabase_MoveAsset(
                     Path.Combine(oldPackageRoot, MaterialFolderName),
                     Path.Combine(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName));
             }
             else
             {
-                RuntimeURDF.AssetDatabase_CreateFolder(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName);
+                RuntimeUrdf.AssetDatabase_CreateFolder(UrdfAssetPathHandler.GetPackageRoot(), MaterialFolderName);
             }
         }
 

@@ -5,14 +5,14 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.TestTools;
-using RosSharp.Urdf;
+using Unity.Robotics.UrdfImporter;
 using Object = UnityEngine.Object;
-using Collision = RosSharp.Urdf.Link.Collision;
-using Geometry = RosSharp.Urdf.Link.Geometry;
-using Box = RosSharp.Urdf.Link.Geometry.Box;
-using Mesh = RosSharp.Urdf.Link.Geometry.Mesh;
+using Collision = Unity.Robotics.UrdfImporter.Link.Collision;
+using Geometry = Unity.Robotics.UrdfImporter.Link.Geometry;
+using Box = Unity.Robotics.UrdfImporter.Link.Geometry.Box;
+using Mesh = Unity.Robotics.UrdfImporter.Link.Geometry.Mesh;
 
-namespace RosSharp.Urdf.Tests
+namespace Unity.Robotics.UrdfImporter.Tests
 {
     public class UrdfGeometryCollisionTests
     {
@@ -22,9 +22,12 @@ namespace RosSharp.Urdf.Tests
         [SetUp]
         public void SetUp()
         {
-            RuntimeURDF.AssetDatabase_CreateFolder("Assets", "Tests");
-            RuntimeURDF.AssetDatabase_CreateFolder("Assets/Tests", "Runtime");
-            RuntimeURDF.AssetDatabase_CreateFolder("Assets/Tests/Runtime", "GeometryTests");
+            // a robot tag needs to be added in project settings before runtime import can work
+            RuntimeUrdf.SetRuntimeMode(false);
+            UrdfRobotExtensions.CreateTag(); 
+            RuntimeUrdf.AssetDatabase_CreateFolder("Assets", "Tests");
+            RuntimeUrdf.AssetDatabase_CreateFolder("Assets/Tests", "Runtime");
+            RuntimeUrdf.AssetDatabase_CreateFolder("Assets/Tests/Runtime", "GeometryTests");
         }
 
         [Test]
@@ -46,9 +49,9 @@ namespace RosSharp.Urdf.Tests
         public void Create_CylinderMesh_AssetCreated()
         {
             // Force runtime mode to set testing package root
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot("Assets/Tests/Runtime/GeometryTests");
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             var parent = new GameObject("Parent").transform;
             UrdfGeometryCollision.Create(parent, GeometryTypes.Cylinder);
             
@@ -62,7 +65,7 @@ namespace RosSharp.Urdf.Tests
             Assert.IsTrue(Vector3.Distance(Vector3.zero, createdCylinder.GetComponent<MeshCollider>().sharedMesh.bounds.center) < centerDelta); 
             Assert.IsTrue(Vector3.Distance(new Vector3(0.5f, 1f, 0.5f), createdCylinder.GetComponent<MeshCollider>().sharedMesh.bounds.extents) < scaleDelta); 
             // Verify Cylinder created in Assets
-            Assert.IsNotNull(RuntimeURDF.AssetDatabase_FindAssets("Cylinder t:mesh", new string[] {"Assets/Tests/Runtime/GeometryTests"}));
+            Assert.IsNotNull(RuntimeUrdf.AssetDatabase_FindAssets("Cylinder t:mesh", new string[] {"Assets/Tests/Runtime/GeometryTests"}));
             
             AssetDatabase.DeleteAsset("Assets/Tests/Runtime/GeometryTests/Cylinder.asset");
             Object.DestroyImmediate(parent.gameObject);
@@ -102,9 +105,9 @@ namespace RosSharp.Urdf.Tests
         public void Create_FromStlUnity_CubeMesh()
         {
             // Force runtime mode to set testing package root
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/");
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             UrdfRobotExtensions.importsettings = ImportSettings.DefaultSettings();
             UrdfRobotExtensions.importsettings.convexMethod = ImportSettings.convexDecomposer.unity;
             
@@ -132,9 +135,9 @@ namespace RosSharp.Urdf.Tests
         public void Create_FromStlVhacdNotRuntime_CubeMesh()
         {
             // Force runtime mode to set testing package root
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/");
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             UrdfRobotExtensions.importsettings = ImportSettings.DefaultSettings();
             
             var parent = new GameObject("Parent").transform;
@@ -161,7 +164,7 @@ namespace RosSharp.Urdf.Tests
         public void Create_FromStlVhacdRuntime_CubeMesh()
         {
             // Force runtime mode to set testing package root
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/");
             UrdfRobotExtensions.importsettings = ImportSettings.DefaultSettings();
             

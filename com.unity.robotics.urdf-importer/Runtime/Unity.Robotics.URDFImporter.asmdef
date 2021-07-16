@@ -1,6 +1,6 @@
 {
-    "name": "Unity.Robotics.URDFImporter",
-    "rootNamespace": "RosSharp.Urdf",
+    "name": "Unity.Robotics.UrdfImporter",
+    "rootNamespace": "Unity.Robotics.UrdfImporter.Urdf",
     "references": [
         "GUID:6a697808d7c80a549b57420070d6c4f3"
     ],

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace RosSharp.Control{
+namespace Unity.Robotics.UrdfImporter.Control{
     public class FKRobot : MonoBehaviour
     {
         private GameObject robot;
@@ -14,15 +14,26 @@ namespace RosSharp.Control{
 
         public Quaternion endEffectorRotation;
         public Matrix4x4 endEffectorPosition;
+        
+        public const string k_TagName = "robot";
 
         // TODO : Automatically adding DH parameters 2. Detecting number of active joints
         void Start()
         {
-            robot = GameObject.FindWithTag("robot");
-            if(dh == null)
+            if (dh == null)
+            {
                 dh = new List<float[]>();
+            }
             
             jointChain = new List<ArticulationBody>();
+
+            robot = FindRobotObject();
+            
+            if (!robot)
+            {
+                return;
+            }
+
             foreach (ArticulationBody joint in robot.GetComponentsInChildren<ArticulationBody>())
             {
                 if (joint.jointType != ArticulationJointType.FixedJoint)
@@ -30,9 +41,28 @@ namespace RosSharp.Control{
             }
         }
 
+        public static GameObject FindRobotObject()
+        {
+            try
+            {
+                GameObject robot = GameObject.FindWithTag(k_TagName);
+                if (robot == null)
+                {
+                    Debug.LogWarning($"No GameObject with tag '{k_TagName}' was found.");
+                }
+                return robot;
+            }
+            catch (Exception)
+            {
+                Debug.LogError($"Unable to find tag '{k_TagName}'. " + 
+                               $"Add A tag '{k_TagName}' in the Project Settings in Unity Editor.");
+            }
+            return null;
+        }
+
         void FixedUpdate()
         {
-            if(dh.Count == jointChain.Count)
+            if (dh.Count == jointChain.Count)
                 FK();
         }
 

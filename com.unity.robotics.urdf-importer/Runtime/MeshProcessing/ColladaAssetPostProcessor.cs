@@ -17,7 +17,7 @@ using System.Globalization;
 using UnityEngine;
 using System.IO;
 
-namespace RosSharp
+namespace Unity.Robotics.UrdfImporter
 {
 #if UNITY_EDITOR
     using UnityEditor;
@@ -32,7 +32,7 @@ namespace RosSharp
         public void OnPreprocessModel()
         {
 #if UNITY_EDITOR
-            if (!RuntimeURDF.IsRuntimeMode())
+            if (!RuntimeUrdf.IsRuntimeMode())
             {
                 ModelImporter modelImporter = (ModelImporter)assetImporter;
                 isCollada = Path.GetExtension(modelImporter.assetPath).ToLowerInvariant() == ".dae";

@@ -2,9 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace RosSharp.Urdf.Editor
+namespace Unity.Robotics.UrdfImporter.Editor
 {
-    public class CompareURDF : EditorWindow
+    public class CompareUrdf : EditorWindow
     {
         public UrdfComparator comparator;
         public string originalFile = "";

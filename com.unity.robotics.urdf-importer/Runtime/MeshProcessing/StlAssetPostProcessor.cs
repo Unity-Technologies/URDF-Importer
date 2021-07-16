@@ -16,61 +16,70 @@ using UnityEngine;
 using System.Linq;
 using System.IO;
 
-namespace RosSharp
+namespace Unity.Robotics.UrdfImporter
 {
-    using Unity.Robotics;
-#if UNITY_EDITOR
-    using UnityEditor;
-    public class StlAssetPostProcessor : AssetPostprocessor
-#else
+    /// <summary>
+    /// Utility functions for processing STL mesh files.
+    /// Note that no post processing is done on STL files anymore when they are added to the project
+    /// As such StlAssetPostProcessor no longer drives from AssetPostProcessor and the OnPostprocessAllAssets()
+    /// function is removed. 
+    /// </summary>
     public class StlAssetPostProcessor
-#endif    
     {
-        private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
+        private static Material s_DefaultDiffuse = null;
+
+        public static void PostprocessStlFile(string stlFile)
         {
-#if UNITY_EDITOR
-            if (!RuntimeURDF.IsRuntimeMode())
+            var stlFileLowercase = stlFile.ToLower();
+            if (stlFileLowercase.StartsWith("assets"))
             {
-                foreach (string stlFile in importedAssets.Where(x => x.ToLowerInvariant().EndsWith(".stl")))
-                {
-                    createStlPrefab(stlFile);
-                }
+                Debug.Log($"Detected an stl file at {stlFile} - creating a mesh prefab.");
+                CreateStlPrefab(stlFile);
             }
-#endif
+            else if (stlFileLowercase.StartsWith("packages"))
+            {
+                Debug.Log($"Found an stl file at {stlFile} - " + 
+                          "skipping post-processing because it's a Package asset");
+            }
+            else
+            {
+                Debug.LogWarning($"Found an stl file at {stlFile} - " + 
+                                 "skipping post-processing because we don't know how to handle an asset in this location.");
+            }
         }
 
-        private static void createStlPrefab(string stlFile)
+        private static void CreateStlPrefab(string stlFile)
         {
             GameObject gameObject = CreateStlParent(stlFile);
-            if (gameObject == null)
+            if (!gameObject)
             {
+                Debug.LogWarning($"Could not create a mesh prefab for {stlFile}");
                 return;
             }
 
-            RuntimeURDF.PrefabUtility_SaveAsPrefabAsset(gameObject, getPrefabAssetPath(stlFile));
+            RuntimeUrdf.PrefabUtility_SaveAsPrefabAsset(gameObject, GetPrefabAssetPath(stlFile));
             Object.DestroyImmediate(gameObject);
         }
 
-        private static Material defaultDiffuse = null;
         private static Material GetDefaultDiffuseMaterial() 
         {
 #if UNITY_EDITOR
             // also save the material in the Assets
-            if (!RuntimeURDF.IsRuntimeMode() && MaterialExtensions.GetRenderPipelineType() == MaterialExtensions.RenderPipelineType.Standard)
+            if (!RuntimeUrdf.IsRuntimeMode() && MaterialExtensions.GetRenderPipelineType() == MaterialExtensions.RenderPipelineType.Standard)
             {
-                defaultDiffuse = RuntimeURDF.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+                s_DefaultDiffuse = RuntimeUrdf.AssetDatabase_GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
             }
 #endif
-            if (defaultDiffuse == null) 
+            if (s_DefaultDiffuse) 
             {   // Could't use the "Default-Diffuse.mat", either because of HDRP or runtime. so let's create one.
-                defaultDiffuse = MaterialExtensions.CreateBasicMaterial();
+                s_DefaultDiffuse = MaterialExtensions.CreateBasicMaterial();
             }
-            return defaultDiffuse;
+            return s_DefaultDiffuse;
         }
 
         private static GameObject CreateStlParent(string stlFile)
         {
-            Mesh[] meshes = Urdf.StlImporter.ImportMesh(stlFile);
+            Mesh[] meshes = StlImporter.ImportMesh(stlFile);
             if (meshes == null)
                 return null;
 
@@ -79,8 +88,8 @@ namespace RosSharp
 
             for (int i = 0; i < meshes.Length; i++)
             {
-                string meshAssetPath = getMeshAssetPath(stlFile, i);
-                RuntimeURDF.AssetDatabase_CreateAsset(meshes[i], meshAssetPath);
+                string meshAssetPath = GetMeshAssetPath(stlFile, i);
+                RuntimeUrdf.AssetDatabase_CreateAsset(meshes[i], meshAssetPath);
                 GameObject gameObject = CreateStlGameObject(meshAssetPath, material);
                 gameObject.transform.SetParent(parent.transform, false);
             }
@@ -90,24 +99,24 @@ namespace RosSharp
         private static GameObject CreateStlGameObject(string meshAssetPath, Material material)
         {
             GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(meshAssetPath));
-            gameObject.AddComponent<MeshFilter>().sharedMesh = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Mesh>(meshAssetPath);
+            gameObject.AddComponent<MeshFilter>().sharedMesh = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Mesh>(meshAssetPath);
             gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
             return gameObject;
         }
         
-        private static string getMeshAssetPath(string stlFile, int i)
+        public static string GetMeshAssetPath(string stlFile, int i)
         {
             return stlFile.Substring(0, stlFile.Length - 4) + "_" + i.ToString() + ".asset";
         }
 
-        private static string getPrefabAssetPath(string stlFile)
+        public static string GetPrefabAssetPath(string stlFile)
         {
             return stlFile.Substring(0, stlFile.Length - 4) + ".prefab";
         }
         
         public static GameObject CreateStlGameObjectRuntime(string stlFile)
         {
-            Mesh[] meshes = Urdf.StlImporter.ImportMesh(stlFile);
+            Mesh[] meshes = StlImporter.ImportMesh(stlFile);
             if (meshes == null)
             {
                 return null;
@@ -119,7 +128,7 @@ namespace RosSharp
             
             for (int i = 0; i < meshes.Length; i++)
             {
-                GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(getMeshAssetPath(stlFile, i)));
+                GameObject gameObject = new GameObject(Path.GetFileNameWithoutExtension(GetMeshAssetPath(stlFile, i)));
                 gameObject.AddComponent<MeshFilter>().sharedMesh = meshes[i];
                 gameObject.AddComponent<MeshRenderer>().sharedMaterial = material;
                 gameObject.transform.SetParent(parent.transform, false);

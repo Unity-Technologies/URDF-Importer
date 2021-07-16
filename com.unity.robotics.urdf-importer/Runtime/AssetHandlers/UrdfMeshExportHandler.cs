@@ -10,12 +10,12 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/ 
+*/
 
 using System.IO;
 using UnityEngine;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfMeshExportHandler
     {
@@ -33,9 +33,9 @@ namespace RosSharp.Urdf
                     string[] foldersToSearch = {Path.GetDirectoryName(prefabPath)};
                     string prefabName = Path.GetFileNameWithoutExtension(prefabPath);
 
-                    foreach (string guid2 in RuntimeURDF.AssetDatabase_FindAssets(prefabName, foldersToSearch))
+                    foreach (string guid2 in RuntimeUrdf.AssetDatabase_FindAssets(prefabName, foldersToSearch))
                     {
-                        string possiblePath = RuntimeURDF.AssetDatabase_GUIDToAssetPath(guid2);
+                        string possiblePath = RuntimeUrdf.AssetDatabase_GUIDToAssetPath(guid2);
                         if (possiblePath.ToLower().Contains(".stl"))
                         {
                             prefabPath = possiblePath;
@@ -45,7 +45,7 @@ namespace RosSharp.Urdf
                     }
                 }
             }
-            
+
             if (foundExistingColladaOrStl)
                 return CopyMeshToExportDestination(prefabPath);
 
@@ -69,19 +69,20 @@ namespace RosSharp.Urdf
         private static void CopyDaeTextureToExportDestination(string prefabPath, string newFolderLocation)
         {
             //Get material from Collada prefab
-            Material material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(prefabPath);
-            if (material.mainTexture == null) return;
-            
+            Material material = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Material>(prefabPath);
+            if (material == null || material.mainTexture == null)
+                return;
+
             //Get relative subfolder where texture is, compared to the DAE file.
             string commonFolder = Path.GetDirectoryName(prefabPath).SetSeparatorChar();
-            string texturePath = RuntimeURDF.AssetDatabase_GetAssetPath(material.mainTexture).SetSeparatorChar();
+            string texturePath = RuntimeUrdf.AssetDatabase_GetAssetPath(material.mainTexture).SetSeparatorChar();
             string relativeLocation = "";
             if (texturePath.Contains(commonFolder))
                 relativeLocation = texturePath.Substring(commonFolder.Length + 1);
             string newTexturePath = Path.Combine(newFolderLocation, relativeLocation);
 
             Directory.CreateDirectory(Path.GetDirectoryName(newTexturePath));
-            
+
             CopyFileToNewLocation(UrdfAssetPathHandler.GetFullAssetPath(texturePath), newTexturePath);
         }
 
@@ -107,7 +108,7 @@ namespace RosSharp.Urdf
 
         private static string GetPrefabPath(GameObject gameObject)
         {
-            return RuntimeURDF.AssetDatabase_GetAssetPath(RuntimeURDF.PrefabUtility_GetCorrespondingObjectFromSource(gameObject));
+            return RuntimeUrdf.AssetDatabase_GetAssetPath(RuntimeUrdf.PrefabUtility_GetCorrespondingObjectFromSource(gameObject));
         } 
     }
 }

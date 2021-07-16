@@ -16,7 +16,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 
-namespace RosSharp.Urdf
+namespace Unity.Robotics.UrdfImporter
 {
     public static class StlImporter
     {
