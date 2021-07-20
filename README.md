@@ -16,7 +16,7 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 <img src = "images~/Package_manager_add.png">
 
-3. Enter the git URL for the URDF Importer with the latest version tag (currently v0.4.0) `https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.4.0` in the text box and press `Enter`.
+3. Enter the git URL for the URDF Importer with the latest version tag (currently v0.5.0) `https://github.com/Unity-Technologies/URDF-Importer.git?path=/com.unity.robotics.urdf-importer#v0.5.0` in the text box and press `Enter`.
 
 4. Click `Import URDF`.
 

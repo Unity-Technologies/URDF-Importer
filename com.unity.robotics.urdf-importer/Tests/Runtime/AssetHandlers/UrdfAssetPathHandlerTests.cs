@@ -21,7 +21,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             assetRoot = "Assets/Tests/Runtime/UrdfAssetPathHandler";
             packageRoot = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/UrdfAssetPathHandler";
 
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             Directory.CreateDirectory(assetRoot);
             Directory.CreateDirectory(packageRoot);
         }
@@ -30,7 +30,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         public void GetSetPackageRoot_RuntimeModeEnabled_Success()
         {
             // Force runtime mode to set testing package root
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot(assetRoot); // Set oldPackagePath
             UrdfAssetPathHandler.SetPackageRoot(assetRoot, true); // Run correctPackageRoot
             Assert.AreEqual(assetRoot, UrdfAssetPathHandler.GetPackageRoot());
@@ -39,7 +39,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void GetRelativeAssetPath_Nonruntime_NullValues()
         {
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             // Everything returns null during non-runtime
             Assert.IsNull(UrdfAssetPathHandler.GetRelativeAssetPath("Invalid/Asset/Path"));
             Assert.IsNull(UrdfAssetPathHandler.GetRelativeAssetPath($"{assetRoot}/TestAsset.txt"));
@@ -49,7 +49,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void GetRelativeAssetPath_Runtime_Success()
         {
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             // Starting with Application.dataPath
             Assert.AreEqual("Assets/Valid/Path", UrdfAssetPathHandler.GetRelativeAssetPath($"{Application.dataPath}/Valid/Path"));
             // Not starting with dataPath
@@ -69,9 +69,9 @@ namespace Unity.Robotics.UrdfImporter.Tests
         {
             string urdfRoot = "Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube";
             // Force runtime mode to set testing package root
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot(urdfRoot);
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             
             Assert.AreEqual($"{urdfRoot}/meshes/cube.prefab", UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath("package://meshes/cube.stl"));
             Assert.AreEqual($"{urdfRoot}/meshes/cube.prefab", UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath("../meshes/cube.stl"));
@@ -80,7 +80,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [Test]
         public void IsValidAssetPath_Nonruntime_Success()
         {
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             AssetDatabase.CreateAsset(new TextAsset("TestAsset"), $"{assetRoot}/TestAsset.txt");
 
             // Everything returns null during non-runtime
@@ -88,7 +88,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.IsFalse(UrdfAssetPathHandler.IsValidAssetPath($"{assetRoot}/TestAsset.txt"));
             Assert.IsFalse(UrdfAssetPathHandler.IsValidAssetPath($"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/AssetHandlers/UrdfAssetPathHandlerTests.cs"));
 
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             // Everything returns true during runtime
             Assert.IsTrue(UrdfAssetPathHandler.IsValidAssetPath("Invalid/Asset/Path"));
             Assert.IsTrue(UrdfAssetPathHandler.IsValidAssetPath($"{assetRoot}/TestAsset.txt"));
@@ -99,16 +99,16 @@ namespace Unity.Robotics.UrdfImporter.Tests
         public void GetMaterialAssetPath_AssetAndPackage_Success()
         {
             // Force runtime mode to set testing package root
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot(assetRoot);
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             Assert.AreEqual($"{assetRoot}/Materials/TestMaterial.mat", UrdfAssetPathHandler.GetMaterialAssetPath("TestMaterial"));
 
 
             // Force runtime mode to set testing package root
-            RuntimeURDF.runtimeModeEnabled = true;
+            RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot(packageRoot);
-            RuntimeURDF.runtimeModeEnabled = false;
+            RuntimeUrdf.runtimeModeEnabled = false;
             Assert.AreEqual($"{packageRoot}/Materials/TestMaterial.mat", UrdfAssetPathHandler.GetMaterialAssetPath("TestMaterial"));
         }
 
