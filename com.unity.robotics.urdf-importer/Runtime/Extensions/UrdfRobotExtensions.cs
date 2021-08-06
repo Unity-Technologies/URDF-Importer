@@ -80,7 +80,8 @@ namespace Unity.Robotics.UrdfImporter
 
             if (!UrdfAssetPathHandler.IsValidAssetPath(im.robot.filename))
             {
-                Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
+                Debug.LogError("URDF file and resources must be placed in project folder:" +
+                    $"\n{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}");
                 if (forceRuntimeMode) 
                 { // set runtime mode back to what it was
                     RuntimeUrdf.SetRuntimeMode(im.wasRuntimeMode);
@@ -109,7 +110,7 @@ namespace Unity.Robotics.UrdfImporter
                 im.robotGameObject.GetComponent<Unity.Robotics.UrdfImporter.Control.Controller>().enabled = false;
             }
 
-            im.robotGameObject.GetComponent<UrdfRobot>().SetAxis(im.settings.choosenAxis);
+            im.robotGameObject.GetComponent<UrdfRobot>().SetAxis(im.settings.chosenAxis);
 
             UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(im.robot.filename));
             UrdfMaterial.InitializeRobotMaterials(im.robot);
@@ -236,7 +237,7 @@ namespace Unity.Robotics.UrdfImporter
             Quaternion correctZtoY = Quaternion.Inverse((correctYtoZ));
             Quaternion correction = new Quaternion();
 
-            if (robotScript.choosenAxis == ImportSettings.axisType.zAxis)
+            if (robotScript.chosenAxis == ImportSettings.axisType.zAxis)
             {
                 correction = correctYtoZ;
             }
@@ -254,7 +255,7 @@ namespace Unity.Robotics.UrdfImporter
 
             foreach (UrdfCollision collision in collisionMeshList)
             {
-                if (robotScript.choosenAxis != ImportSettings.axisType.zAxis) 
+                if (robotScript.chosenAxis != ImportSettings.axisType.zAxis) 
                 {
                     collision.transform.localRotation = collision.transform.localRotation * correction;
                 }

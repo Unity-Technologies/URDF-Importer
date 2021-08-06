@@ -50,19 +50,24 @@ namespace Unity.Robotics.UrdfImporter
         
         public static string GetRelativeAssetPath(string absolutePath)
         {
+            string assetPath = absolutePath;
             var absolutePathUnityFormat = absolutePath.SetSeparatorChar();
             if (!absolutePathUnityFormat.StartsWith(Application.dataPath.SetSeparatorChar()))
             {
 #if UNITY_EDITOR
                 if (!RuntimeUrdf.IsRuntimeMode())
                 {
-                    return null;
+                    if (absolutePath.Length > Application.dataPath.Length)
+                    {
+                        assetPath = absolutePath.Substring(Application.dataPath.Length - "Assets".Length);
+                    }
                 }
 #endif
-                return absolutePath; // so that it works in runtime
             }
-
-            var assetPath = "Assets" + absolutePath.Substring(Application.dataPath.Length);
+            else 
+            {
+                assetPath = "Assets" + absolutePath.Substring(Application.dataPath.Length);
+            }
             return assetPath.SetSeparatorChar();
         }
 
@@ -120,7 +125,7 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_EDITOR
             if (!RuntimeUrdf.IsRuntimeMode())
             {
-                return GetRelativeAssetPath(path) != null;
+                return Directory.Exists(path) || File.Exists(path);
             }
 #endif
             //RuntimeImporter. TODO: check if the path really exists

@@ -135,6 +135,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
         public void Create_FromStlVhacdNotRuntime_CubeMesh()
         {
             // Force runtime mode to set testing package root
+            LogAssert.ignoreFailingMessages = true;
             RuntimeUrdf.runtimeModeEnabled = true;
             UrdfAssetPathHandler.SetPackageRoot("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/");
             RuntimeUrdf.runtimeModeEnabled = false;
@@ -156,6 +157,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             // Verify geometry created in Assets
             Assert.IsNotNull(AssetDatabase.FindAssets("cube t:mesh", new string[] {"Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes"}));
 
+            LogAssert.ignoreFailingMessages = false;
             AssetDatabase.DeleteAsset("Packages/com.unity.robotics.urdf-importer/Tests/Runtime/Assets/URDF/cube/meshes/cube_1.asset");
             Object.DestroyImmediate(parent.gameObject);
         }
