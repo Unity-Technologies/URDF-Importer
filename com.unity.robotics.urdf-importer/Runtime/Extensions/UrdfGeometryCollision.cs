@@ -123,9 +123,17 @@ namespace Unity.Robotics.UrdfImporter
                 var packageRoot = UrdfAssetPathHandler.GetPackageRoot();
                 var filePath = RuntimeUrdf.AssetDatabase_GUIDToAssetPath(RuntimeUrdf.AssetDatabase_CreateFolder($"{packageRoot}", "meshes"));
                 var name =$"{filePath}/Cylinder.asset";
-                Debug.Log($"Creating new cylinder file: {name}");
-                RuntimeUrdf.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
-                RuntimeUrdf.AssetDatabase_SaveAssets();    
+                // Only create new asset if one doesn't exist
+                if (!RuntimeUrdf.AssetExists(name))
+                {
+                    Debug.Log($"Creating new cylinder file: {name}");
+                    RuntimeUrdf.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
+                    RuntimeUrdf.AssetDatabase_SaveAssets();       
+                }
+                else
+                {
+                    collider = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Mesh>(name);
+                }
             }
             MeshCollider current = go.AddComponent<MeshCollider>();
             current.sharedMesh = collider;
@@ -196,16 +204,25 @@ namespace Unity.Robotics.UrdfImporter
                     List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);
                     foreach (Mesh collider in colliderMeshes)
                     {
+                        var c = collider;
                         if (!RuntimeUrdf.IsRuntimeMode())
                         {
                             meshIndex++;
                             string name = $"{filePath}/{templateFileName}_{meshIndex}.asset";
-                            Debug.Log($"Creating new mesh file: {name}");
-                            RuntimeUrdf.AssetDatabase_CreateAsset(collider, name);
-                            RuntimeUrdf.AssetDatabase_SaveAssets();
+                            // Only create new asset if one doesn't exist
+                            if (!RuntimeUrdf.AssetExists(name))
+                            {
+                                Debug.Log($"Creating new mesh file: {name}");
+                                RuntimeUrdf.AssetDatabase_CreateAsset(c, name);
+                                RuntimeUrdf.AssetDatabase_SaveAssets();       
+                            }
+                            else
+                            {
+                                c = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Mesh>(name);
+                            }
                         }
                         MeshCollider current = child.AddComponent<MeshCollider>();
-                        current.sharedMesh = collider;
+                        current.sharedMesh = c;
                         current.convex = setConvex;
                     }
                     Component.DestroyImmediate(child.GetComponent<VHACD>());
