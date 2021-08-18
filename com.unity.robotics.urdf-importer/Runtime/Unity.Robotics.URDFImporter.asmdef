@@ -2,7 +2,8 @@
     "name": "Unity.Robotics.UrdfImporter",
     "rootNamespace": "Unity.Robotics.UrdfImporter.Urdf",
     "references": [
-        "GUID:6a697808d7c80a549b57420070d6c4f3"
+        "GUID:6a697808d7c80a549b57420070d6c4f3",
+        "GUID:7c3cd0727030049da8a847e9ce61c46c"
     ],
     "includePlatforms": [
         "Editor",
