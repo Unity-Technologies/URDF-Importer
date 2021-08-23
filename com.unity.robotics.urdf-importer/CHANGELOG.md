@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## Unreleased
 Fixed bug with multiple references to the same mesh during import
 
+Add the [Close Stale Issues](https://github.com/marketplace/actions/close-stale-issues) action
+
 ### Upgrade Notes
 
 ### Known Issues
