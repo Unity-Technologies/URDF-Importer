@@ -21,6 +21,8 @@ namespace Unity.Robotics.UrdfImporter
 {
     public class UrdfGeometryCollision : UrdfGeometry
     {
+        public static List<string> CreatedAssetNames = new List<string>();
+        
         public static void Create(Transform parent, GeometryTypes geometryType, Link.Geometry geometry = null)
         {
             GameObject geometryGameObject = null;
@@ -209,12 +211,13 @@ namespace Unity.Robotics.UrdfImporter
                         {
                             meshIndex++;
                             string name = $"{filePath}/{templateFileName}_{meshIndex}.asset";
-                            // Only create new asset if one doesn't exist
-                            if (!RuntimeUrdf.AssetExists(name))
+                            // Only create new asset if one doesn't exist or should overwrite
+                            if ((UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeUrdf.AssetExists(name)) && !CreatedAssetNames.Contains(name))
                             {
                                 Debug.Log($"Creating new mesh file: {name}");
                                 RuntimeUrdf.AssetDatabase_CreateAsset(c, name);
-                                RuntimeUrdf.AssetDatabase_SaveAssets();       
+                                RuntimeUrdf.AssetDatabase_SaveAssets();
+                                CreatedAssetNames.Add(name);
                             }
                             else
                             {
