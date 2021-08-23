@@ -63,7 +63,6 @@ namespace Unity.Robotics.UrdfImporter.Editor
                 if (urdfFile != "")
                 {
                     showLoadBar = true;
-                    UrdfGeometryCollision.CreatedAssetNames.Clear();
                     EditorCoroutineUtility.StartCoroutine(UrdfRobotExtensions.Create(urdfFile, settings,showLoadBar), this);
                 }
             }

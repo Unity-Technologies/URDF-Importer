@@ -21,7 +21,9 @@ namespace Unity.Robotics.UrdfImporter
 {
     public class UrdfGeometryCollision : UrdfGeometry
     {
-        public static List<string> CreatedAssetNames = new List<string>();
+        public static List<string> UsedTemplateFiles => s_UsedTemplateFiles;
+        static List<string> s_UsedTemplateFiles = new List<string>();
+        static List<string> s_CreatedAssetNames = new List<string>();
         
         public static void Create(Transform parent, GeometryTypes geometryType, Link.Geometry geometry = null)
         {
@@ -212,12 +214,13 @@ namespace Unity.Robotics.UrdfImporter
                             meshIndex++;
                             string name = $"{filePath}/{templateFileName}_{meshIndex}.asset";
                             // Only create new asset if one doesn't exist or should overwrite
-                            if ((UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeUrdf.AssetExists(name)) && !CreatedAssetNames.Contains(name))
+                            if ((UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeUrdf.AssetExists(name)) && !s_CreatedAssetNames.Contains(name))
                             {
                                 Debug.Log($"Creating new mesh file: {name}");
                                 RuntimeUrdf.AssetDatabase_CreateAsset(c, name);
                                 RuntimeUrdf.AssetDatabase_SaveAssets();
-                                CreatedAssetNames.Add(name);
+                                s_CreatedAssetNames.Add(name);
+                                s_UsedTemplateFiles.Add(templateFileName);
                             }
                             else
                             {
@@ -233,6 +236,12 @@ namespace Unity.Robotics.UrdfImporter
                     Object.DestroyImmediate(meshFilter);
                 }
             }
+        }
+
+        public static void BeginNewUrdfImport()
+        {
+            s_CreatedAssetNames.Clear();
+            s_UsedTemplateFiles.Clear();
         }
 
     }

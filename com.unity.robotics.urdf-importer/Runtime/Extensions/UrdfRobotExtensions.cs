@@ -174,6 +174,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns></returns>
         public static IEnumerator<GameObject> Create(string filename, ImportSettings settings, bool loadStatus = false, bool forceRuntimeMode = false)
         {
+            UrdfGeometryCollision.BeginNewUrdfImport();
             ImportPipelineData im = ImportPipelineInit(filename, settings, loadStatus, forceRuntimeMode);
             if (im == null)
             {

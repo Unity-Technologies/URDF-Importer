@@ -28,7 +28,7 @@ namespace Unity.Robotics.UrdfImporter
             var originalUrdfPath = UrdfAssetPathHandler.GetRelativeAssetPathFromUrdfPath(urdfFileName, false);
             if (originalUrdfPath.ToLower().EndsWith(".stl"))
             {// it is an asset that requires post processing
-                if (UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeUrdf.AssetExists(fileAssetPath, true))
+                if ((UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeUrdf.AssetExists(fileAssetPath, true)) && !UrdfGeometryCollision.UsedTemplateFiles.Contains(Path.GetFileNameWithoutExtension(fileAssetPath)))
                 {// post process again to (re)create prefabs
                     StlAssetPostProcessor.PostprocessStlFile(originalUrdfPath);
                 }                
