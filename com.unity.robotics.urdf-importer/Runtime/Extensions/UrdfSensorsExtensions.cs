@@ -32,15 +32,20 @@ namespace Unity.Robotics.UrdfImporter
                 }
             }
 
-            GameObject transformSensor = AddTransformSensor(parent);
-            transformSensor.transform.SetParentAndAlign(sensorsObject.transform);
+
+            if (parent.GetComponent<ArticulationBody>() != null)
+            {
+                GameObject transformSensor = AddTransformSensor(parent);
+                transformSensor.transform.SetParentAndAlign(sensorsObject.transform);
+            }
+
             return urdfSensors;
         }
 
         static GameObject AddTransformSensor(Transform parent)
         {
             string topicName = "/"+parent.root.name + "/" + parent.name + "/TransformStamped";
-            Dictionary<string, string> settings = new Dictionary<string, string> { { k_SensorTopic, topicName } };
+            Dictionary<string, string> settings = new Dictionary<string, string> ();//{ { k_SensorTopic, topicName } };
             return SensorFactory.InstantiateSensor("transform",settings);
         }
     }
