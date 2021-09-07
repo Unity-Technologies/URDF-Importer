@@ -111,7 +111,7 @@ namespace Unity.Robotics.UrdfImporter
             joint.limit = ExportLimitData();
 #else
             joint.axis = GetAxisData(unityJoint.axis);
-            joint.dynamics = new Joint.Dynamics(((HingeJoint)unityJoint).spring.damper, ((HingeJoint)unityJoint).spring.spring);
+            joint.dynamics = new Joints.Dynamics(((HingeJoint)unityJoint).spring.damper, ((HingeJoint)unityJoint).spring.spring);
 
             joint.limit = ExportLimitData();
 #endif
@@ -137,7 +137,7 @@ namespace Unity.Robotics.UrdfImporter
             return new Joint.Limit(drive.lowerLimit * Mathf.Deg2Rad, drive.upperLimit * Mathf.Deg2Rad, drive.forceLimit, unityJoint.maxAngularVelocity);
 #else
             HingeJointLimitsManager hingeJointLimits = GetComponent<HingeJointLimitsManager>();
-            return new Joint.Limit(
+            return new Joints.Limit(
                 Math.Round(hingeJointLimits.LargeAngleLimitMin * Mathf.Deg2Rad, RoundDigits),
                 Math.Round(hingeJointLimits.LargeAngleLimitMax * Mathf.Deg2Rad, RoundDigits),
                 EffortLimit,

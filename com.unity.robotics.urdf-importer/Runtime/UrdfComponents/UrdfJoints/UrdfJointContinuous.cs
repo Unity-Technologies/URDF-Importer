@@ -109,7 +109,7 @@ namespace Unity.Robotics.UrdfImporter
 #else
 
             joint.axis = GetAxisData(unityJoint.axis);
-            joint.dynamics = new Joint.Dynamics(
+            joint.dynamics = new Joints.Dynamics(
                 ((HingeJoint)unityJoint).spring.damper, 
                 ((HingeJoint)unityJoint).spring.spring);
 #endif

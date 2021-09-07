@@ -167,7 +167,7 @@ namespace Unity.Robotics.UrdfImporter
                 Joint jointExported = exported.joints.Find(x => x.name == jointSource.name); // Check for no match
                 if (jointExported == null)
                 {
-                    linkLog.AppendLine(String.Format("{0}Joint Not Found in Exported: Joint Name:{1,12}",Indent(indent + 1),jointSource.name));
+                    linkLog.AppendLine(String.Format("{0}Joints Not Found in Exported: Joints Name:{1,12}",Indent(indent + 1),jointSource.name));
                     return false;
                 }
                 if (jointExported != null && !CompareJoint(jointSource, jointExported, indent))
@@ -188,7 +188,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns></returns>
         private bool CompareJoint( Joint source,  Joint exported, int indent) // This function does not test for Mimic, Calibration and SafetyController as they are not imported in Unity
         {
-            linkLog.AppendLine("\n\n********Joint*****\n");
+            linkLog.AppendLine("\n\n********Joints*****\n");
 
             bool jointNameEqual = (source.name == exported.name);
             linkLog.AppendLine(String.Format("{0}Name:", Indent(indent)));

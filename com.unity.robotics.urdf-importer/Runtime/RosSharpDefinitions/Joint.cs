@@ -150,7 +150,7 @@ namespace Unity.Robotics.UrdfImporter
             {
                 writer.WriteStartElement("calibration");
 
-                //TODO only output one or the other
+                //TODO only Output one or the other
                 writer.WriteAttributeString("rising", rising + "");
                 writer.WriteAttributeString("falling", falling + "");
 

@@ -326,7 +326,7 @@ namespace Unity.Robotics.UrdfImporter
                 robot.links.Add(urdfLink.ExportLinkData());
                 linkNames.Add(urdfLink.name);
 
-                //Joint export
+                //Joints export
                 UrdfJoint urdfJoint = urdfLink.gameObject.GetComponent<UrdfJoint>();
                 if (urdfJoint != null)
                     robot.joints.Add(urdfJoint.ExportJointData());
