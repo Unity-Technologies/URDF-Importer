@@ -22,6 +22,9 @@ namespace Unity.Robotics.UrdfImporter.Tests
         [SetUp]
         public void SetUp()
         {
+            // a robot tag needs to be added in project settings before runtime import can work
+            RuntimeUrdf.SetRuntimeMode(false);
+            UrdfRobotExtensions.CreateTag(); 
             RuntimeUrdf.AssetDatabase_CreateFolder("Assets", "Tests");
             RuntimeUrdf.AssetDatabase_CreateFolder("Assets/Tests", "Runtime");
             RuntimeUrdf.AssetDatabase_CreateFolder("Assets/Tests/Runtime", "GeometryTests");
