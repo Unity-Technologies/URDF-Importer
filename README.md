@@ -1,6 +1,8 @@
 # URDF Importer 
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Version](https://img.shields.io/github/v/tag/Unity-Technologies/URDF-Importer)](https://github.com/Unity-Technologies/URDF-Importer/releases)
+[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE.md)
+![Unity](https://img.shields.io/badge/unity-2020.2+-brightgreen)
 
 URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org/urdf/XML) format in a Unity scene. URDF defines the geometry, visual meshes, kinematic and dynamic attributes of a Robot. Importer parses a URDF file and imports it into Unity using PhyX 4.0 articulation bodies.
 

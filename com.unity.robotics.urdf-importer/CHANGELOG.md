@@ -13,14 +13,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 
 ### Changed
+ - STL files will not be automatically processed to create .prefab files when copied into the Assets directory or when assets are reimported. Instead the processing happens during the URDF import and required .prefab files will be created if they don't exist already or if the "Overwrite Existing Prefabs" option is checked in the URDF Import settings dialog.
+- Renamed "URDF" to "Urdf" in class names, function names and source filenames.
+- Renamed RuntimeURDFImporter to RuntimeUrdfImporterExample for clarification
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
- - Bug where-in URDF Importer would throw an error when installed via Package Manager because it can't save prefabs to its own directories 
-
+ - Bug where-in URDF Importer would throw an error when installed via Package Manager because it can't save prefabs to its own directories
+ - Compile error "Plugin 'assimp.dll' is used from several locations" when creating a Universal Windows Platform build (#122) 
 
 ## [0.4.0-preview] - 2021-05-27
 
