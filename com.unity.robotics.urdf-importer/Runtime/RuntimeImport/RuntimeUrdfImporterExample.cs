@@ -1,24 +1,34 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Robotics.UrdfImporter;
 using Unity.Robotics.UrdfImporter.Control;
-using Unity.Robotics.UrdfImporter;
 using UnityEngine;
 
 /// <summary>
 /// Example component for using the runtime urdf import funcionality.
 /// To use, attach to a gameobject and use the GUI to load a URDF.
+///
+/// Notes:
+/// 
+/// - This component is for demonstration and testing only
+///   and is not intended to be used as is in a final product.
+/// 
+/// - The runtime import feature is currently only functional in builds created using
+///   Mono scripting backend and will not fully work in standalone builds created with
+///   IL2CPP due to the dependency to Assimpnet plugin for loading collada meshes.
+///   However URDF files that only use STL format for both visual and collision meshes
+///   can still be imported in runtime in standalone IL2CPP builds.  
 /// </summary>
-public class RuntimeURDFImporter : MonoBehaviour
+public class RuntimeUrdfImporterExample : MonoBehaviour
 {
     public string urdfFilepath;
     public bool setImmovableLink = true;
-    public bool useVHACD = false;
+    public bool useVHACD = false; // this is not yet fully functional in runtime.
     public bool showProgress = false; // this is not stable in runtime.
     public bool clearOnLoad = true;
 
     public string immovableLinkName = "base_link";
+    // The values below are tested to work with the niryo_one URDF:
     private float controllerStiffness = 10000;
     private float controllerDamping = 100;
     private float controllerForceLimit = 1000;
@@ -27,7 +37,7 @@ public class RuntimeURDFImporter : MonoBehaviour
     private GameObject currentRobot = null;
     private bool isLoading = false;
 
-    private IEnumerator LoadURDF()
+    private IEnumerator LoadUrdf()
     {
         isLoading = true;
         if (string.IsNullOrEmpty(urdfFilepath))
@@ -107,7 +117,7 @@ public class RuntimeURDFImporter : MonoBehaviour
         showProgress = GUI.Toggle(new Rect(10, 125, 200, 25), showProgress, "Show Progress (experimental)");
         if (!isLoading && GUI.Button(new Rect(530, 50, 150, 25), "Load UDRF File"))
         {
-            StartCoroutine(LoadURDF());
+            StartCoroutine(LoadUrdf());
         }
     }    
 }

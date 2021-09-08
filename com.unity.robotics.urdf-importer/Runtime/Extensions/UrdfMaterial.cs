@@ -37,7 +37,7 @@ namespace Unity.Robotics.UrdfImporter
                 urdfMaterial.name = GenerateMaterialName(urdfMaterial);
             }
 
-            var material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
+            var material = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
             if (material != null)
             {   //material already exists
                 return material;
@@ -53,7 +53,7 @@ namespace Unity.Robotics.UrdfImporter
                 material.mainTexture = LoadTexture(urdfMaterial.texture.filename);
             }
 
-            RuntimeURDF.AssetDatabase_CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
+            RuntimeUrdf.AssetDatabase_CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(urdfMaterial.name));
             return material;
         }
 
@@ -62,9 +62,9 @@ namespace Unity.Robotics.UrdfImporter
         {
             Material material = defaultMaterial;
 #if UNITY_EDITOR
-            if (!RuntimeURDF.IsRuntimeMode())
+            if (!RuntimeUrdf.IsRuntimeMode())
             {
-                material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+                material = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
             }
 #endif
             if (material != null)
@@ -78,10 +78,10 @@ namespace Unity.Robotics.UrdfImporter
             // just keep it in memory while the app is running.
             defaultMaterial = material;
 #if UNITY_EDITOR
-            if (!RuntimeURDF.IsRuntimeMode())
+            if (!RuntimeUrdf.IsRuntimeMode())
             {
                 // create the material to be reused
-                RuntimeURDF.AssetDatabase_CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+                RuntimeUrdf.AssetDatabase_CreateAsset(material, UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
             }
 #endif
         }
@@ -143,9 +143,9 @@ namespace Unity.Robotics.UrdfImporter
                 {
                     Material material = defaultMaterial;
 #if UNITY_EDITOR
-                    if (!RuntimeURDF.IsRuntimeMode())
+                    if (!RuntimeUrdf.IsRuntimeMode())
                     {
-                        material = RuntimeURDF.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
+                        material = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Material>(UrdfAssetPathHandler.GetMaterialAssetPath(DefaultMaterialName));
                     }
 #endif
                     SetMaterial(gameObject, material);
@@ -207,7 +207,7 @@ namespace Unity.Robotics.UrdfImporter
 
         private static Link.Visual.Material.Texture ExportTextureData(Texture texture)
         {
-            string oldTexturePath = UrdfAssetPathHandler.GetFullAssetPath(RuntimeURDF.AssetDatabase_GetAssetPath(texture));
+            string oldTexturePath = UrdfAssetPathHandler.GetFullAssetPath(RuntimeUrdf.AssetDatabase_GetAssetPath(texture));
             string newTexturePath = UrdfExportPathHandler.GetNewResourcePath(Path.GetFileName(oldTexturePath));
             if (oldTexturePath != newTexturePath)
             {
