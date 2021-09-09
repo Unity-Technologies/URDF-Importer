@@ -2209,7 +2209,7 @@
         </member>
         <member name="T:Assimp.Configs.IRRAnimationFrameRateConfig">
             <summary>
-            Defines the Output frame rate of the IRR loader.
+            Defines the output frame rate of the IRR loader.
             <para>IRR animations are difficult to convert for Assimp and there will always be
             a loss of quality. This setting defines how many keys per second are returned by the converter.</para>
             The default value is 100 frames per second.
@@ -2224,7 +2224,7 @@
             <summary>
             Constructs a new IRRAnimationFramerateConfig.
             </summary>
-            <param name="frameRate">Number of frames per second to Output.</param>
+            <param name="frameRate">Number of frames per second to output.</param>
         </member>
         <member name="T:Assimp.Configs.OgreMaterialFileConfig">
             <summary>
@@ -2765,7 +2765,7 @@
             <description>Specify both <see cref="F:Assimp.PostProcessSteps.Triangulate"/> and <see cref="F:Assimp.PostProcessSteps.SortByPrimitiveType"/>.</description>
             </item>
             <item>
-            <description>Ignore all point and line meshes when you process Assimp's Output</description>
+            <description>Ignore all point and line meshes when you process Assimp's output</description>
             </item>
             </list>
             </summary>
@@ -2777,9 +2777,9 @@
             <para>
             The components to be removed are specified in a separate configuration
             option, AI_CONFIG_PP_RVC_FLAGS. This is quite useful if you don't
-            need all parts of the Output structure. Especially vertex colors are rarely used today...calling this step to remove
+            need all parts of the output structure. Especially vertex colors are rarely used today...calling this step to remove
             unrequired stuff from the pipeline as early as possible results in an increased
-            performance and a better optimized Output data structure.
+            performance and a better optimized output data structure.
             </para>
             <para>
             This step is also useful if you want to force Assimp to recompute normals
@@ -2839,7 +2839,7 @@
             <summary>
             Removes the node graph and "bakes" (pre-transforms) all
             vertices with the local transformation matrices of their nodes.
-            The Output scene does still contain nodes, however, there is only
+            The output scene does still contain nodes, however, there is only
             a root node with children, each one referencing only one mesh. 
             Each mesh referencing one material. For rendering, you can simply render
             all meshes in order, you don't need to pay attention to local transformations
@@ -2870,7 +2870,7 @@
             and bones are linked correctly, all material references are
             correct, etc.
             </para>
-            It is recommended to capture Assimp's log Output if you use this flag,
+            It is recommended to capture Assimp's log output if you use this flag,
             so you can easily find out what's actually wrong if a file fails the
             validation. The validator is quite rude and will find *all* inconsistencies
             in the data structure. There are two types of failures:
@@ -3646,13 +3646,13 @@
             post process step if validation is successful, but some issues have been found. This can for example
             mean that a texture that does not exist is referenced by a material or that the bone weights for a vertex
             do not sum to 1.0. In most cases you should still be able to use the import. This flag can be useful
-            for applications which do not capture Assimp's log Output.
+            for applications which do not capture Assimp's log output.
             </summary>
         </member>
         <member name="F:Assimp.SceneFlags.NonVerboseFormat">
             <summary>
             This flag is set by the <see cref="F:Assimp.PostProcessSteps.JoinIdenticalVertices"/> post process step.
-            It indicates that the vertices of the Output mesh are not in the internal verbose format anymore. In the
+            It indicates that the vertices of the output mesh are not in the internal verbose format anymore. In the
             verbose format, all vertices are unique where no vertex is ever referenced by more than one face.
             </summary>
         </member>
@@ -3724,18 +3724,18 @@
         </member>
         <member name="F:Assimp.DefaultLogStream.StdOut">
             <summary>
-            Stream log to the standard Output
+            Stream log to the standard output
             </summary>
         </member>
         <member name="F:Assimp.DefaultLogStream.StdErr">
             <summary>
-            Stream log to the standard error Output.
+            Stream log to the standard error output.
             </summary>
         </member>
         <member name="F:Assimp.DefaultLogStream.Debugger">
             <summary>
             MSVC only: Stream the log to the debugger (this relies
-            on OutputDebugString from the Win32 SDK).
+            on outputDebugString from the Win32 SDK).
             </summary>
         </member>
         <member name="T:Assimp.PropertyType">
@@ -3888,7 +3888,7 @@
         <member name="T:Assimp.ExportDataBlob">
             <summary>
             Describes a blob of exported scene data. Blobs can be nested - each blob may reference another blob, which in
-            turn can reference another and so on. This is used to allow exporters to write more than one Output for a given
+            turn can reference another and so on. This is used to allow exporters to write more than one output for a given
             scene, such as material files. Existence of such files depends on the format.
             </summary>
             <remarks>
@@ -4191,7 +4191,7 @@
         </member>
         <member name="T:Assimp.IOStream">
             <summary>
-            Defines a stream to some file input or Output source. This object is responsible for reading/writing data
+            Defines a stream to some file input or output source. This object is responsible for reading/writing data
             that is used by Assimp.
             </summary>
         </member>
@@ -4212,7 +4212,7 @@
         </member>
         <member name="P:Assimp.IOStream.IsValid">
             <summary>
-            Gets whether the stream is in fact valid - that is, the input/Output has been
+            Gets whether the stream is in fact valid - that is, the input/output has been
             properly located and can be read/written.
             </summary>
         </member>
@@ -5764,7 +5764,7 @@
             <summary>
             Decomposes a transformation matrix into its original scale, rotation, and translation components. The
             scaling vector receives the scaling for the x, y, z axes. The rotation is returned as a hamilton quaternion. And
-            the translation is the Output position for the x, y, z axes.
+            the translation is the output position for the x, y, z axes.
             </summary>
             <param name="scaling">Vector to hold the scaling component</param>
             <param name="rotation">Quaternion to hold the rotation component</param>
@@ -5773,7 +5773,7 @@
         <member name="M:Assimp.Matrix4x4.DecomposeNoScaling(Assimp.Quaternion@,Assimp.Vector3D@)">
             <summary>
             Decomposes a transformation matrix with no scaling. The rotation is returned as a hamilton
-            quaternion. The translation receives the Output position for the x, y, z axes.
+            quaternion. The translation receives the output position for the x, y, z axes.
             </summary>
             <param name="rotation">Quaternion to hold the rotation component</param>
             <param name="translation">Vector to hold the translation component</param>
@@ -8478,7 +8478,7 @@
         </member>
         <member name="F:Assimp.Unmanaged.AiConfigs.AI_CONFIG_IMPORT_IRR_ANIM_FPS">
             <summary>
-            Defines the Output frame rate of the IRR loader.
+            Defines the output frame rate of the IRR loader.
             <para>IRR animations are difficult to convert for Assimp and there will always be
             a loss of quality. This setting defines how many keys per second are returned by the converter.</para>
             <para>Type: integer. Default: 100</para>
@@ -9049,7 +9049,7 @@
             <summary>
             Exports the given scene to a chosen file format and writes the result file(s) to disk.
             </summary>
-            <param name="scene">The scene to export, which needs to be freed by the caller. The scene is expected to conform to Assimp's Importer Output format. In short,
+            <param name="scene">The scene to export, which needs to be freed by the caller. The scene is expected to conform to Assimp's Importer output format. In short,
             this means the model data should use a right handed coordinate system, face winding should be counter clockwise, and the UV coordinate origin assumed to be upper left. If the input is different, specify the pre processing flags appropiately.</param>
             <param name="formatId">Format id describing which format to export to.</param>
             <param name="fileName">Output filename to write to</param>
@@ -9061,14 +9061,14 @@
             <summary>
             Exports the given scene to a chosen file format and writes the result file(s) to disk.
             </summary>
-            <param name="scene">The scene to export, which needs to be freed by the caller. The scene is expected to conform to Assimp's Importer Output format. In short,
+            <param name="scene">The scene to export, which needs to be freed by the caller. The scene is expected to conform to Assimp's Importer output format. In short,
             this means the model data should use a right handed coordinate system, face winding should be counter clockwise, and the UV coordinate origin assumed to be upper left. If the input is different, specify the pre processing flags appropiately.</param>
             <param name="formatId">Format id describing which format to export to.</param>
             <param name="fileName">Output filename to write to</param>
             <param name="fileIO">Pointer to an instance of AiFileIO, a custom file IO system used to open the model and 
             any associated file the loader needs to open, passing NULL uses the default implementation.</param>
             <param name="preProcessing">Pre processing flags - accepts any post processing step flag. In reality only a small subset are actually supported, e.g. to ensure the input
-            conforms to the standard Assimp Output format. Some may be redundant, such as triangulation, which some exporters may have to enforce due to the export format.</param>
+            conforms to the standard Assimp output format. Some may be redundant, such as triangulation, which some exporters may have to enforce due to the export format.</param>
             <returns>Return code specifying if the operation was a success.</returns>
         </member>
         <member name="M:Assimp.Unmanaged.AssimpLibrary.CopyScene(System.IntPtr)">
