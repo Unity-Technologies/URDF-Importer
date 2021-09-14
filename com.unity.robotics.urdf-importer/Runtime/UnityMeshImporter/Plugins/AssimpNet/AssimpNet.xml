@@ -3735,7 +3735,7 @@
         <member name="F:Assimp.DefaultLogStream.Debugger">
             <summary>
             MSVC only: Stream the log to the debugger (this relies
-            on outputDebugString from the Win32 SDK).
+            on OutputDebugString from the Win32 SDK).
             </summary>
         </member>
         <member name="T:Assimp.PropertyType">
@@ -9054,7 +9054,7 @@
             <param name="formatId">Format id describing which format to export to.</param>
             <param name="fileName">Output filename to write to</param>
             <param name="preProcessing">Pre processing flags - accepts any post processing step flag. In reality only a small subset are actually supported, e.g. to ensure the input
-            conforms to the standard Assimp Output format. Some may be redundant, such as triangulation, which some exporters may have to enforce due to the export format.</param>
+            conforms to the standard Assimp output format. Some may be redundant, such as triangulation, which some exporters may have to enforce due to the export format.</param>
             <returns>Return code specifying if the operation was a success.</returns>
         </member>
         <member name="M:Assimp.Unmanaged.AssimpLibrary.ExportScene(System.IntPtr,System.String,System.String,System.IntPtr,Assimp.PostProcessSteps)">
