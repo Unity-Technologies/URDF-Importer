@@ -344,9 +344,10 @@ namespace Unity.Robotics.UrdfImporter
                 if (urdfJoint != null)
                     robot.joints.Add(urdfJoint.ExportJointData());
                 else if (!urdfLink.IsBaseLink)
-
+                {
                     //Make sure that links with no rigidbodies are still connected to the robot by a default joint
                     robot.joints.Add(UrdfJoint.ExportDefaultJoint(urdfLink.transform));
+                }
             }
 
             robot.materials = UrdfMaterial.Materials.Values.ToList();
