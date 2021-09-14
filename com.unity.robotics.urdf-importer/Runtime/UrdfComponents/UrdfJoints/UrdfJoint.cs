@@ -20,7 +20,7 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_2020_1_OR_NEWER
     [RequireComponent(typeof(ArticulationBody))]
 #else
-        [RequireComponent(typeof(Joint))]
+        [RequireComponent(typeof(Joints))]
 #endif
     public abstract class UrdfJoint : MonoBehaviour
     {
@@ -40,7 +40,7 @@ namespace Unity.Robotics.UrdfImporter
         protected ArticulationBody unityJoint;
         protected Vector3 axisofMotion;
 #else
-        protected UnityEngine.Joint unityJoint;
+        protected UnityEngine.Joints unityJoint;
 #endif
         public string jointName;
 
@@ -101,7 +101,7 @@ namespace Unity.Robotics.UrdfImporter
 
 #if UNITY_2020_1_OR_NEWER
 #else
-            UnityEngine.Joint unityJoint = linkObject.GetComponent<UnityEngine.Joint>();
+            UnityEngine.Joints unityJoint = linkObject.GetComponent<UnityEngine.Joints>();
             unityJoint.connectedBody = linkObject.transform.parent.gameObject.GetComponent<Rigidbody>();
             unityJoint.autoConfigureConnectedAnchor = true;
 #endif
@@ -112,7 +112,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <summary>
         /// Changes the type of the joint
         /// </summary>
-        /// <param name="linkObject">Joint whose type is to be changed</param>
+        /// <param name="linkObject">Joints whose type is to be changed</param>
         /// <param name="newJointType">Type of the new joint</param>
         public static void ChangeJointType(GameObject linkObject, JointTypes newJointType)
         {
@@ -122,7 +122,7 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_2020_1_OR_NEWER
             linkObject.transform.DestroyImmediateIfExists<UnityEngine.ArticulationBody>();
 #else
-                        linkObject.transform.DestroyImmediateIfExists<UnityEngine.Joint>();
+                        linkObject.transform.DestroyImmediateIfExists<UnityEngine.Joints>();
 #endif
             AddCorrectJointType(linkObject, newJointType);
         }
@@ -134,7 +134,7 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_2020_1_OR_NEWER
             unityJoint = GetComponent<ArticulationBody>();
 #else
-                        unityJoint = GetComponent<Joint>();
+                        unityJoint = GetComponent<Joints>();
 #endif
         }
 
@@ -229,7 +229,7 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_2020_1_OR_NEWER
             unityJoint = GetComponent<UnityEngine.ArticulationBody>();
 #else
-                        unityJoint = GetComponent<UnityEngine.Joint>();
+                        unityJoint = GetComponent<UnityEngine.Joints>();
 #endif
             CheckForUrdfCompatibility();
 
@@ -280,7 +280,7 @@ namespace Unity.Robotics.UrdfImporter
             else
                 return true;
 #else
-                        UnityEngine.Joint joint = GetComponent<UnityEngine.Joint>();
+                        UnityEngine.Joints joint = GetComponent<UnityEngine.Joints>();
                         return !(Math.Abs(joint.axis.x) < Tolerance &&
                                  Math.Abs(joint.axis.y) < Tolerance &&
                                  Math.Abs(joint.axis.z) < Tolerance);
@@ -311,7 +311,7 @@ namespace Unity.Robotics.UrdfImporter
         private void CheckForUrdfCompatibility()
         {
             if (!AreLimitsCorrect())
-                Debug.LogWarning("Limits are not defined correctly for Joint " + jointName + " in Link " + name +
+                Debug.LogWarning("Limits are not defined correctly for Joints " + jointName + " in Link " + name +
                                  ". This may cause problems when visualizing the robot in RVIZ or Gazebo.",
                                  gameObject);
             if (!IsJointAxisDefined())

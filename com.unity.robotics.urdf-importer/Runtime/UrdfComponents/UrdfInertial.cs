@@ -60,6 +60,10 @@ namespace Unity.Robotics.UrdfImporter
                  
                 urdfInertial.useUrdfData = true;
             }
+            else
+            {
+                urdfInertial.SetDefaultInertialValues();
+            }
 
             urdfInertial.displayInertiaGizmo = false;
         }
@@ -218,6 +222,17 @@ namespace Unity.Robotics.UrdfImporter
                 qz = 0.25f * s;
             }
             return new Quaternion(qx, qy, qz, qw);
+        }
+
+        public void SetDefaultInertialValues()
+        {
+            ArticulationBody robotLink = GetComponent<ArticulationBody>();
+            robotLink.mass = minMass;
+            robotLink.inertiaTensor = new Vector3(MinInertia, MinInertia, MinInertia);
+            robotLink.inertiaTensorRotation = Quaternion.identity;
+            this.centerOfMass = Vector3.zero;
+            this.inertiaTensor = robotLink.inertiaTensor;
+            this.inertiaTensorRotation = robotLink.inertiaTensorRotation;
         }
 
 #endregion

@@ -32,7 +32,6 @@ namespace Unity.Robotics.UrdfImporter
 
         public List<Link> links;
         public List<Joint> joints;
-        public List<Sensor> sensors;
         public List<Plugin> plugins;
         public List<Tuple<string, string>> ignoreCollisionPair;
 
@@ -49,7 +48,6 @@ namespace Unity.Robotics.UrdfImporter
             links = ReadLinks(node);
             joints = ReadJoints(node);
             plugins = ReadPlugins(node);
-            sensors = ReadSensors(node);
             ignoreCollisionPair = ReadDisableCollision(node);
             
 
@@ -108,14 +106,7 @@ namespace Unity.Robotics.UrdfImporter
                 select new Joint(child);
             return joints.ToList();
         }
-
-        private static List<Sensor> ReadSensors(XElement node)
-        {
-            var sensors =
-                from child in node.Elements("sensor")
-                select new Sensor(child);
-            return sensors.ToList(); 
-        }
+      
 
         private List<Plugin> ReadPlugins(XElement node)
         {
