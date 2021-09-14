@@ -167,7 +167,7 @@ namespace Unity.Robotics.UrdfImporter
                 Joint jointExported = exported.joints.Find(x => x.name == jointSource.name); // Check for no match
                 if (jointExported == null)
                 {
-                    linkLog.AppendLine(String.Format("{0}Joints Not Found in Exported: Joints Name:{1,12}",Indent(indent + 1),jointSource.name));
+                    linkLog.AppendLine(String.Format("{0}Joints Not Found in Exported: Joints Name:{1,12}", Indent(indent + 1),jointSource.name));
                     return false;
                 }
                 if (jointExported != null && !CompareJoint(jointSource, jointExported, indent))
