@@ -15,6 +15,7 @@ limitations under the License.
 using System.IO;
 using UnityEngine;
 using System;
+using System.Diagnostics;
 
 namespace Unity.Robotics.UrdfImporter
 {
