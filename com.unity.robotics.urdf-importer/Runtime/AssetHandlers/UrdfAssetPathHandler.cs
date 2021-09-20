@@ -96,7 +96,7 @@ namespace Unity.Robotics.UrdfImporter
             }
             else
             {
-                throw Exception(urdfPath + " is not supported URI format.");
+                throw new Exception(urdfPath + " is not supported URI format.");
             }
 
             if (convertToPrefab) 
