@@ -90,10 +90,12 @@ namespace Unity.Robotics.UrdfImporter
         public static string GetRelativeAssetPathFromUrdfPath(string urdfPath, bool convertToPrefab=true)
         {
             string path;
+            // loading assets relative path from ROS/ROS2 package.
             if (urdfPath.StartsWith(@"package://"))
             {
                 path = urdfPath.Substring(10).SetSeparatorChar();
             }
+            // loading assets from file:// type URI.
             if (urdfPath.StartsWith(@"file://"))
             {
                 path = urdfPath.Substring(7).SetSeparatorChar();
