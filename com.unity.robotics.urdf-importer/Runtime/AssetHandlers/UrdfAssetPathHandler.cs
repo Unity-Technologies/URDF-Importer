@@ -90,6 +90,7 @@ namespace Unity.Robotics.UrdfImporter
         public static string GetRelativeAssetPathFromUrdfPath(string urdfPath, bool convertToPrefab=true)
         {
             string path;
+            bool use_file_uri = false;
             if (!urdfPath.StartsWith(@"file://") && !urdfPath.StartsWith(@"package://"))
             {
                if (urdfPath.Substring(0, 3) == "../")
@@ -108,10 +109,10 @@ namespace Unity.Robotics.UrdfImporter
                 path = urdfPath.Substring(10).SetSeparatorChar();
             }
             // loading assets from file:// type URI.
-            if (urdfPath.StartsWith(@"file://"))
+            else if (urdfPath.StartsWith(@"file://"))
             {
                 path = urdfPath.Substring(7).SetSeparatorChar();
-                return path;
+                use_file_uri = true;
             }
             else
             {
@@ -123,6 +124,9 @@ namespace Unity.Robotics.UrdfImporter
                 if (Path.GetExtension(path)?.ToLowerInvariant() == ".stl")
                     path = path.Substring(0, path.Length - 3) + "prefab";
 
+            }
+            if (use_file_uri) {
+                return path;
             }
             return Path.Combine(packageRoot, path);
         }
