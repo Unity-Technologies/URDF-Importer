@@ -15,6 +15,8 @@ Add the [Close Stale Issues](https://github.com/marketplace/actions/close-stale-
 
 ### Added
 
+Start supporting file:// type URI.
+
 ### Changed
 
 ### Deprecated
