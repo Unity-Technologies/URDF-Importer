@@ -5,6 +5,22 @@ All notable changes to this repository will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
+### Upgrade Notes
+
+### Known Issues
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+## [0.5.1-preview] - 2021-10-04
 Fixed bug with multiple references to the same mesh during import
 
 Add the [Close Stale Issues](https://github.com/marketplace/actions/close-stale-issues) action
