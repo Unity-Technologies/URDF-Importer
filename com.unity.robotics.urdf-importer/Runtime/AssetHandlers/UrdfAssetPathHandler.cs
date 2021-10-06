@@ -98,10 +98,6 @@ namespace Unity.Robotics.UrdfImporter
                    UnityEngine.Debug.LogWarning("Attempting to replace file path's starting instance of `../` with standard package notation `package://` to prevent manual path traversal at root of directory!");
                    urdfPath = $@"package://{urdfPath.Substring(3)}";
                 }
-                else
-                {
-                   return null;
-                }
             }
             // loading assets relative path from ROS/ROS2 package.
             if (urdfPath.StartsWith(@"package://"))
@@ -116,7 +112,7 @@ namespace Unity.Robotics.UrdfImporter
             }
             else
             {
-                throw new Exception(urdfPath + " is not supported URI format.");
+                path = urdfPath.SetSeparatorChar();
             }
 
             if (convertToPrefab) 
