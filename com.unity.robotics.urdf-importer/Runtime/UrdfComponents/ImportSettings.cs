@@ -8,8 +8,8 @@ namespace Unity.Robotics.UrdfImporter
     {
         public enum axisType
         {
-            zAxis,
             yAxis,
+            zAxis,
         }
 
         public enum convexDecomposer
