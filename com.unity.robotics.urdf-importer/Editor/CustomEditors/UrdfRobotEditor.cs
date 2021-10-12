@@ -37,10 +37,6 @@ namespace Unity.Robotics.UrdfImporter.Editor
 
             urdfRobot = (UrdfRobot) target;
 
-            EditorGUILayout.PropertyField(axisType, new GUIContent("Axis Type"));
-            serializedObject.ApplyModifiedProperties();
-            UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
-
             GUILayout.Space(5);
             GUILayout.Label("All Rigidbodies", EditorStyles.boldLabel);
             DisplaySettingsToggle(new GUIContent("Use Gravity", "If disabled, robot is not affected by gravity."), urdfRobot.SetRigidbodiesUseGravity, UrdfRobot.useGravity);
