@@ -223,6 +223,7 @@ namespace Unity.Robotics.UrdfImporter
 
         public static void CorrectAxis(GameObject robot)
         {
+            //Debug.Log("hit");
             UrdfRobot robotScript = robot.GetComponent<UrdfRobot>();
             if (robotScript == null) 
             {
@@ -237,6 +238,7 @@ namespace Unity.Robotics.UrdfImporter
             Quaternion correctYtoZ = Quaternion.Euler(-90, 0, 90);
             Quaternion correctZtoY = Quaternion.Inverse((correctYtoZ));
             Quaternion correction = new Quaternion();
+            Debug.Log("hit2");
 
             if (robotScript.chosenAxis == ImportSettings.axisType.zAxis)
             {
@@ -256,7 +258,7 @@ namespace Unity.Robotics.UrdfImporter
 
             foreach (UrdfCollision collision in collisionMeshList)
             {
-                if (robotScript.chosenAxis != ImportSettings.axisType.zAxis) 
+                if (collision.geometryType == GeometryTypes.Mesh) 
                 {
                     collision.transform.localRotation = collision.transform.localRotation * correction;
                 }
