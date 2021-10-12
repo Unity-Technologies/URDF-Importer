@@ -238,7 +238,6 @@ namespace Unity.Robotics.UrdfImporter
             Quaternion correctYtoZ = Quaternion.Euler(-90, 0, 90);
             Quaternion correctZtoY = Quaternion.Inverse((correctYtoZ));
             Quaternion correction = new Quaternion();
-            Debug.Log("hit2");
 
             if (robotScript.chosenAxis == ImportSettings.axisType.zAxis)
             {
