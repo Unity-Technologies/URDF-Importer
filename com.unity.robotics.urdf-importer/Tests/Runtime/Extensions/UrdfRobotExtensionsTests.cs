@@ -93,7 +93,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             UrdfRobotExtensions.CorrectAxis(robot);
             Assert.IsTrue(Quaternion.Euler(-90, 0, 90) ==
                 robot.GetComponentInChildren<UrdfVisual>().transform.localRotation);
-            Assert.IsTrue(Vector3.zero == robot.GetComponentInChildren<UrdfCollision>().transform.localEulerAngles);
+            Assert.IsTrue(Quaternion.Euler(-90, 0, 90) == robot.GetComponentInChildren<UrdfCollision>().transform.localRotation);
 
             Object.DestroyImmediate(robot);
         }
