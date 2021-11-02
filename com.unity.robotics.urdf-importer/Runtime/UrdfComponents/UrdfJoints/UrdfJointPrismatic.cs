@@ -164,7 +164,7 @@ namespace Unity.Robotics.UrdfImporter
             ConfigurableJoint configurableJoint = (ConfigurableJoint)unityJoint;
 
             joint.axis = GetAxisData(configurableJoint.axis);
-            joint.dynamics = new Joint.Dynamics(configurableJoint.xDrive.positionDamper, configurableJoint.xDrive.positionSpring);
+            joint.dynamics = new Joints.Dynamics(configurableJoint.xDrive.positionDamper, configurableJoint.xDrive.positionSpring);
             joint.limit = ExportLimitData();
 #endif
             return joint;
@@ -188,11 +188,11 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_2020_2_OR_NEWER
             return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, unityJoint.maxLinearVelocity);
 #elif UNITY_2020_1
-            return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, maxLinearVelocity);
+            return new Joints.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, maxLinearVelocity);
 #endif
 #else
             PrismaticJointLimitsManager prismaticLimits = GetComponent<PrismaticJointLimitsManager>();
-            return new Joint.Limit(
+            return new Joints.Limit(
                 Math.Round(prismaticLimits.PositionLimitMin, RoundDigits),
                 Math.Round(prismaticLimits.PositionLimitMax, RoundDigits),
                 EffortLimit,

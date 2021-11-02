@@ -116,7 +116,7 @@ namespace Unity.Robotics.UrdfImporter
 #else
             ConfigurableJoint configurableJoint = (ConfigurableJoint)unityJoint;
             joint.axis = GetAxisData(Vector3.Cross(configurableJoint.axis, configurableJoint.secondaryAxis));
-            joint.dynamics = new Joint.Dynamics(configurableJoint.xDrive.positionDamper, configurableJoint.xDrive.positionSpring);
+            joint.dynamics = new Joints.Dynamics(configurableJoint.xDrive.positionDamper, configurableJoint.xDrive.positionSpring);
             joint.limit = ExportLimitData();
 #endif
             return joint;
@@ -129,7 +129,7 @@ namespace Unity.Robotics.UrdfImporter
             return new Joint.Limit(drive.lowerLimit, drive.upperLimit, EffortLimit, VelocityLimit);
 #else
             ConfigurableJoint configurableJoint = (ConfigurableJoint)unityJoint;
-            return new Joint.Limit(
+            return new Joints.Limit(
                 Math.Round(-configurableJoint.linearLimit.limit, RoundDigits),
                 Math.Round(configurableJoint.linearLimit.limit, RoundDigits),
                 EffortLimit, VelocityLimit);

@@ -23,9 +23,7 @@ namespace Unity.Robotics.UrdfImporter
             GameObject linkObject = new GameObject("link");
             linkObject.transform.SetParentAndAlign(parent);
             UrdfLink urdfLink = linkObject.AddComponent<UrdfLink>();
-            UrdfCollisionsExtensions.Create(linkObject.transform, link?.collisions);
-            UrdfVisualsExtensions.Create(linkObject.transform, link?.visuals);
-
+            
             if (link != null)
             {
                 urdfLink.ImportLinkData(link, joint);
@@ -37,6 +35,10 @@ namespace Unity.Robotics.UrdfImporter
                 UnityEditor.EditorGUIUtility.PingObject(linkObject);
 #endif
             }
+            
+            UrdfVisualsExtensions.Create(linkObject.transform, link?.visuals);
+            UrdfCollisionsExtensions.Create(linkObject.transform, link?.collisions);
+            UrdfSensorsExtensions.Create(linkObject.transform, link?.sensors);
 
             return linkObject;
         }
@@ -59,7 +61,10 @@ namespace Unity.Robotics.UrdfImporter
                     UrdfJoint.Create(urdfLink.gameObject, UrdfJoint.GetJointType(joint.type), joint);
             }
             else if (joint != null)
+            {
+                UrdfInertial.Create(urdfLink.gameObject);
                 UrdfJoint.Create(urdfLink.gameObject, UrdfJoint.GetJointType(joint.type), joint);
+            }
 
         } 
         

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Linq;
+using Unity.Robotics.Sensors;
 using Unity.Robotics.UrdfImporter.Control;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -80,14 +81,16 @@ namespace Unity.Robotics.UrdfImporter
 
             if (!UrdfAssetPathHandler.IsValidAssetPath(im.robot.filename))
             {
-                Debug.LogError("URDF file and resources must be placed in project folder:" +
-                    $"\n{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}");
+                Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
                 if (forceRuntimeMode)
-                { // set runtime mode back to what it was
+                {
+                    // set runtime mode back to what it was
                     RuntimeUrdf.SetRuntimeMode(im.wasRuntimeMode);
                 }
+
                 return null;
             }
+
             return im;
         }
 
@@ -106,7 +109,8 @@ namespace Unity.Robotics.UrdfImporter
 
             im.robotGameObject.AddComponent<Unity.Robotics.UrdfImporter.Control.Controller>();
             if (RuntimeUrdf.IsRuntimeMode())
-            {// In runtime mode, we have to disable controller while robot is being constructed.
+            {
+                // In runtime mode, we have to disable controller while robot is being constructed.
                 im.robotGameObject.GetComponent<Unity.Robotics.UrdfImporter.Control.Controller>().enabled = false;
             }
 
@@ -115,6 +119,7 @@ namespace Unity.Robotics.UrdfImporter
             UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(im.robot.filename));
             UrdfMaterial.InitializeRobotMaterials(im.robot);
             UrdfPlugins.Create(im.robotGameObject.transform, im.robot.plugins);
+            AddJointSensor(im.robotGameObject);
         }
 
         // Creates the stack of robot joints. Should be called iteratively until false is returned.
@@ -136,8 +141,10 @@ namespace Unity.Robotics.UrdfImporter
                     Link child = childJoint.ChildLink;
                     im.importStack.Push(new Tuple<Link, Transform, Joint>(child, importedLink.transform, childJoint));
                 }
+
                 return true;
             }
+
             return false;
         }
 
@@ -154,7 +161,8 @@ namespace Unity.Robotics.UrdfImporter
             CreateCollisionExceptions(im.robot, im.robotGameObject);
 
             if (im.forceRuntimeMode)
-            { // set runtime mode back to what it was
+            {
+                // set runtime mode back to what it was
                 RuntimeUrdf.SetRuntimeMode(im.wasRuntimeMode);
             }
         }
@@ -213,7 +221,8 @@ namespace Unity.Robotics.UrdfImporter
             ImportPipelineCreateObject(im);
 
             while (ProcessJointStack(im))
-            {// process the stack until finished.
+            {
+                // process the stack until finished.
             }
 
             ImportPipelinePostCreate(im);
@@ -235,6 +244,7 @@ namespace Unity.Robotics.UrdfImporter
             {
                 return;
             }
+
             Quaternion correctYtoZ = Quaternion.Euler(-90, 0, 90);
             Quaternion correctZtoY = Quaternion.Inverse((correctYtoZ));
             Quaternion correction = new Quaternion();
@@ -257,11 +267,12 @@ namespace Unity.Robotics.UrdfImporter
 
             foreach (UrdfCollision collision in collisionMeshList)
             {
-                if (collision.geometryType == GeometryTypes.Mesh)
+                if (robotScript.choosenAxis != ImportSettings.axisType.zAxis)
                 {
                     collision.transform.localRotation = collision.transform.localRotation * correction;
                 }
             }
+
             robotScript.SetOrientation();
         }
 
@@ -278,6 +289,7 @@ namespace Unity.Robotics.UrdfImporter
                     CollisionList.Add(new CollisionIgnore(collisionObject1, collisionObject2));
                 }
             }
+
             robotGameObject.GetComponent<UrdfRobot>().collisionExceptions = CollisionList;
         }
 
@@ -325,16 +337,19 @@ namespace Unity.Robotics.UrdfImporter
                         "Ok");
                     return null;
                 }
+
                 robot.links.Add(urdfLink.ExportLinkData());
                 linkNames.Add(urdfLink.name);
 
-                //Joint export
+                //Joints export
                 UrdfJoint urdfJoint = urdfLink.gameObject.GetComponent<UrdfJoint>();
                 if (urdfJoint != null)
                     robot.joints.Add(urdfJoint.ExportJointData());
                 else if (!urdfLink.IsBaseLink)
+                {
                     //Make sure that links with no rigidbodies are still connected to the robot by a default joint
                     robot.joints.Add(UrdfJoint.ExportDefaultJoint(urdfLink.transform));
+                }
             }
 
             robot.materials = UrdfMaterial.Materials.Values.ToList();
@@ -397,7 +412,7 @@ namespace Unity.Robotics.UrdfImporter
             catch (Exception)
             {
                 Debug.LogError($"Unable to find tag '{FKRobot.k_TagName}'." +
-                               $"Add a tag '{FKRobot.k_TagName}' in the Project Settings in Unity Editor.");
+                    $"Add a tag '{FKRobot.k_TagName}' in the Project Settings in Unity Editor.");
                 return;
             }
 
@@ -411,6 +426,38 @@ namespace Unity.Robotics.UrdfImporter
             catch (Exception)
             {
                 Debug.LogError($"Unable to set the GameObject '{go.name}' tag to '{FKRobot.k_TagName}'.");
+            }
+        }
+
+        static void AddJointSensor(GameObject robot)
+        {
+            Dictionary<string, string> settings = new Dictionary<string, string> { { "sensor/topic", robot.name + "/JointState" } };
+            SensorFactory.InstantiateSensor("joint", settings).transform.SetParentAndAlign(robot.transform);
+
+            static void SetTag(GameObject go)
+            {
+                try
+                {
+                    GameObject.FindWithTag(FKRobot.k_TagName);
+                }
+                catch (Exception)
+                {
+                    Debug.LogError($"Unable to find tag '{FKRobot.k_TagName}'." +
+                        $"Add a tag '{FKRobot.k_TagName}' in the Project Settings in Unity Editor.");
+                    return;
+                }
+
+                if (!go)
+                    return;
+
+                try
+                {
+                    go.tag = FKRobot.k_TagName;
+                }
+                catch (Exception)
+                {
+                    Debug.LogError($"Unable to set the GameObject '{go.name}' tag to '{FKRobot.k_TagName}'.");
+                }
             }
         }
     }

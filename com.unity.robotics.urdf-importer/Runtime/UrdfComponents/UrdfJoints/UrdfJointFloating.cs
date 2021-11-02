@@ -25,7 +25,7 @@ namespace Unity.Robotics.UrdfImporter
             UrdfJointFloating urdfJoint = linkObject.AddComponent<UrdfJointFloating>();
             #if UNITY_2020_1_OR_NEWER
                 urdfJoint.unityJoint = linkObject.AddComponent<ArticulationBody>();
-                //Doesnt have any equivalent Articulatiob Joint
+                //Doesnt have any equivalent Articulatiob Joints
             #else
             urdfJoint.UnityJoint = linkObject.AddComponent<ConfigurableJoint>();
             #endif

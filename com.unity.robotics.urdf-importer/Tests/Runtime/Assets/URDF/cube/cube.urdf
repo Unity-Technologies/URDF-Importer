@@ -13,5 +13,8 @@
         <mesh filename="package://meshes/cube.stl"/>
       </geometry>
     </collision>
+    <sensor name="Test" type="Test">
+    <update_rate>100</update_rate>
+    </sensor>
   </link>
 </robot>
