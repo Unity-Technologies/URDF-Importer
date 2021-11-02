@@ -17,10 +17,8 @@ namespace Unity.Robotics.UrdfImporter
         string m_OriginalUrdfFile = "cube_export.urdf";
 
         [Test]
-        public void RunTimeExportTest()
+        public void ExportRobotToUrdf_UrdfFile_ExportedFileEqual()
         {
-            
-            
             var robotEnumerator =  UrdfRobotExtensions.Create(Path.Combine(m_UrdfFilePath,m_OriginalUrdfFile), ImportSettings.DefaultSettings());
             robotEnumerator.MoveNext();
             var robot = robotEnumerator.Current;
