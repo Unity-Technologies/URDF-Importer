@@ -432,7 +432,7 @@ namespace Unity.Robotics.UrdfImporter
         static void AddJointSensor(GameObject robot)
         {
             Dictionary<string, string> settings = new Dictionary<string, string> { { "sensor/topic", robot.name + "/JointState" } };
-            SensorFactory.InstantiateSensor("joint", settings).transform.SetParentAndAlign(robot.transform);
+            SensorFactory.InstantiateSensor("joint", settings, out Dictionary<string,string> unusedSettings).transform.SetParentAndAlign(robot.transform);
 
             static void SetTag(GameObject go)
             {

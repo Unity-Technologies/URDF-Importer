@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Unity.Robotics.Sensors;
 
@@ -35,21 +36,25 @@ namespace Unity.Robotics.UrdfImporter
 
             sensorObject.name = sensor.elements[k_NameKey];
             GameObject sensorGameObject;
+            Dictionary<string, string> unusedSettings;
             if (sensor.elements.ContainsKey(k_PluginKey) && String.IsNullOrEmpty(sensor.elements[k_PluginKey]))
             {
-                sensorGameObject = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements[k_PluginKey],sensor.elements);
+                sensorGameObject = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements[k_PluginKey],sensor.elements, out unusedSettings);
             }
             else
             {
-                sensorGameObject = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements);
+                sensorGameObject = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements, out unusedSettings);
             }
 
+            sensorObject.GetComponent<UrdfSensor>().unusedSettings = unusedSettings;
             sensorGameObject.transform.SetParentAndAlign(sensorObject);
         }
 
         public static Sensor ExportSensorData(this UrdfSensor urdfSensor)
         {
-            Dictionary<string,string> sensorProperties = SensorFactory.GetSensorSettingsAsDictionary(urdfSensor.gameObject);
+            var sensorProperties = SensorFactory.GetSensorSettingsAsDictionary(urdfSensor.gameObject);
+            foreach (var unusedSettings in urdfSensor.unusedSettings.Where(unusedSettings => unusedSettings.Key != k_NameKey && unusedSettings.Key != k_PoseKey && unusedSettings.Key != k_TypeKey))
+                sensorProperties.Add(unusedSettings.Key,unusedSettings.Value);
             sensorProperties.Add(k_NameKey,urdfSensor.name);
             sensorProperties.Add(k_TypeKey,urdfSensor.sensorType);
             var sensorPose = UrdfOrigin.ExportOriginData(urdfSensor.transform);

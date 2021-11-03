@@ -15,6 +15,7 @@
     </collision>
     <sensor name="Test" type="Test">
     <update_rate>100</update_rate>
+    <extra>eg</extra>
     </sensor>
   </link>
 </robot>
