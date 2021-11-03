@@ -9,6 +9,7 @@ namespace Unity.Robotics.UrdfImporter
     public static class UrdfSensorsExtensions
     {
         const string k_SensorTopic = "sensor/topic";
+        const string k_SensorName = "sensor/name";
         public static UrdfSensors Create(Transform parent, List<Sensor> sensors = null)
         {
             GameObject sensorsObject = new GameObject("Sensors");
@@ -28,7 +29,7 @@ namespace Unity.Robotics.UrdfImporter
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError($"Failed loading `{sensor.name}`");
+                        Debug.LogError($"Failed loading `{sensor.elements[k_SensorName]}`");
                     }
                 }
             }

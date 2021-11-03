@@ -55,7 +55,10 @@ namespace Unity.Robotics.UrdfImporter
 
             Assert.AreEqual(source.collisions.Count, exported.collisions.Count, $"Number of collision meshes are unequal: Expected: {source.collisions.Count} Actual: {exported.collisions.Count}");
             for (var i = 0; i < source.collisions.Count; i++) CompareCollisions(source.collisions[i], exported.collisions[i]);
-
+            
+            Assert.AreEqual(source.sensors.Count, exported.sensors.Count, $"Number of sensors are unequal: Expected: {source.sensors.Count} Actual: {exported.sensors.Count}");
+            for (var i = 0; i < source.sensors.Count; i++) CompareSensors(source.sensors[i], exported.sensors[i]);
+            
             Assert.AreEqual(source.joints.Count, exported.joints.Count, $"Number of joints connected to {source.name} link are unequal: Expected: {source.joints.Count} Actual: {exported.joints.Count}");
             foreach (var jointSource in source.joints)
             {
@@ -218,6 +221,62 @@ namespace Unity.Robotics.UrdfImporter
             Assert.IsTrue(source.name == exported.name, "Collision mesh name not equal");
             CompareOrigin(source.origin, exported.origin);
             CompareGeometry(source.geometry, exported.geometry);
+        }
+
+        /// <summary>
+        /// Compares sensor information
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="exported"></param>
+        static void CompareSensors(Sensor source, Sensor exported)
+        {
+            var sourceSettings = source.elements;
+            var exportedSettings = exported.elements;
+            string poseKey = "sensor/pose";
+            string zeroPose = "0 0 0 0 0 0";
+            Assert.IsTrue((!sourceSettings.ContainsKey(poseKey) && !exportedSettings.ContainsKey(poseKey)) || 
+                (sourceSettings.ContainsKey(poseKey) && !exportedSettings.ContainsKey(poseKey) && sourceSettings[poseKey] == zeroPose) ||
+                (exportedSettings.ContainsKey(poseKey) && !sourceSettings.ContainsKey(poseKey) && exportedSettings[poseKey] == zeroPose) ||
+                (sourceSettings.ContainsKey(poseKey) && exportedSettings.ContainsKey(poseKey)));
+            
+            if(sourceSettings.ContainsKey(poseKey) && exportedSettings.ContainsKey(poseKey))
+            {
+                string[] sourcePose = sourceSettings[poseKey].Split();
+                string[] exportedPose = exportedSettings[poseKey].Split();
+
+                //Pose XYZ check
+                Vector3 sourceXYZ = new Vector3(float.Parse(sourcePose[0]), float.Parse(sourcePose[1]), float.Parse(sourcePose[2]));
+                Vector3 exportedXYZ = new Vector3(float.Parse(exportedPose[0]), float.Parse(exportedPose[1]), float.Parse(exportedPose[2]));
+                Assert.AreEqual(sourceXYZ, exportedXYZ);
+
+                //Pose RPY check
+                Vector3 sourceRPY = new Vector3(float.Parse(sourcePose[3]), float.Parse(sourcePose[4]), float.Parse(sourcePose[5]));
+                Vector3 exportedRPY = new Vector3(float.Parse(exportedPose[3]), float.Parse(exportedPose[4]), float.Parse(exportedPose[5]));
+                Quaternion sourceQuat = new Quaternion();
+                sourceQuat.eulerAngles = sourceRPY;
+                Quaternion exportedQuat = new Quaternion();
+                exportedQuat.eulerAngles = exportedRPY;
+                Assert.AreEqual(sourceQuat, exportedQuat);
+            }
+
+            sourceSettings.Remove(poseKey);
+            exportedSettings.Remove(poseKey);
+
+            string testString = "";
+            string testString2 = "";
+            foreach (string key in sourceSettings.Keys)
+                testString = string.Join(" ", testString,key);
+            foreach (string key in exportedSettings.Keys)
+                testString2 = string.Join(" ", testString2,key);
+            Debug.Log(testString);
+            Debug.Log(testString2);
+            
+            //Assert.AreEqual(sourceSettings.Count,exportedSettings.Count); // To discuss: It is possible that the sensor may prefab may have extra fields during export.
+            foreach (var key in sourceSettings.Keys)
+            {
+                Assert.IsTrue(exportedSettings.ContainsKey(key), $"Key Name: {key}");
+                Assert.AreEqual(sourceSettings[key],exportedSettings[key]);
+            }
         }
 
         /// <summary>

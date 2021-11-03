@@ -34,6 +34,9 @@
           <box size="1 2 3" />
         </geometry>
       </visual>
+      <sensor name="Test" type="Test">
+        <update_rate>100</update_rate>
+      </sensor>
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
