@@ -267,7 +267,7 @@ namespace Unity.Robotics.UrdfImporter
 
             foreach (UrdfCollision collision in collisionMeshList)
             {
-                if (robotScript.choosenAxis != ImportSettings.axisType.zAxis)
+                if (robotScript.chosenAxis != ImportSettings.axisType.zAxis)
                 {
                     collision.transform.localRotation = collision.transform.localRotation * correction;
                 }

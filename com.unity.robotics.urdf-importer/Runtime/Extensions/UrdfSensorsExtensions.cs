@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Robotics.Sensors;
 using UnityEngine;
 
@@ -47,6 +48,13 @@ namespace Unity.Robotics.UrdfImporter
             string topicName = "/"+parent.root.name + "/" + parent.name + "/TransformStamped";
             Dictionary<string, string> settings = new Dictionary<string, string> ();//{ { k_SensorTopic, topicName } };
             return SensorFactory.InstantiateSensor("transform",settings);
+        }
+        
+        public static List<Sensor> ExportSensorsData(this UrdfSensors urdfSensors)
+        {
+            UrdfSensor[] urdfSensorsList = urdfSensors.GetComponentsInChildren<UrdfSensor>();
+
+            return urdfSensorsList.Select(urdfSensor => urdfSensor.ExportSensorData()).ToList();
         }
     }
 }

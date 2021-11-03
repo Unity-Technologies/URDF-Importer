@@ -77,6 +77,7 @@ namespace Unity.Robotics.UrdfImporter
             {
                 visuals = urdfLink.GetComponentInChildren<UrdfVisuals>().ExportVisualsData(),
                 collisions = urdfLink.GetComponentInChildren<UrdfCollisions>().ExportCollisionsData(),
+                sensors = urdfLink.GetComponentInChildren<UrdfSensors>().ExportSensorsData(),
                 inertial = urdfInertial == null ? null : urdfInertial.ExportInertialData()
             };
             

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Unity.Robotics.Sensors;
 
@@ -44,6 +46,17 @@ namespace Unity.Robotics.UrdfImporter
             }
 
             sensorGameObject.transform.SetParentAndAlign(sensorObject);
+        }
+
+        public static Sensor ExportSensorData(this UrdfSensor urdfSensor)
+        {
+            Dictionary<string,string> sensorProperties = SensoFactory.GetSensorProperties(urdfSensor.gameObject);
+            sensorProperties.Add(k_NameKey,urdfSensor.name);
+            sensorProperties.Add(k_PoseKey,urdfSensor.sensorType);
+            return new Sensor()
+            {
+                elements = sensorProperties
+            };
         }
     }
 }
