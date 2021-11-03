@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Unity.Robotics.Sensors;
 
@@ -50,9 +49,15 @@ namespace Unity.Robotics.UrdfImporter
 
         public static Sensor ExportSensorData(this UrdfSensor urdfSensor)
         {
-            Dictionary<string,string> sensorProperties = SensoFactory.GetSensorProperties(urdfSensor.gameObject);
+            Dictionary<string,string> sensorProperties = SensorFactory.GetSensorSettingsAsDictionary(urdfSensor.gameObject);
             sensorProperties.Add(k_NameKey,urdfSensor.name);
-            sensorProperties.Add(k_PoseKey,urdfSensor.sensorType);
+            sensorProperties.Add(k_TypeKey,urdfSensor.sensorType);
+            var sensorPose = UrdfOrigin.ExportOriginData(urdfSensor.transform);
+            if (sensorPose != null)
+            {
+                string poseString = string.Join(" ", string.Join(" ", sensorPose.Xyz ?? new double[] { 0, 0, 0 }), string.Join(" ", sensorPose.Rpy ?? new double[] { 0, 0, 0 }));
+                sensorProperties.Add(k_PoseKey,poseString);
+            }
             return new Sensor()
             {
                 elements = sensorProperties
