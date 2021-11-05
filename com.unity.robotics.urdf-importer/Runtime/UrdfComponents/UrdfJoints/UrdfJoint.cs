@@ -45,7 +45,7 @@ namespace Unity.Robotics.UrdfImporter
         public string jointName;
 
         public abstract JointTypes JointType { get; } // Clear out syntax
-        public bool IsRevoluteOrContinuous => JointType == JointTypes.Revolute || JointType == JointTypes.Revolute;
+        public bool IsRevoluteOrContinuous => JointType == JointTypes.Revolute || JointType == JointTypes.Continuous;
         public double EffortLimit = 1e3;
         public double VelocityLimit = 1e3;
 
