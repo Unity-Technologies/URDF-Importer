@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using Unity.Robotics.UrdfImporter;
+using UnityEditor;
 using Joint = Unity.Robotics.UrdfImporter.Joint;
 
 namespace Unity.Robotics.UrdfImporter.Tests
@@ -22,7 +23,8 @@ namespace Unity.Robotics.UrdfImporter.Tests
 
 #if UNITY_2020_1_OR_NEWER
         [Test, TestCaseSource("JointTypes")]
-        public void Create_UrdfJoint_Succeeds(UrdfJoint.JointTypes urdfJointType, ArticulationJointType articulationJointType)
+        public void Create_UrdfJoint_Succeeds(UrdfJoint.JointTypes urdfJointType,
+            ArticulationJointType articulationJointType, bool isRevoluteOrContinuousJoint)
         {
             GameObject linkObject = new GameObject("link");
             UrdfJoint urdfJoint = UrdfJoint.Create(linkObject, urdfJointType);
@@ -32,6 +34,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.IsNotNull(articulationBody);
             Assert.AreEqual(urdfJointType, urdfJoint.JointType);
             Assert.AreEqual(articulationJointType, articulationBody.jointType);
+            Assert.AreEqual(isRevoluteOrContinuousJoint, urdfJoint.IsRevoluteOrContinuous);
 
             Object.DestroyImmediate(linkObject);
         }
@@ -40,12 +43,12 @@ namespace Unity.Robotics.UrdfImporter.Tests
         {
             get
             {
-                yield return new TestCaseData(UrdfJoint.JointTypes.Fixed, ArticulationJointType.FixedJoint);
-                yield return new TestCaseData(UrdfJoint.JointTypes.Continuous, ArticulationJointType.RevoluteJoint);
-                yield return new TestCaseData(UrdfJoint.JointTypes.Floating, ArticulationJointType.FixedJoint);
-                yield return new TestCaseData(UrdfJoint.JointTypes.Planar, ArticulationJointType.PrismaticJoint);
-                yield return new TestCaseData(UrdfJoint.JointTypes.Prismatic, ArticulationJointType.PrismaticJoint);
-                yield return new TestCaseData(UrdfJoint.JointTypes.Revolute, ArticulationJointType.RevoluteJoint);
+                yield return new TestCaseData(UrdfJoint.JointTypes.Fixed, ArticulationJointType.FixedJoint, false);
+                yield return new TestCaseData(UrdfJoint.JointTypes.Continuous, ArticulationJointType.RevoluteJoint, true);
+                yield return new TestCaseData(UrdfJoint.JointTypes.Floating, ArticulationJointType.FixedJoint, false);
+                yield return new TestCaseData(UrdfJoint.JointTypes.Planar, ArticulationJointType.PrismaticJoint, false);
+                yield return new TestCaseData(UrdfJoint.JointTypes.Prismatic, ArticulationJointType.PrismaticJoint, false);
+                yield return new TestCaseData(UrdfJoint.JointTypes.Revolute, ArticulationJointType.RevoluteJoint, true);
             }
         }
 
