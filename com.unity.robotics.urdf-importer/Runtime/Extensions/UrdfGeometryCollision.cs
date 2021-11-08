@@ -21,6 +21,10 @@ namespace Unity.Robotics.UrdfImporter
 {
     public class UrdfGeometryCollision : UrdfGeometry
     {
+        public static List<string> UsedTemplateFiles => s_UsedTemplateFiles;
+        static List<string> s_UsedTemplateFiles = new List<string>();
+        static List<string> s_CreatedAssetNames = new List<string>();
+        
         public static void Create(Transform parent, GeometryTypes geometryType, Link.Geometry geometry = null)
         {
             GameObject geometryGameObject = null;
@@ -123,9 +127,17 @@ namespace Unity.Robotics.UrdfImporter
                 var packageRoot = UrdfAssetPathHandler.GetPackageRoot();
                 var filePath = RuntimeUrdf.AssetDatabase_GUIDToAssetPath(RuntimeUrdf.AssetDatabase_CreateFolder($"{packageRoot}", "meshes"));
                 var name =$"{filePath}/Cylinder.asset";
-                Debug.Log($"Creating new cylinder file: {name}");
-                RuntimeUrdf.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
-                RuntimeUrdf.AssetDatabase_SaveAssets();    
+                // Only create new asset if one doesn't exist
+                if (!RuntimeUrdf.AssetExists(name))
+                {
+                    Debug.Log($"Creating new cylinder file: {name}");
+                    RuntimeUrdf.AssetDatabase_CreateAsset(collider, name, uniquePath:true);
+                    RuntimeUrdf.AssetDatabase_SaveAssets();       
+                }
+                else
+                {
+                    collider = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Mesh>(name);
+                }
             }
             MeshCollider current = go.AddComponent<MeshCollider>();
             current.sharedMesh = collider;
@@ -196,16 +208,27 @@ namespace Unity.Robotics.UrdfImporter
                     List<Mesh> colliderMeshes = decomposer.GenerateConvexMeshes(meshFilter.sharedMesh);
                     foreach (Mesh collider in colliderMeshes)
                     {
+                        var c = collider;
                         if (!RuntimeUrdf.IsRuntimeMode())
                         {
                             meshIndex++;
                             string name = $"{filePath}/{templateFileName}_{meshIndex}.asset";
-                            Debug.Log($"Creating new mesh file: {name}");
-                            RuntimeUrdf.AssetDatabase_CreateAsset(collider, name);
-                            RuntimeUrdf.AssetDatabase_SaveAssets();
+                            // Only create new asset if one doesn't exist or should overwrite
+                            if ((UrdfRobotExtensions.importsettings.OverwriteExistingPrefabs || !RuntimeUrdf.AssetExists(name)) && !s_CreatedAssetNames.Contains(name))
+                            {
+                                Debug.Log($"Creating new mesh file: {name}");
+                                RuntimeUrdf.AssetDatabase_CreateAsset(c, name);
+                                RuntimeUrdf.AssetDatabase_SaveAssets();
+                                s_CreatedAssetNames.Add(name);
+                                s_UsedTemplateFiles.Add(templateFileName);
+                            }
+                            else
+                            {
+                                c = RuntimeUrdf.AssetDatabase_LoadAssetAtPath<Mesh>(name);
+                            }
                         }
                         MeshCollider current = child.AddComponent<MeshCollider>();
-                        current.sharedMesh = collider;
+                        current.sharedMesh = c;
                         current.convex = setConvex;
                     }
                     Component.DestroyImmediate(child.GetComponent<VHACD>());
@@ -213,6 +236,12 @@ namespace Unity.Robotics.UrdfImporter
                     Object.DestroyImmediate(meshFilter);
                 }
             }
+        }
+
+        public static void BeginNewUrdfImport()
+        {
+            s_CreatedAssetNames.Clear();
+            s_UsedTemplateFiles.Clear();
         }
 
     }
