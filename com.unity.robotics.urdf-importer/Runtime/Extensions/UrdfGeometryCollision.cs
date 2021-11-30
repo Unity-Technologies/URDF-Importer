@@ -38,6 +38,11 @@ namespace Unity.Robotics.UrdfImporter
                 case GeometryTypes.Cylinder:
                     geometryGameObject = CreateCylinderCollider();
                     break;
+                case GeometryTypes.Capsule:
+                    geometryGameObject = new GameObject(geometryType.ToString());
+                    var capsuleCollider = geometryGameObject.AddComponent<CapsuleCollider>();
+                    capsuleCollider.height = 2;
+                    break;
                 case GeometryTypes.Sphere:
                     geometryGameObject = new GameObject(geometryType.ToString());
                     geometryGameObject.AddComponent<SphereCollider>();
