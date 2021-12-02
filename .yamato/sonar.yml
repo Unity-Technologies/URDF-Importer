@@ -1,0 +1,18 @@
+
+name: Sonarqube Scan
+agent:
+    type: Unity::VM
+    image: robotics/ci-ubuntu20:v0.1.0-795910
+    flavor: i1.large
+commands:
+    - git submodule update --init --recursive
+    - npm install upm-ci-utils@stable -g --registry https://artifactory.prd.it.unity3d.com/artifactory/api/npm/upm-npm
+    - unity-downloader-cli -u 2020.3.11f1 -c editor -c StandaloneSupport-IL2CPP -c Linux --wait --published
+    - brew install mono corretto
+    - curl https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.4.0.40033/sonar-scanner-msbuild-5.4.0.40033-net46.zip -o sonar-scanner-msbuild-net46.zip -L
+    - unzip sonar-scanner-msbuild-net46.zip -d ~
+    - chmod a+x ~/sonar-scanner-4.6.2.2472/bin/sonar-scanner
+    - .Editor/Unity.app/Contents/MacOS/Unity -projectPath ./TestUrdfImporter -batchmode -quit -nographics -logFile - -executeMethod "UnityEditor.SyncVS.SyncSolution"
+    - mono ~/SonarScanner.MSBuild.exe begin /k:"ai-robotics-urdf-importer" /d:sonar.host.url=$SONARQUBE_ENDPOINT_URL_STG /d:sonar.login=$SONARQUBE_TOKEN_STG /d:sonar.projectBaseDir=./TestUrdfImporter
+    - msbuild ./TestUrdfImporter/TestUrdfImporter.sln
+    - mono ~/SonarScanner.MSBuild.exe end /d:sonar.login=$SONARQUBE_TOKEN_STG
