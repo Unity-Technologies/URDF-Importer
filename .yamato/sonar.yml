@@ -1,10 +1,8 @@
-
-  
-name: sonarqube
+name: Sonarqube Scan
 agent:
-    type: Unity::metal::macmini
-    image: package-ci/mac
-    flavor: m1.mac
+    type: Unity::VM
+    image: slough-ops/win10-base:stable
+    flavor: b1.large
 commands:
     - git submodule update --init --recursive
     - npm install upm-ci-utils@stable -g --registry https://artifactory.prd.it.unity3d.com/artifactory/api/npm/upm-npm
