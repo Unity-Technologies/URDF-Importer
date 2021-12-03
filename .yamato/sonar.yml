@@ -6,6 +6,7 @@ agent:
     image: package-ci/mac
     flavor: m1.mac
 commands:
+    - git submodule update --init --recursive
     - npm install upm-ci-utils@stable -g --registry https://artifactory.prd.it.unity3d.com/artifactory/api/npm/upm-npm
     - unity-downloader-cli -u 2020.3.11f1 -c Editor
     - brew install mono corretto
