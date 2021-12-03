@@ -1,11 +1,11 @@
 name: Sonarqube Scan
 agent:
-    type: Unity::VM
-    image: slough-ops/win10-base:stable
-    flavor: b1.large
+    type: Unity::VM::osx
+    image: buildfarm/mac:stable
+    flavor: m1.mac
 commands:
     - git submodule update --init --recursive
-    - python3 -m pip install unity-downloader-cli --index-url https://artifactory.prd.it.unity3d.com/artifactory/api/pypi/pypi/simple --upgrade
+    - npm install upm-ci-utils@stable -g --registry https://artifactory.prd.it.unity3d.com/artifactory/api/npm/upm-npm
     - unity-downloader-cli -u 2020.3.11f1 -c Editor
     - brew install mono corretto
     - curl https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.2.1.31210/sonar-scanner-msbuild-5.2.1.31210-net46.zip -o sonar-scanner-msbuild-net46.zip -L
@@ -21,3 +21,4 @@ triggers:
         ((pull_request.target eq "main" OR pull_request.target eq "dev")
         AND NOT pull_request.push.changes.all match "**/*.md") OR
         (push.branch eq "main" OR push.branch eq "dev")
+        
