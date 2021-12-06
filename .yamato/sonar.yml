@@ -11,7 +11,7 @@ commands:
     - unzip sonar-scanner-msbuild-net46.zip -d ~
     - chmod a+x ~/sonar-scanner-4.6.1.2450/bin/sonar-scanner
     - .Editor/Unity.app/Contents/MacOS/Unity -projectPath ./TestUrdfImporter -batchmode -quit -nographics -logFile - -executeMethod "UnityEditor.SyncVS.SyncSolution"
-    - mono ~/SonarScanner.MSBuild.exe begin /k:"ai-robotics-urdf-importer" /d:sonar.host.url=$SONARQUBE_ENDPOINT_URL_STG /d:sonar.login=$SONARQUBE_TOKEN_STG /d:sonar.projectBaseDir=.
+    - mono ~/SonarScanner.MSBuild.exe begin /k:"ai-robotics-urdf-importer" /d:sonar.host.url=$SONARQUBE_ENDPOINT_URL_STG /d:sonar.login=$SONARQUBE_TOKEN_STG 
     # - msbuild ./TestUrdfImporter/TestUrdfImporter.sln /p:Platform="Any CPU" /t:restore
     - msbuild ./TestUrdfImporter/TestUrdfImporter.sln
     - mono ~/SonarScanner.MSBuild.exe end /d:sonar.login=$SONARQUBE_TOKEN_STG
