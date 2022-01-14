@@ -120,6 +120,7 @@ namespace Unity.Robotics.UrdfImporter
             UrdfMaterial.InitializeRobotMaterials(im.robot);
             UrdfPlugins.Create(im.robotGameObject.transform, im.robot.plugins);
             AddJointSensor(im.robotGameObject);
+            AddTFBroadcaster(im.robotGameObject);
         }
 
         // Creates the stack of robot joints. Should be called iteratively until false is returned.
@@ -431,32 +432,12 @@ namespace Unity.Robotics.UrdfImporter
         {
             Dictionary<string, string> settings = new Dictionary<string, string> { { "sensor/topic", robot.name + "/JointState" } };
             SensorFactory.InstantiateSensor("joint", settings).transform.SetParentAndAlign(robot.transform);
-
-            static void SetTag(GameObject go)
-            {
-                try
-                {
-                    GameObject.FindWithTag(FKRobot.k_TagName);
-                }
-                catch (Exception)
-                {
-                    Debug.LogError($"Unable to find tag '{FKRobot.k_TagName}'." +
-                        $"Add a tag '{FKRobot.k_TagName}' in the Project Settings in Unity Editor.");
-                    return;
-                }
-
-                if (!go)
-                    return;
-
-                try
-                {
-                    go.tag = FKRobot.k_TagName;
-                }
-                catch (Exception)
-                {
-                    Debug.LogError($"Unable to set the GameObject '{go.name}' tag to '{FKRobot.k_TagName}'.");
-                }
-            }
+        }
+        
+        static void AddTFBroadcaster(GameObject robot)
+        {
+            Dictionary<string, string> settings = new Dictionary<string, string> ();
+            SensorFactory.InstantiateSensor("TF", settings).transform.SetParentAndAlign(robot.transform);
         }
     }
 }
