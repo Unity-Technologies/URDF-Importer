@@ -120,7 +120,7 @@ namespace Unity.Robotics.UrdfImporter
             UrdfMaterial.InitializeRobotMaterials(im.robot);
             UrdfPlugins.Create(im.robotGameObject.transform, im.robot.plugins);
             AddJointSensor(im.robotGameObject);
-            AddTFBroadcaster(im.robotGameObject);
+            AddTfBroadcaster(im.robotGameObject);
         }
 
         // Creates the stack of robot joints. Should be called iteratively until false is returned.
@@ -434,7 +434,7 @@ namespace Unity.Robotics.UrdfImporter
             SensorFactory.InstantiateSensor("joint", settings).transform.SetParentAndAlign(robot.transform);
         }
         
-        static void AddTFBroadcaster(GameObject robot)
+        static void AddTfBroadcaster(GameObject robot)
         {
             Dictionary<string, string> settings = new Dictionary<string, string> ();
             SensorFactory.InstantiateSensor("TF", settings).transform.SetParentAndAlign(robot.transform);
