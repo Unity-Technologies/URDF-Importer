@@ -76,3 +76,7 @@ crashlytics-build.properties
 
 # .DS_Store
 **/.DS_Store
+
+# Sonarqube
+.scannerwork/**
+.sonarqube/**
