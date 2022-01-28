@@ -431,13 +431,29 @@ namespace Unity.Robotics.UrdfImporter
         static void AddJointSensor(GameObject robot)
         {
             Dictionary<string, string> settings = new Dictionary<string, string> { { "sensor/topic", robot.name + "/JointState" } };
-            SensorFactory.InstantiateSensor("joint", settings).transform.SetParentAndAlign(robot.transform);
+            var sensor = SensorFactory.InstantiateSensor("joint", settings);
+            if (sensor == null)
+            {
+                Debug.LogWarning("JointSensor is not loaded.");
+            }
+            else
+            {
+                sensor.transform.SetParentAndAlign(robot.transform);
+            }
         }
         
         static void AddTfBroadcaster(GameObject robot)
         {
             Dictionary<string, string> settings = new Dictionary<string, string> ();
-            SensorFactory.InstantiateSensor("TF", settings).transform.SetParentAndAlign(robot.transform);
+            var sensor = SensorFactory.InstantiateSensor("TF", settings);
+            if (sensor == null)
+            {
+                Debug.LogWarning("TFBroadcaster is not loaded.");
+            }
+            else
+            {
+                sensor.transform.SetParentAndAlign(robot.transform);
+            }
         }
     }
 }
