@@ -12,8 +12,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Added
 
-Added Sonarqube scanner
-
 ### Changed
 
 ### Deprecated
@@ -21,6 +19,17 @@ Added Sonarqube scanner
 ### Removed
 
 ### Fixed
+
+
+## [0.5.2-preview] - 2022-02-01
+
+Added Sonarqube scanner
+
+### Fixed
+Fixed inability to read relative file paths 
+
+Correct Axis change issues in URDF Importer
+
 
 ## [0.5.1-preview] - 2021-10-04
 Fixed bug with multiple references to the same mesh during import
