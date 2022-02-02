@@ -20,6 +20,38 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ### Fixed
 
+
+## [0.5.2-preview] - 2022-02-01
+
+Added Sonarqube scanner
+
+### Fixed
+Fixed inability to read relative file paths 
+
+Correct Axis change issues in URDF Importer
+
+
+## [0.5.1-preview] - 2021-10-04
+Fixed bug with multiple references to the same mesh during import
+
+Add the [Close Stale Issues](https://github.com/marketplace/actions/close-stale-issues) action
+
+### Upgrade Notes
+
+### Known Issues
+
+### Added
+
+Start supporting file:// type URI.
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
 ## [0.5.0-preview] - 2021-07-15
 
 ### Upgrade Notes
