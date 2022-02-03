@@ -34,6 +34,10 @@ namespace Unity.Robotics.UrdfImporter
                     geometryGameObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
                     geometryGameObject.transform.DestroyImmediateIfExists<CapsuleCollider>();
                     break;
+                case GeometryTypes.Capsule:
+                    geometryGameObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                    geometryGameObject.transform.DestroyImmediateIfExists<CapsuleCollider>();
+                    break;
                 case GeometryTypes.Sphere:
                     geometryGameObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     geometryGameObject.transform.DestroyImmediateIfExists<SphereCollider>();
