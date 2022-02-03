@@ -11,6 +11,7 @@ using Collision = Unity.Robotics.UrdfImporter.Link.Collision;
 using Geometry = Unity.Robotics.UrdfImporter.Link.Geometry;
 using Box = Unity.Robotics.UrdfImporter.Link.Geometry.Box;
 using Cylinder = Unity.Robotics.UrdfImporter.Link.Geometry.Cylinder;
+using Capsule = Unity.Robotics.UrdfImporter.Link.Geometry.Capsule;
 using Sphere = Unity.Robotics.UrdfImporter.Link.Geometry.Sphere;
 using Mesh = Unity.Robotics.UrdfImporter.Link.Geometry.Mesh;
 
@@ -27,6 +28,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             {
                 yield return new TestCaseData(new Geometry(box: new Box(new double[] { 2, 3, 4 })), new Vector3(3, 4, 2), GeometryTypes.Box);
                 yield return new TestCaseData(new Geometry(cylinder: new Cylinder(1, 4)), Vector3.one * 2,GeometryTypes.Cylinder);
+                yield return new TestCaseData(new Geometry(capsule: new Capsule(1, 4)), Vector3.one * 2, GeometryTypes.Capsule);
                 yield return new TestCaseData(new Geometry(sphere: new Sphere(1)), Vector3.one * 2,GeometryTypes.Sphere);
             }
         }
@@ -42,6 +44,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.AreEqual(new double[] {1, 1, 1}, export.box.size);
             Assert.AreEqual(typeof(Box), export.box.GetType());
             Assert.IsNull(export.cylinder);
+            Assert.IsNull(export.capsule);
             Assert.IsNull(export.sphere);
             Assert.IsNull(export.mesh);
             
@@ -63,6 +66,26 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.AreEqual(2, export.cylinder.length);
             Assert.AreEqual(typeof(Cylinder), export.cylinder.GetType());
             Assert.IsNull(export.box);
+            Assert.IsNull(export.capsule);
+            Assert.IsNull(export.sphere);
+            Assert.IsNull(export.mesh);
+
+            Object.DestroyImmediate(parent.gameObject);
+        }
+
+        [Test]
+        public void ExportGeometryData_Capsule_DefaultGeometry()
+        {
+            var parent = new GameObject("Parent").transform;
+            UrdfGeometryCollision.Create(parent, GeometryTypes.Capsule);
+            var t = parent.Find("Capsule");
+            var export = UrdfGeometry.ExportGeometryData(GeometryTypes.Capsule, t);
+            Assert.IsNotNull(export);
+            Assert.AreEqual(0.5, export.capsule.radius);
+            Assert.AreEqual(2, export.capsule.length);
+            Assert.AreEqual(typeof(Capsule), export.capsule.GetType());
+            Assert.IsNull(export.box);
+            Assert.IsNull(export.cylinder);
             Assert.IsNull(export.sphere);
             Assert.IsNull(export.mesh);
 
@@ -81,6 +104,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.AreEqual(typeof(Sphere), export.sphere.GetType());
             Assert.IsNull(export.box);
             Assert.IsNull(export.cylinder);
+            Assert.IsNull(export.capsule);
             Assert.IsNull(export.mesh);
 
             Object.DestroyImmediate(parent.gameObject);
