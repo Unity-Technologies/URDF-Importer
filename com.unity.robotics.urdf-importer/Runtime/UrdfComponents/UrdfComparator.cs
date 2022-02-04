@@ -508,6 +508,21 @@ namespace Unity.Robotics.UrdfImporter
                     return false;
             }
 
+            if (source.capsule != null && exported.capsule != null)
+            {
+                bool capsuleEqual = (source.capsule.radius == exported.capsule.radius && source.capsule.length == exported.capsule.length);
+                linkLog.AppendLine(String.Format("{0}Geometry:", Indent(indent)));
+                linkLog.AppendLine(String.Format("{0}Type:{1,5}", Indent(indent), "Capsule"));
+                linkLog.AppendLine(String.Format("{0}Dimensions Equal: {1,6}", Indent(indent), capsuleEqual));
+                linkLog.AppendLine(String.Format("{0}Source: Radius: {1,5:F3} Length: {2,5:F3} Exported: Radius: {3,5:F3} Length: {4,5:F3}", Indent(indent), source.capsule.radius, source.capsule.length, exported.capsule.radius, exported.capsule.length));
+
+                if (capsuleEqual)
+                    return true;
+
+                else
+                    return false;
+            }
+
             if (source.sphere != null && exported.sphere != null)
             {
                 bool sphereEqual = source.sphere.radius.EqualsDelta(exported.sphere.radius, .0001);

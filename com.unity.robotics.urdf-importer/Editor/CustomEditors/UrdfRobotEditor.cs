@@ -10,7 +10,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/  
+*/
 
 using System.IO;
 using UnityEditor;
@@ -28,7 +28,7 @@ namespace Unity.Robotics.UrdfImporter.Editor
 
         public void OnEnable()
         {
-            axisType = serializedObject.FindProperty("choosenAxis");
+            axisType = serializedObject.FindProperty("chosenAxis");
         }
         public override void OnInspectorGUI()
         {
@@ -36,10 +36,6 @@ namespace Unity.Robotics.UrdfImporter.Editor
                 buttonStyle = new GUIStyle(EditorStyles.miniButtonRight) { fixedWidth = 75 };
 
             urdfRobot = (UrdfRobot) target;
-
-            EditorGUILayout.PropertyField(axisType, new GUIContent("Axis Type"));
-            serializedObject.ApplyModifiedProperties();
-            UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
 
             GUILayout.Space(5);
             GUILayout.Label("All Rigidbodies", EditorStyles.boldLabel);
@@ -61,9 +57,12 @@ namespace Unity.Robotics.UrdfImporter.Editor
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(5);
+            EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.PropertyField(axisType, new GUIContent("Axis Type", "Adjust this if the models that make up your robot are facing the wrong direction."));
-            serializedObject.ApplyModifiedProperties();
-            UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
+            EditorGUI.EndDisabledGroup();
+            // Legacy code for correcting axis in the inspector
+            // serializedObject.ApplyModifiedProperties();
+            // UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
 
             if (urdfRobot.GetComponent<Unity.Robotics.UrdfImporter.Control.Controller>() == null || urdfRobot.GetComponent<Unity.Robotics.UrdfImporter.Control.FKRobot>() == null)
             {

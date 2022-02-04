@@ -23,7 +23,7 @@ namespace Unity.Robotics.UrdfImporter
             GameObject linkObject = new GameObject("link");
             linkObject.transform.SetParentAndAlign(parent);
             UrdfLink urdfLink = linkObject.AddComponent<UrdfLink>();
-            
+
             if (link != null)
             {
                 urdfLink.ImportLinkData(link, joint);
@@ -36,6 +36,7 @@ namespace Unity.Robotics.UrdfImporter
 #endif
             }
             
+
             UrdfVisualsExtensions.Create(linkObject.transform, link?.visuals);
             UrdfCollisionsExtensions.Create(linkObject.transform, link?.collisions);
 #if ROBOTICS_SENSORS

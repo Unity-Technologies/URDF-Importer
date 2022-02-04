@@ -14,6 +14,8 @@ limitations under the License.
 
 using System.IO;
 using UnityEngine;
+using System;
+using System.Diagnostics;
 
 namespace Unity.Robotics.UrdfImporter
 {
@@ -50,19 +52,24 @@ namespace Unity.Robotics.UrdfImporter
         
         public static string GetRelativeAssetPath(string absolutePath)
         {
+            string assetPath = absolutePath;
             var absolutePathUnityFormat = absolutePath.SetSeparatorChar();
             if (!absolutePathUnityFormat.StartsWith(Application.dataPath.SetSeparatorChar()))
             {
 #if UNITY_EDITOR
                 if (!RuntimeUrdf.IsRuntimeMode())
                 {
-                    return null;
+                    if (absolutePath.Length > Application.dataPath.Length)
+                    {
+                        assetPath = absolutePath.Substring(Application.dataPath.Length - "Assets".Length);
+                    }
                 }
 #endif
-                return absolutePath; // so that it works in runtime
             }
-
-            var assetPath = "Assets" + absolutePath.Substring(Application.dataPath.Length);
+            else 
+            {
+                assetPath = "Assets" + absolutePath.Substring(Application.dataPath.Length);
+            }
             return assetPath.SetSeparatorChar();
         }
 
@@ -82,23 +89,26 @@ namespace Unity.Robotics.UrdfImporter
 
         public static string GetRelativeAssetPathFromUrdfPath(string urdfPath, bool convertToPrefab=true)
         {
-            if (!urdfPath.StartsWith(@"package://"))
-            {
-               Debug.LogWarning(@$"{urdfPath} is not a valid URDF package file path. Path should start with package://, and URDF file should be in the directory root.");
-               if (urdfPath.Substring(0, 3) == "../")
-               {
-                   Debug.LogWarning("Attempting to replace file path's starting instance of `../` with standard package notation `package://` to prevent manual path traversal at root of directory!");
-                   urdfPath = $@"package://{urdfPath.Substring(3)}";
-               }
-               else
-               {
-                   return null;
-               }
-            }
             string path;
+            bool useFileUri = false;
+            if (!urdfPath.StartsWith(@"file://") && !urdfPath.StartsWith(@"package://"))
+            {
+               if (urdfPath.Substring(0, 3) == "../")
+                {
+                   UnityEngine.Debug.LogWarning("Attempting to replace file path's starting instance of `../` with standard package notation `package://` to prevent manual path traversal at root of directory!");
+                   urdfPath = $@"package://{urdfPath.Substring(3)}";
+                }
+            }
+            // loading assets relative path from ROS/ROS2 package.
             if (urdfPath.StartsWith(@"package://"))
             {
                 path = urdfPath.Substring(10).SetSeparatorChar();
+            }
+            // loading assets from file:// type URI.
+            else if (urdfPath.StartsWith(@"file://"))
+            {
+                path = urdfPath.Substring(7).SetSeparatorChar();
+                useFileUri = true;
             }
             else
             {
@@ -111,6 +121,9 @@ namespace Unity.Robotics.UrdfImporter
                     path = path.Substring(0, path.Length - 3) + "prefab";
 
             }
+            if (useFileUri) {
+                return path;
+            }
             return Path.Combine(packageRoot, path);
         }
         #endregion
@@ -120,7 +133,7 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_EDITOR
             if (!RuntimeUrdf.IsRuntimeMode())
             {
-                return GetRelativeAssetPath(path) != null;
+                return Directory.Exists(path) || File.Exists(path);
             }
 #endif
             //RuntimeImporter. TODO: check if the path really exists
