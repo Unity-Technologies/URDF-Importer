@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace Unity.Robotics.UrdfImporter
 {
-    public enum GeometryTypes { Box, Cylinder, Sphere, Mesh }
+    public enum GeometryTypes { Box, Cylinder, Capsule, Sphere, Mesh }
 
     public class UrdfRobot : MonoBehaviour
     {
