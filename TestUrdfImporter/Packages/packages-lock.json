@@ -1,17 +1,5 @@
 {
   "dependencies": {
-    "com.unity.addressables": {
-      "version": "1.16.19",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.15.2",
-        "com.unity.modules.assetbundle": "1.0.0",
-        "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.modules.unitywebrequestassetbundle": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.collab-proxy": {
       "version": "1.5.7",
       "depth": 0,
@@ -67,22 +55,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.robotics.ros-tcp-connector": {
-      "version": "file:ROS-TCP-Connector",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
-    "com.unity.robotics.sensors": {
-      "version": "file:/Users/vidur.vij/Desktop/RoboticsSensors/com.unity.robotics.sensors",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.addressables": "1.6.2",
-        "com.unity.systemgraph": "0.0.1-preview.2",
-        "com.unity.robotics.ros-tcp-connector": "0.1.2-preview"
-      }
-    },
     "com.unity.robotics.urdf-importer": {
       "version": "file:../../com.unity.robotics.urdf-importer",
       "depth": 0,
@@ -91,35 +63,12 @@
         "com.unity.editorcoroutines": "1.0.0"
       }
     },
-    "com.unity.scriptablebuildpipeline": {
-      "version": "1.15.2",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.settings-manager": {
       "version": "1.0.3",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
-    },
-    "com.unity.systemgraph": {
-      "version": "file:Mechatronics/com.unity.systemgraph",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.addressables": "1.6.2"
-      }
-    },
-    "com.unity.systemgraph.authoring": {
-      "version": "file:Mechatronics/com.unity.systemgraph.authoring",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.systemgraph": "1.0.0-exp.3"
-      }
     },
     "com.unity.test-framework": {
       "version": "1.1.24",

@@ -16,7 +16,10 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Linq;
+
+#if ROBOTICS_SENSORS
 using Unity.Robotics.Sensors;
+#endif
 using Unity.Robotics.UrdfImporter.Control;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -118,7 +121,10 @@ namespace Unity.Robotics.UrdfImporter
             UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(im.robot.filename));
             UrdfMaterial.InitializeRobotMaterials(im.robot);
             UrdfPlugins.Create(im.robotGameObject.transform, im.robot.plugins);
+#if ROBOTICS_SENSORS
             AddJointSensor(im.robotGameObject);
+            AddTfBroadcaster(im.robotGameObject);
+#endif
         }
 
         // Creates the stack of robot joints. Should be called iteratively until false is returned.
@@ -427,36 +433,34 @@ namespace Unity.Robotics.UrdfImporter
             }
         }
 
+#if ROBOTICS_SENSORS
         static void AddJointSensor(GameObject robot)
         {
             Dictionary<string, string> settings = new Dictionary<string, string> { { "sensor/topic", robot.name + "/JointState" } };
             SensorFactory.InstantiateSensor("joint", settings, out Dictionary<string,string> unusedSettings).transform.SetParentAndAlign(robot.transform);
-
-            static void SetTag(GameObject go)
+            if (sensor == null)
             {
-                try
-                {
-                    GameObject.FindWithTag(FKRobot.k_TagName);
-                }
-                catch (Exception)
-                {
-                    Debug.LogError($"Unable to find tag '{FKRobot.k_TagName}'." +
-                        $"Add a tag '{FKRobot.k_TagName}' in the Project Settings in Unity Editor.");
-                    return;
-                }
-
-                if (!go)
-                    return;
-
-                try
-                {
-                    go.tag = FKRobot.k_TagName;
-                }
-                catch (Exception)
-                {
-                    Debug.LogError($"Unable to set the GameObject '{go.name}' tag to '{FKRobot.k_TagName}'.");
-                }
+                Debug.LogWarning("JointSensor is not loaded.");
+            }
+            else
+            {
+                sensor.transform.SetParentAndAlign(robot.transform);
             }
         }
+        
+        static void AddTfBroadcaster(GameObject robot)
+        {
+            Dictionary<string, string> settings = new Dictionary<string, string> ();
+            var sensor = SensorFactory.InstantiateSensor("TF", settings);
+            if (sensor == null)
+            {
+                Debug.LogWarning("TFBroadcaster is not loaded.");
+            }
+            else
+            {
+                sensor.transform.SetParentAndAlign(robot.transform);
+            }
+        }
+#endif
     }
 }
