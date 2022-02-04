@@ -34,7 +34,7 @@ namespace Unity.Robotics.UrdfImporter
         void Compare()
         {
             Assert.AreEqual(m_Original.links.Count, m_Export.links.Count, $"Number of links in exported and source file are unequal: {m_Export.links.Count}, {m_Original.links.Count}");
-            Assert.AreEqual(m_Original.links.Count, m_Export.links.Count, $"Number of joints in exported and source file are unequal: {m_Export.joints.Count}, {m_Original.joints.Count}");
+            Assert.AreEqual(m_Original.joints.Count, m_Export.joints.Count, $"Number of joints in exported and source file are unequal: {m_Export.joints.Count}, {m_Original.joints.Count}");
 
             CompareLink(m_Original.root, m_Export.root);
         }
@@ -51,16 +51,18 @@ namespace Unity.Robotics.UrdfImporter
             CompareInertial(source.inertial, exported.inertial);
 
             Assert.AreEqual(source.visuals.Count, exported.visuals.Count, $"Number of visual meshes are unequal: Expected: {source.visuals.Count} Actual: {exported.visuals.Count}");
-            for (var i = 0; i < source.visuals.Count; i++) CompareVisual(source.visuals[i], exported.visuals[i]);
+            for (var i = 0; i < source.visuals.Count; i++) 
+                CompareVisual(source.visuals[i], exported.visuals[i]);
 
             Assert.AreEqual(source.collisions.Count, exported.collisions.Count, $"Number of collision meshes are unequal: Expected: {source.collisions.Count} Actual: {exported.collisions.Count}");
-            for (var i = 0; i < source.collisions.Count; i++) CompareCollisions(source.collisions[i], exported.collisions[i]);
+            for (var i = 0; i < source.collisions.Count; i++) 
+                CompareCollisions(source.collisions[i], exported.collisions[i]);
 
             Assert.AreEqual(source.joints.Count, exported.joints.Count, $"Number of joints connected to {source.name} link are unequal: Expected: {source.joints.Count} Actual: {exported.joints.Count}");
             foreach (var jointSource in source.joints)
             {
                 var jointExported = exported.joints.Find(x => x.name == jointSource.name); // Check for no match
-                Assert.IsFalse(jointExported == null, $"Joint name not found in the exported URDF file");
+                Assert.IsNotNull(jointExported, $"Joint name not found in the exported URDF file");
                 CompareJoint(jointSource, jointExported);
             }
         }
@@ -81,7 +83,8 @@ namespace Unity.Robotics.UrdfImporter
 
             CompareAxis(source.axis, exported.axis);
             CompareDynamics(source.dynamics, exported.dynamics);
-            if (source.type == "revolute" || source.type == "prismatic") CompareLimit(source.limit, exported.limit);
+            if (source.type == "revolute" || source.type == "prismatic") 
+                CompareLimit(source.limit, exported.limit);
 
             Assert.AreEqual(source.child, exported.child, $"Child name is unequal: Expected: {source.child} Actual: {exported.child}");
             if (source.child != null)
@@ -96,9 +99,10 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns></returns>
         static void CompareInertial(Link.Inertial source, Link.Inertial exported)
         {
-            if (source == null && exported == null) return;
+            if (source == null && exported == null) 
+                return;
 
-            Assert.IsFalse(source == null && exported != null || source != null && exported == null, $"Both joints' inertial is not null");
+            Assert.IsTrue(source == null && exported == null || source != null && exported != null, $"Both joints' inertial is not null");
             Assert.IsTrue(source.mass.EqualsDelta(exported.mass, .005), $"Mass is unequal: Expected: {source.mass} Actual: {exported.mass}");
 
             CompareOrigin(source.origin, exported.origin);
@@ -112,7 +116,8 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns></returns>
         static void CompareOrigin(Origin source, Origin exported)
         {
-            if (source == null && exported == null) return;
+            if (source == null && exported == null) 
+                return;
 
             Assert.IsTrue(source != null && exported == null && source.Xyz.ToVector3() == new Vector3(0, 0, 0) && source.Rpy.ToVector3() == new Vector3(0, 0, 0)
                 || exported != null && source == null && exported.Xyz.ToVector3() == new Vector3(0, 0, 0) && exported.Rpy.ToVector3() == new Vector3(0, 0, 0)
@@ -121,9 +126,15 @@ namespace Unity.Robotics.UrdfImporter
             if (source != null && exported != null)
             {
                 // XYZ checks
-                Assert.IsTrue(source.Xyz != null && exported.Xyz != null && source.Xyz.DoubleDeltaCompare(exported.Xyz, 0.01) || source.Xyz == null && exported.Xyz == null || source.Xyz == null && exported.Xyz.ToVector3() == new Vector3(0, 0, 0) || source.Xyz.ToVector3() == new Vector3(0, 0, 0) && exported.Xyz == null);
+                Assert.IsTrue(source.Xyz != null && exported.Xyz != null && source.Xyz.DoubleDeltaCompare(exported.Xyz, 0.01) || 
+                    source.Xyz == null && exported.Xyz == null || 
+                    source.Xyz == null && exported.Xyz.ToVector3() == new Vector3(0, 0, 0) || 
+                    source.Xyz.ToVector3() == new Vector3(0, 0, 0) && exported.Xyz == null);
                 //RPY checks
-                Assert.IsTrue(source?.Rpy != null && exported?.Rpy != null && RpyCheck(source.Rpy, exported.Rpy, .05) || source.Rpy == null && exported.Rpy == null || source.Rpy == null && exported.Rpy.ToVector3() == new Vector3(0, 0, 0) || source.Rpy.ToVector3() == new Vector3(0, 0, 0) && exported.Rpy == null);
+                Assert.IsTrue(source?.Rpy != null && exported?.Rpy != null && RpyCheck(source.Rpy, exported.Rpy, .05) || 
+                    source.Rpy == null && exported.Rpy == null || 
+                    source.Rpy == null && exported.Rpy.ToVector3() == new Vector3(0, 0, 0) || 
+                    source.Rpy.ToVector3() == new Vector3(0, 0, 0) && exported.Rpy == null);
             }
         }
 
@@ -141,8 +152,6 @@ namespace Unity.Robotics.UrdfImporter
 
             if (source.material != null && exported.material != null)
                 CompareMaterial(source.material, exported.material);
-            //else
-              //  Assert.IsTrue(source.material == null && exported.material == null || source.material == null && exported.material.name == "Default-Material" || exported.material == null && source.material?.name == "Default-Material");
         }
 
         /// <summary>
@@ -181,7 +190,9 @@ namespace Unity.Robotics.UrdfImporter
                     for (var i = 0; i < source.mesh.scale.Length; i++)
                         Assert.IsTrue(source.mesh.scale[i].EqualsDelta(exported.mesh.scale[i], .0001), "Mesh scale is not equal");
                 else
-                    Assert.IsTrue(source.mesh.scale == null && exported.mesh.scale == null || exported.mesh.scale == null && source.mesh.scale.DoubleDeltaCompare(new double[] { 1, 1, 1 }, 0) || source.mesh.scale == null && exported.mesh.scale.DoubleDeltaCompare(new double[] { 1, 1, 1 }, 0));
+                    Assert.IsTrue(source.mesh.scale == null && exported.mesh.scale == null || 
+                        exported.mesh.scale == null && source.mesh.scale.DoubleDeltaCompare(new double[] { 1, 1, 1 }, 0) || 
+                        source.mesh.scale == null && exported.mesh.scale.DoubleDeltaCompare(new double[] { 1, 1, 1 }, 0));
             }
         }
 
@@ -196,7 +207,7 @@ namespace Unity.Robotics.UrdfImporter
             Assert.AreEqual(source.name, exported.name, $"Name of the material is unequal: Expected: {source.name} Actual: {exported.name}");
 
             if (source.color != null && exported.color != null)
-                for (var i = 0; i < 3; i++)
+                for (var i = 0; i < source.color.rgba.Length; i++)
                     Assert.IsTrue(source.color.rgba[i].EqualsDelta(exported.color.rgba[i], .005), "Material not equal");
             else
                 Assert.IsTrue(source.color == null && exported.color == null);
@@ -215,7 +226,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns></returns>
         static void CompareCollisions(Link.Collision source, Link.Collision exported)
         {
-            Assert.IsTrue(source.name == exported.name, "Collision mesh name not equal");
+            Assert.AreEqual(source.name,exported.name, "Collision mesh name not equal");
             CompareOrigin(source.origin, exported.origin);
             CompareGeometry(source.geometry, exported.geometry);
         }
@@ -243,9 +254,15 @@ namespace Unity.Robotics.UrdfImporter
         {
             Assert.IsTrue(source == null && exported == null ||
                 source != null && exported != null &&
-                (!double.IsNaN(source.damping) && !double.IsNaN(exported.damping) && source.damping.EqualsDelta(exported.damping, .001) || double.IsNaN(source.damping) && exported.damping == 0 || double.IsNaN(exported.damping) && source.damping == 0 || double.IsNaN(source.damping) && double.IsNaN(exported.damping)) &&
-                (!double.IsNaN(source.friction) && !double.IsNaN(exported.friction) && source.friction.EqualsDelta(exported.friction, .001) || double.IsNaN(source.friction) && exported.friction == 0 || double.IsNaN(exported.friction) && source.friction == 0 || double.IsNaN(source.friction) && double.IsNaN(exported.friction)) || 
-                (source == null && exported.damping == 0 && exported.friction == 0 || exported == null && source.damping == 0 && source.friction == 0)
+                (!double.IsNaN(source.damping) && !double.IsNaN(exported.damping) && source.damping.EqualsDelta(exported.damping, .001) || 
+                    double.IsNaN(source.damping) && exported.damping == 0 || 
+                    double.IsNaN(exported.damping) && source.damping == 0 || 
+                    double.IsNaN(source.damping) && double.IsNaN(exported.damping)) && (!double.IsNaN(source.friction) && !double.IsNaN(exported.friction) && source.friction.EqualsDelta(exported.friction, .001) || 
+                    double.IsNaN(source.friction) && exported.friction == 0 || 
+                    double.IsNaN(exported.friction) && source.friction == 0 || 
+                    double.IsNaN(source.friction) && double.IsNaN(exported.friction)) || 
+                (source == null && exported.damping == 0 && exported.friction == 0 || 
+                    exported == null && source.damping == 0 && source.friction == 0)
             );
         }
 
