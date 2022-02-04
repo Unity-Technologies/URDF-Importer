@@ -48,7 +48,7 @@ namespace Unity.Robotics.UrdfImporter
         {
             string topicName = "/"+parent.root.name + "/" + parent.name + "/TransformStamped";
             Dictionary<string, string> settings = new Dictionary<string, string> { { k_SensorTopic, topicName } };
-            return SensorFactory.InstantiateSensor("transform",settings);
+            return SensorFactory.InstantiateSensor("transform",settings, out Dictionary<string,string> unusedSettings);
         }
         
         public static List<Sensor> ExportSensorsData(this UrdfSensors urdfSensors)
