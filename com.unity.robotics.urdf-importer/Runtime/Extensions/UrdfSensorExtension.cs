@@ -1,3 +1,4 @@
+#if ROBOTICS_SENSORS
 using System;
 using UnityEngine;
 using Unity.Robotics.Sensors;
@@ -47,3 +48,4 @@ namespace Unity.Robotics.UrdfImporter
         }
     }
 }
+#endif
