@@ -17,6 +17,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.robotics.sensors",
+            "expression": "",
+            "define": "ROBOTICS_SENSORS"
+        }
+    ],
     "noEngineReferences": false
 }

@@ -16,7 +16,10 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Linq;
+
+#if ROBOTICS_SENSORS
 using Unity.Robotics.Sensors;
+#endif
 using Unity.Robotics.UrdfImporter.Control;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -119,7 +122,9 @@ namespace Unity.Robotics.UrdfImporter
             UrdfAssetPathHandler.SetPackageRoot(Path.GetDirectoryName(im.robot.filename));
             UrdfMaterial.InitializeRobotMaterials(im.robot);
             UrdfPlugins.Create(im.robotGameObject.transform, im.robot.plugins);
+#if ROBOTICS_SENSORS
             AddJointSensor(im.robotGameObject);
+#endif
         }
 
         // Creates the stack of robot joints. Should be called iteratively until false is returned.
@@ -427,6 +432,7 @@ namespace Unity.Robotics.UrdfImporter
             }
         }
 
+#if ROBOTICS_SENSORS
         static void AddJointSensor(GameObject robot)
         {
             Dictionary<string, string> settings = new Dictionary<string, string> { { "sensor/topic", robot.name + "/JointState" } };
@@ -458,5 +464,6 @@ namespace Unity.Robotics.UrdfImporter
                 }
             }
         }
+#endif
     }
 }

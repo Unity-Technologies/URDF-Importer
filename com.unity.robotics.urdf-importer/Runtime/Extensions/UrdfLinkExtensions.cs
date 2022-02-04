@@ -38,7 +38,9 @@ namespace Unity.Robotics.UrdfImporter
             
             UrdfVisualsExtensions.Create(linkObject.transform, link?.visuals);
             UrdfCollisionsExtensions.Create(linkObject.transform, link?.collisions);
+#if ROBOTICS_SENSORS
             UrdfSensorsExtensions.Create(linkObject.transform, link?.sensors);
+#endif
 
             return linkObject;
         }
