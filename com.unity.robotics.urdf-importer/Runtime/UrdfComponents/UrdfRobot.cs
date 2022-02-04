@@ -18,12 +18,12 @@ using System.Collections.Generic;
 
 namespace Unity.Robotics.UrdfImporter
 {
-    public enum GeometryTypes { Box, Cylinder, Sphere, Mesh }
+    public enum GeometryTypes { Box, Cylinder, Capsule, Sphere, Mesh }
 
     public class UrdfRobot : MonoBehaviour
     {
         public string FilePath;
-        public ImportSettings.axisType choosenAxis ;
+        public ImportSettings.axisType chosenAxis ;
         [SerializeField]
         private ImportSettings.axisType currentOrientation = ImportSettings.axisType.yAxis;
         public List<CollisionIgnore> collisionExceptions;
@@ -76,12 +76,12 @@ namespace Unity.Robotics.UrdfImporter
 
         public bool CheckOrientation()
         {
-            return currentOrientation == choosenAxis;
+            return currentOrientation == chosenAxis;
         }
 
         public void SetOrientation()
         {
-            currentOrientation = choosenAxis;
+            currentOrientation = chosenAxis;
         }
 
         public void AddController()
@@ -116,7 +116,7 @@ namespace Unity.Robotics.UrdfImporter
 
         public void SetAxis(ImportSettings.axisType setAxis)
         {
-            this.choosenAxis = setAxis;
+            this.chosenAxis = setAxis;
         }
 
         void Start()
