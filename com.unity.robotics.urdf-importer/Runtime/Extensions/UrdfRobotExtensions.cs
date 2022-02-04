@@ -81,10 +81,10 @@ namespace Unity.Robotics.UrdfImporter
 
             if (!UrdfAssetPathHandler.IsValidAssetPath(im.robot.filename))
             {
-                Debug.LogError("URDF file and ressources must be placed in Assets Folder:\n" + Application.dataPath);
+                Debug.LogError("URDF file and resources must be placed in project folder:" +
+                    $"\n{Application.dataPath.Substring(0, Application.dataPath.Length - "Assets".Length)}");
                 if (forceRuntimeMode)
-                {
-                    // set runtime mode back to what it was
+                { // set runtime mode back to what it was
                     RuntimeUrdf.SetRuntimeMode(im.wasRuntimeMode);
                 }
 
@@ -109,8 +109,7 @@ namespace Unity.Robotics.UrdfImporter
 
             im.robotGameObject.AddComponent<Unity.Robotics.UrdfImporter.Control.Controller>();
             if (RuntimeUrdf.IsRuntimeMode())
-            {
-                // In runtime mode, we have to disable controller while robot is being constructed.
+            {// In runtime mode, we have to disable controller while robot is being constructed.
                 im.robotGameObject.GetComponent<Unity.Robotics.UrdfImporter.Control.Controller>().enabled = false;
             }
 
@@ -161,8 +160,7 @@ namespace Unity.Robotics.UrdfImporter
             CreateCollisionExceptions(im.robot, im.robotGameObject);
 
             if (im.forceRuntimeMode)
-            {
-                // set runtime mode back to what it was
+            { // set runtime mode back to what it was
                 RuntimeUrdf.SetRuntimeMode(im.wasRuntimeMode);
             }
         }
@@ -267,7 +265,7 @@ namespace Unity.Robotics.UrdfImporter
 
             foreach (UrdfCollision collision in collisionMeshList)
             {
-                if (robotScript.chosenAxis != ImportSettings.axisType.zAxis)
+                if (collision.geometryType == GeometryTypes.Mesh)
                 {
                     collision.transform.localRotation = collision.transform.localRotation * correction;
                 }
@@ -412,7 +410,7 @@ namespace Unity.Robotics.UrdfImporter
             catch (Exception)
             {
                 Debug.LogError($"Unable to find tag '{FKRobot.k_TagName}'." +
-                    $"Add a tag '{FKRobot.k_TagName}' in the Project Settings in Unity Editor.");
+                               $"Add a tag '{FKRobot.k_TagName}' in the Project Settings in Unity Editor.");
                 return;
             }
 
