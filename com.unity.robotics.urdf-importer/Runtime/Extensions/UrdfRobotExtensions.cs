@@ -437,7 +437,7 @@ namespace Unity.Robotics.UrdfImporter
         static void AddJointSensor(GameObject robot)
         {
             Dictionary<string, string> settings = new Dictionary<string, string> { { "sensor/topic", robot.name + "/JointState" } };
-            SensorFactory.InstantiateSensor("joint", settings, out Dictionary<string,string> unusedSettings).transform.SetParentAndAlign(robot.transform);
+            var sensor = SensorFactory.InstantiateSensor("joint", settings, out Dictionary<string,string> unusedSettings);
             if (sensor == null)
             {
                 Debug.LogWarning("JointSensor is not loaded.");
@@ -451,7 +451,7 @@ namespace Unity.Robotics.UrdfImporter
         static void AddTfBroadcaster(GameObject robot)
         {
             Dictionary<string, string> settings = new Dictionary<string, string> ();
-            var sensor = SensorFactory.InstantiateSensor("TF", settings);
+            var sensor = SensorFactory.InstantiateSensor("TF", settings, out Dictionary<string,string> unusedSettings);
             if (sensor == null)
             {
                 Debug.LogWarning("TFBroadcaster is not loaded.");
