@@ -55,10 +55,12 @@ namespace Unity.Robotics.UrdfImporter
 
             Assert.AreEqual(source.collisions.Count, exported.collisions.Count, $"Number of collision meshes are unequal: Expected: {source.collisions.Count} Actual: {exported.collisions.Count}");
             for (var i = 0; i < source.collisions.Count; i++) CompareCollisions(source.collisions[i], exported.collisions[i]);
+
+#if ROBOTICS_SENSORS
             
             Assert.AreEqual(source.sensors.Count, exported.sensors.Count, $"Number of sensors are unequal: Expected: {source.sensors.Count} Actual: {exported.sensors.Count}");
             for (var i = 0; i < source.sensors.Count; i++) CompareSensors(source.sensors[i], exported.sensors[i]);
-            
+#endif
             Assert.AreEqual(source.joints.Count, exported.joints.Count, $"Number of joints connected to {source.name} link are unequal: Expected: {source.joints.Count} Actual: {exported.joints.Count}");
             foreach (var jointSource in source.joints)
             {
@@ -223,6 +225,7 @@ namespace Unity.Robotics.UrdfImporter
             CompareGeometry(source.geometry, exported.geometry);
         }
 
+#if ROBOTICS_SENSORS
         /// <summary>
         /// Compares sensor information
         /// </summary>
@@ -278,6 +281,7 @@ namespace Unity.Robotics.UrdfImporter
                 Assert.AreEqual(sourceSettings[key],exportedSettings[key]);
             }
         }
+#endif
 
         /// <summary>
         /// Compares axis information of two links

@@ -24,6 +24,11 @@
             "define": "URP_PRESENT"
         },
         {
+            "name": "com.unity.robotics.sensors",
+            "expression": "",
+            "define": "ROBOTICS_SENSORS"
+        },
+        {
             "name": "com.unity.render-pipelines.high-definition",
             "expression": "",
             "define": "HDRP_PRESENT"
