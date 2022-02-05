@@ -45,6 +45,7 @@ namespace Unity.Robotics.UrdfImporter
             visuals = new List<Visual>();
             collisions = new List<Collision>();
             joints = new List<Joint>();
+            sensors = new List<Sensor>();
         }
 
         public void WriteToUrdf(XmlWriter writer)
@@ -58,6 +59,8 @@ namespace Unity.Robotics.UrdfImporter
                 visual.WriteToUrdf(writer);
             foreach (var collision in collisions)
                 collision.WriteToUrdf(writer);
+            foreach (var sensor in sensors)
+                sensor.WriteToUrdf(writer);
 
             writer.WriteEndElement();
         }

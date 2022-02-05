@@ -1,24 +1,16 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Xml;
 using System.Xml.Linq;
 using System;
-using System.Numerics;
-
+using System.Xml;
 
 namespace Unity.Robotics.UrdfImporter
 {
     public class Sensor
     {
-        public string name { get; set; }
-        public string type { get; set; }
-        public string topic { get; set; }
-        private static string k_BaseKey = "sensor";
-        private static string k_AttributeDelimit = "@";
-        private static string k_ElementDelimit = "/";
-        public int updateRate { get; set; }
+        static string k_BaseKey = "sensor";
+        static char k_AttributeDelimit = '@';
+        static char k_ElementDelimit = '/';
         public Dictionary<string,string> elements { get; set; }
 
         public Sensor(XElement node)
@@ -33,6 +25,11 @@ namespace Unity.Robotics.UrdfImporter
                 AddElement(element,k_BaseKey);
             }
         }
+
+        public Sensor()
+        {
+            
+        }
  
         public void AddAttribute(XAttribute attribute, string key)
         {
@@ -43,7 +40,7 @@ namespace Unity.Robotics.UrdfImporter
         public void AddElement(XElement element, string key)
         {
             string currentKey = key + k_ElementDelimit + element.Name;
-            if (element.Elements().Count() == 0 && !(element.Value == ""))
+            if (!element.Elements().Any() && element.Value != "")
             {
                 elements.Add(currentKey,element.Value);
             }
@@ -56,5 +53,27 @@ namespace Unity.Robotics.UrdfImporter
                 AddElement(ele,currentKey);
             }
         }
+
+        public void WriteToUrdf(XmlWriter writer)
+        {
+            ExportElement("sensor",writer);
+        }
+
+        void ExportElement(string elementKey, XmlWriter writer)
+        {
+            char[] delimiterChars = { k_AttributeDelimit, k_ElementDelimit };
+            string elementName = elementKey.Split(delimiterChars).Last();
+            writer.WriteStartElement(elementName);
+            var attributeList = elements.Select(x => x).Where(x => x.Key.StartsWith(elementKey + k_AttributeDelimit)).ToList();
+            foreach(var attribute in attributeList)
+                writer.WriteAttributeString(attribute.Key.Substring((elementKey + k_AttributeDelimit).Length),attribute.Value);
+            if(elements.Keys.Contains(elementKey))
+                writer.WriteString(elements[elementKey]);
+            var elementList = elements.Select(x => x).Where(x => x.Key.StartsWith(elementKey + k_ElementDelimit)).ToList();
+            foreach(var element in elementList)
+                ExportElement(element.Key,writer);
+            writer.WriteEndElement();
+        }
+        
     }
 }
