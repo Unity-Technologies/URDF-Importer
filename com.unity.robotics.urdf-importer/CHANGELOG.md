@@ -7,7 +7,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ## Unreleased
 
 ### Upgrade Notes
-- Added check for NaN values during inertia matrix's conversion to inertia tensor rotation.
 
 ### Known Issues
 
@@ -19,6 +18,7 @@ Add capsule shape support
 ### Deprecated
 
 ### Removed
+- Removed option on UrdfRobot inspector window to set all MeshColliders to non-Convex meshes.
 
 ### Fixed
 
