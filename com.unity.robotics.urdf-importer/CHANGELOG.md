@@ -20,7 +20,7 @@ Add capsule shape support
 ### Removed
 
 ### Fixed
-
+- Added check for NaN values during inertia matrix's conversion to inertia tensor rotation.
 
 ## [0.5.2-preview] - 2022-02-01
 
