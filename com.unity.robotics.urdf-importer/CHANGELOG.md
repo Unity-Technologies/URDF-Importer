@@ -18,6 +18,7 @@ Add capsule shape support
 ### Deprecated
 
 ### Removed
+- Removed option on UrdfRobot inspector window to set all MeshColliders to non-Convex meshes.
 
 ### Fixed
 
