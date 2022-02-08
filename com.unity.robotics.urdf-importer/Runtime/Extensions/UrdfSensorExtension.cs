@@ -11,11 +11,23 @@ namespace Unity.Robotics.UrdfImporter
     {
         const string k_PoseKey = "sensor/pose";
         const string k_NameKey = "sensor@name";
+        public static string NameKey => k_NameKey;
         const string k_TypeKey = "sensor@type";
-        const string k_PluginKey = "sensor/plugin@name";
+        const string k_PluginNameKey = "sensor/plugin@name";
+        const string k_PluginFilenameKey = "sensor/plugin@filename";
+        
         public static UrdfSensor Create(Transform parent, Sensor sensor)
         {
-            GameObject sensorObject = new GameObject("unnamed");
+            if (!sensor.elements.ContainsKey(k_NameKey))
+            {
+                throw new Exception("No 'name' attribute specified for the sensor.");
+            }
+            if (!sensor.elements.ContainsKey(k_TypeKey))
+            {
+                throw new Exception($"No 'type' attribute specified for the sensor name='{sensor.elements[k_NameKey]}'.");
+            }
+            
+            GameObject sensorObject = new GameObject(sensor.elements[k_NameKey]);
             sensorObject.transform.SetParentAndAlign(parent);
             UrdfSensor urdfSensor = sensorObject.AddComponent<UrdfSensor>();
             urdfSensor.sensorType = sensor.elements[k_TypeKey];
@@ -35,17 +47,20 @@ namespace Unity.Robotics.UrdfImporter
                 UrdfOrigin.ImportOriginData(sensorObject.transform, origin);
             }
 
-            sensorObject.name = sensor.elements[k_NameKey];
-            GameObject sensorGameObject;
+            if (string.IsNullOrEmpty(sensor.elements.GetValueOrDefault(k_PluginNameKey)) && !string.IsNullOrEmpty(sensor.elements.GetValueOrDefault(k_PluginFilenameKey)))
+            {
+                throw new Exception($"No name attribute specified for the plugin filename='{sensor.elements[k_PluginFilenameKey]}' of sensor '{sensorObject.name}'.");
+            }
+
+            if (!string.IsNullOrEmpty(sensor.elements.GetValueOrDefault(k_PluginNameKey)) && string.IsNullOrEmpty(sensor.elements.GetValueOrDefault(k_PluginFilenameKey)))
+            {
+                throw new Exception($"No filename attribute specified for the plugin name='{sensor.elements[k_PluginNameKey]}' of sensor '{sensorObject.name}'.");
+            }
+
             Dictionary<string, string> unusedSettings;
-            if (sensor.elements.ContainsKey(k_PluginKey) && String.IsNullOrEmpty(sensor.elements[k_PluginKey]))
-            {
-                sensorGameObject = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements[k_PluginKey],sensor.elements, out unusedSettings);
-            }
-            else
-            {
-                sensorGameObject = SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements, out unusedSettings);
-            }
+            var sensorGameObject = string.IsNullOrEmpty(sensor.elements.GetValueOrDefault(k_PluginFilenameKey)) ? 
+                SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements, out unusedSettings) : 
+                SensorFactory.InstantiateSensor(sensor.elements[k_TypeKey], sensor.elements[k_PluginFilenameKey], sensor.elements, out unusedSettings); 
 
             sensorObject.GetComponent<UrdfSensor>().unusedSettings = unusedSettings;
             sensorGameObject.transform.SetParentAndAlign(sensorObject);
