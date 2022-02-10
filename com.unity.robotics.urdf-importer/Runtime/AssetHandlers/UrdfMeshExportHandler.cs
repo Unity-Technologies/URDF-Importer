@@ -20,9 +20,9 @@ namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfMeshExportHandler
     {
-        // TODO: Validate support for other Unity built-in import meshes: mb, ma, max, jas, dxf, c4d, blend, lxo, 3ds
-        static readonly string[] k_StandardMeshExt = new string[] {".dae", ".obj", ".fbx"};
-
+        // TODO: Validate support for Unity built-in import meshes: mb, ma, max, jas, dxf, c4d, blend, lxo, 3ds
+        static readonly string[] k_StandardMeshExt = new string[] {".dae", ".obj", ".fbx", ".ma", ".max", ".jas", 
+            ".dxf", ".c4d", ".blend", ".lxo", ".3ds"};
         public static string CopyOrCreateMesh(GameObject geometryObject, bool isCollisionGeometry)
         {
             string prefabPath = GetPrefabPath(geometryObject);
