@@ -11,7 +11,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Known Issues
 
 ### Added
-Add capsule shape support
+- Added capsule shape support
+
+- Added mesh filetype export support for .dae, .obj, .fbx, .ma, .max, .jas, .dxf, .c4d, .blend, .lxo, .3ds
 
 ### Changed
 
