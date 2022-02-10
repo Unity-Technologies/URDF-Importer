@@ -8,9 +8,9 @@ namespace Unity.Robotics.UrdfImporter
 {
     public class Sensor
     {
-        static string k_BaseKey = "sensor";
-        static char k_AttributeDelimit = '@';
-        static char k_ElementDelimit = '/';
+        const string k_BaseKey = "sensor";
+        const char k_AttributeDelimit = '@';
+        const char k_ElementDelimit = '/';
         public Dictionary<string,string> elements { get; set; }
 
         public Sensor(XElement node)
@@ -28,7 +28,6 @@ namespace Unity.Robotics.UrdfImporter
 
         public Sensor()
         {
-            
         }
  
         public void AddAttribute(XAttribute attribute, string key)
