@@ -45,10 +45,6 @@ namespace Unity.Robotics.UrdfImporter.Editor
             DisplaySettingsToggle(new GUIContent("Default Space"), urdfRobot.ChangeToCorrectedSpace,UrdfRobot.changetoCorrectedSpace);
 
             GUILayout.Space(5);
-            GUILayout.Label("All Colliders", EditorStyles.boldLabel);
-            DisplaySettingsToggle(new GUIContent("Convex"), urdfRobot.SetCollidersConvex,UrdfRobot.collidersConvex);
-
-            GUILayout.Space(5);
             GUILayout.Label("All Joints", EditorStyles.boldLabel);
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Generate Unique Joint Names");

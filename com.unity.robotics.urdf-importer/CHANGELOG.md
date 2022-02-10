@@ -18,9 +18,10 @@ Add capsule shape support
 ### Deprecated
 
 ### Removed
+- Removed option on UrdfRobot inspector window to set all MeshColliders to non-Convex meshes.
 
 ### Fixed
-
+- Added check for NaN values during inertia matrix's conversion to inertia tensor rotation.
 
 ## [0.5.2-preview] - 2022-02-01
 
