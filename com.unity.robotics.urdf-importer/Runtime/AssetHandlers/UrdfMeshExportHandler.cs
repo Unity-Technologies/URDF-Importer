@@ -13,22 +13,28 @@ limitations under the License.
 */
 
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace Unity.Robotics.UrdfImporter
 {
     public static class UrdfMeshExportHandler
     {
+        // TODO: Validate support for other Unity built-in import meshes: mb, ma, max, jas, dxf, c4d, blend, lxo, 3ds
+        static readonly string[] k_StandardMeshExt = new string[] {".dae", ".obj", ".fbx"};
+
         public static string CopyOrCreateMesh(GameObject geometryObject, bool isCollisionGeometry)
         {
             string prefabPath = GetPrefabPath(geometryObject);
 
-            bool foundExistingColladaOrStl = false;
-            if (prefabPath != null && prefabPath != "")
+            bool foundExistingMeshAsset = false;
+            if (!string.IsNullOrEmpty(prefabPath))
             {
-                if (Path.GetExtension(prefabPath).ToLower() == ".dae")
-                    foundExistingColladaOrStl = true;
-                else //Find STL file that corresponds to the prefab, if it already exists
+                if (k_StandardMeshExt.Contains(Path.GetExtension(prefabPath).ToLower()))
+                {
+                    foundExistingMeshAsset = true;
+                }
+                else // No built-in import for STL; find stl file that corresponds to the prefab, if it already exists
                 {
                     string[] foldersToSearch = {Path.GetDirectoryName(prefabPath)};
                     string prefabName = Path.GetFileNameWithoutExtension(prefabPath);
@@ -39,14 +45,14 @@ namespace Unity.Robotics.UrdfImporter
                         if (possiblePath.ToLower().Contains(".stl"))
                         {
                             prefabPath = possiblePath;
-                            foundExistingColladaOrStl = true;
+                            foundExistingMeshAsset = true;
                             break;
                         }
                     }
                 }
             }
 
-            if (foundExistingColladaOrStl)
+            if (foundExistingMeshAsset)
                 return CopyMeshToExportDestination(prefabPath);
 
             return CreateNewStlFile(geometryObject, isCollisionGeometry);
