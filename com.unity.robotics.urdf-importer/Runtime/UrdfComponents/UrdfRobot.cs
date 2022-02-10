@@ -37,15 +37,7 @@ namespace Unity.Robotics.UrdfImporter
         public static bool changetoCorrectedSpace = false;
 
         #region Configure Robot
-
-        public void SetCollidersConvex()
-        {
-            foreach (MeshCollider meshCollider in GetComponentsInChildren<MeshCollider>())
-                meshCollider.convex = !collidersConvex;
-            collidersConvex = !collidersConvex;
-        }
-
-
+        
         public void SetUseUrdfInertiaData()
         {
             foreach (UrdfInertial urdfInertial in GetComponentsInChildren<UrdfInertial>())
