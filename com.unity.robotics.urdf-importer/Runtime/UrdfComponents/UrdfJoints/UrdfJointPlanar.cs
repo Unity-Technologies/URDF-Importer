@@ -214,6 +214,13 @@ namespace Unity.Robotics.UrdfImporter
             }
             unityJoint.anchorRotation = motion;
         }
+        
+        protected Joint.Axis GetAxisData(Vector3 axis)
+        {
+            var res = (-1 * (unityJoint.anchorRotation * new Vector3(1, 0, 0))).Unity2Ros();
+            double[] rosAxis = res.ToRoundedDoubleArray();
+            return new Joint.Axis(rosAxis);
+        }
 
         #endregion
     }

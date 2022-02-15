@@ -103,7 +103,8 @@ namespace Unity.Robotics.UrdfImporter
         protected override Joint ExportSpecificJointData(Joint joint)
         {
 #if UNITY_2020_1_OR_NEWER
-            joint.axis = GetAxisData(axisofMotion);
+            Debug.Log($"{joint.parent} {axisofMotion} {joint.child}");
+            joint.axis = GetAxisData();
             joint.dynamics = new Joint.Dynamics(unityJoint.angularDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
 #else
@@ -115,6 +116,13 @@ namespace Unity.Robotics.UrdfImporter
 #endif
             return joint;
         }
+        
+        protected Joint.Axis GetAxisData()
+        {
+            var res = (-1 * (unityJoint.anchorRotation * new Vector3(1, 0, 0)));//.Unity2Ros();
+            double[] rosAxis = res.ToRoundedDoubleArray();
+            return new Joint.Axis(rosAxis);
+        }
 
 
         /// <summary>
@@ -124,6 +132,7 @@ namespace Unity.Robotics.UrdfImporter
         protected override void AdjustMovement(Joint joint)
         {
             axisofMotion = joint.axis.xyz.ToVector3();
+            Debug.Log($"{joint.parent} {axisofMotion} {joint.child}");
             unityJoint.linearLockX = ArticulationDofLock.LockedMotion;
             unityJoint.linearLockY = ArticulationDofLock.LockedMotion;
             unityJoint.linearLockZ = ArticulationDofLock.LockedMotion;
@@ -133,7 +142,7 @@ namespace Unity.Robotics.UrdfImporter
             Quaternion motion = new Quaternion();
             motion.SetFromToRotation(new Vector3(1, 0, 0), -1 * axisofMotionUnity);
             unityJoint.anchorRotation = motion;
-
+            
             if (joint.limit != null)
             {
                 ArticulationDrive drive = unityJoint.xDrive;

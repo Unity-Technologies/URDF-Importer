@@ -148,6 +148,13 @@ namespace Unity.Robotics.UrdfImporter
                 unityJoint.xDrive = drive;
             }
         }
+        
+        protected Joint.Axis GetAxisData()
+        {
+            var res = (unityJoint.anchorRotation * new Vector3(1, 0, 0)).Unity2Ros();
+            double[] rosAxis = res.ToRoundedDoubleArray();
+            return new Joint.Axis(rosAxis);
+        }
 
         #endregion
 
@@ -157,7 +164,7 @@ namespace Unity.Robotics.UrdfImporter
         protected override Joint ExportSpecificJointData(Joint joint)
         {
 #if UNITY_2020_1_OR_NEWER
-            joint.axis = GetAxisData(axisofMotion);
+            joint.axis = GetAxisData();
             joint.dynamics = new Joint.Dynamics(unityJoint.linearDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
 #else

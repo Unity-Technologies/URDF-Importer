@@ -292,12 +292,6 @@ namespace Unity.Robotics.UrdfImporter
             jointName = transform.parent.name + "_" + transform.name + "_joint";
         }
 
-        protected static Joint.Axis GetAxisData(Vector3 axis)
-        {
-            double[] rosAxis = axis.ToRoundedDoubleArray();
-            return new Joint.Axis(rosAxis);
-        }
-
         private bool IsAnchorTransformed() // TODO : Check for tolerances before implementation
         {
 
