@@ -127,6 +127,8 @@ namespace Unity.Robotics.UrdfImporter
             AddCorrectJointType(linkObject, newJointType);
         }
 
+        public abstract Joint.Axis GetAxisData();
+
         #region Runtime
 
         public void Start()

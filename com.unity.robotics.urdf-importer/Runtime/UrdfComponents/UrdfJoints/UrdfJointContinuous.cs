@@ -103,7 +103,6 @@ namespace Unity.Robotics.UrdfImporter
         protected override Joint ExportSpecificJointData(Joint joint)
         {
 #if UNITY_2020_1_OR_NEWER
-            Debug.Log($"{joint.parent} {axisofMotion} {joint.child}");
             joint.axis = GetAxisData();
             joint.dynamics = new Joint.Dynamics(unityJoint.angularDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
@@ -117,9 +116,9 @@ namespace Unity.Robotics.UrdfImporter
             return joint;
         }
         
-        protected Joint.Axis GetAxisData()
+        public override Joint.Axis GetAxisData()
         {
-            var res = (-1 * (unityJoint.anchorRotation * new Vector3(1, 0, 0)));//.Unity2Ros();
+            var res = (-1 * (unityJoint.anchorRotation * new Vector3(1, 0, 0))).Unity2Ros();
             double[] rosAxis = res.ToRoundedDoubleArray();
             return new Joint.Axis(rosAxis);
         }
@@ -132,7 +131,6 @@ namespace Unity.Robotics.UrdfImporter
         protected override void AdjustMovement(Joint joint)
         {
             axisofMotion = joint.axis.xyz.ToVector3();
-            Debug.Log($"{joint.parent} {axisofMotion} {joint.child}");
             unityJoint.linearLockX = ArticulationDofLock.LockedMotion;
             unityJoint.linearLockY = ArticulationDofLock.LockedMotion;
             unityJoint.linearLockZ = ArticulationDofLock.LockedMotion;

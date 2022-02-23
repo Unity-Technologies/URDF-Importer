@@ -110,7 +110,7 @@ namespace Unity.Robotics.UrdfImporter
         protected override Joint ExportSpecificJointData(Joint joint)
         {
 #if UNITY_2020_1_OR_NEWER
-            joint.axis = GetAxisData(axisofMotion);
+            joint.axis = GetAxisData();
             joint.dynamics = new Joint.Dynamics(unityJoint.linearDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
 #else
@@ -215,7 +215,7 @@ namespace Unity.Robotics.UrdfImporter
             unityJoint.anchorRotation = motion;
         }
         
-        protected Joint.Axis GetAxisData(Vector3 axis)
+        public override Joint.Axis GetAxisData()
         {
             var res = (-1 * (unityJoint.anchorRotation * new Vector3(1, 0, 0))).Unity2Ros();
             double[] rosAxis = res.ToRoundedDoubleArray();
