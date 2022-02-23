@@ -23,7 +23,8 @@ namespace Unity.Robotics.UrdfImporter.Tests
             return ExportSpecificJointData(joint);
         }
 
-        public void SetAxisOfMotion(Vector3 axisofMotion) => this.axisofMotion = axisofMotion;
+        public void SetAxisOfMotion(Vector3 axisofMotion) => SetAxisData(axisofMotion);
+        public void SetUnityJoint(ArticulationBody articulationBody) => this.unityJoint = articulationBody;
         public void Dynamics(Joint.Dynamics dynamics) => SetDynamics(dynamics);
     }
 
@@ -127,16 +128,17 @@ namespace Unity.Robotics.UrdfImporter.Tests
             GameObject linkObject = new GameObject("link");
             TestUrdfJointRevolute urdfJoint = linkObject.AddComponent<TestUrdfJointRevolute>();
             ArticulationBody articulationBody = linkObject.GetComponent<ArticulationBody>();
-            urdfJoint.SetAxisOfMotion(new Vector3(1.2345678f, 2.3456789f, 3.4567891f));
+            urdfJoint.SetUnityJoint(articulationBody);
+            var testDirection = new Vector3(1.2345678f, 2.3456789f, 3.4567891f);
+            urdfJoint.SetAxisOfMotion(testDirection);
             urdfJoint.Dynamics(new Joint.Dynamics(4, 5));
 
             var joint = new Joint(
                 name: "custom_joint", type: "continuous", parent: "base", child: "link");
             urdfJoint.TestExportSpecificJointData(joint);
 
-            UnityEngine.Assertions.Assert.AreApproximatelyEqual(1.234568f, (float)joint.axis.xyz[0]);
-            UnityEngine.Assertions.Assert.AreApproximatelyEqual(2.345679f, (float)joint.axis.xyz[1]);
-            UnityEngine.Assertions.Assert.AreApproximatelyEqual(3.456789f, (float)joint.axis.xyz[2]);
+            UnityEngine.Assertions.Assert.IsTrue(testDirection.normalized == joint.axis.xyz.ToVector3());
+            UnityEngine.Assertions.Assert.AreApproximatelyEqual(testDirection.normalized.sqrMagnitude, joint.axis.xyz.ToVector3().magnitude);
             Assert.AreEqual(4, joint.dynamics.damping);
             Assert.AreEqual(5, joint.dynamics.friction);
             Assert.AreEqual(articulationBody.xDrive.lowerLimit * Mathf.Deg2Rad, joint.limit.lower);

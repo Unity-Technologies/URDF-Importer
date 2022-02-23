@@ -198,7 +198,8 @@ namespace Unity.Robotics.UrdfImporter
             return new Vector3(-1, 0, 0);
         }
 
-        protected virtual void AdjustMovement(Joint joint) { }
+        protected virtual void SetAxisData(Vector3 axisofMotion) { }
+        protected  virtual void SetLimits(Joint joint){}
 
         protected void SetDynamics(Joint.Dynamics dynamics)
         {
