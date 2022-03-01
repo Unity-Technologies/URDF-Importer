@@ -156,7 +156,7 @@ namespace Unity.Robotics.UrdfImporter
         
         public override Joint.Axis GetAxisData()
         {
-            var res = (unityJoint.anchorRotation * new Vector3(1, 0, 0)).Unity2Ros();
+            var res = (unityJoint.anchorRotation * Vector3.right).Unity2Ros();
             double[] rosAxis = res.ToRoundedDoubleArray();
             return new Joint.Axis(rosAxis);
         }
