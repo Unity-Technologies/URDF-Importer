@@ -189,13 +189,13 @@ namespace Unity.Robotics.UrdfImporter
 
             switch (motionAxis)
             {
-                case 0:
+                case 0: // Axis: (1,0,0)
                     motion.eulerAngles = new Vector3(0, -90, 0);
                     break;
-                case 1:
+                case 1: // Axis: (0,1,0)
                     motion.eulerAngles = new Vector3(0, 0, 0);
                     break;
-                case 2:
+                case 2:// Axis: (0,0,1)
                     motion.eulerAngles = new Vector3(0, 0, 90);
                     break;
             }
