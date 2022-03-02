@@ -141,7 +141,7 @@ namespace Unity.Robotics.UrdfImporter
                 drive.lowerLimit = (float)joint.limit.lower;
                 drive.forceLimit = (float)joint.limit.effort;
 #if UNITY_2020_2_OR_NEWER
-                unityJoint.maxLinearVelocity = (float)joint.limit.velocity;
+                unityJoint.maxJointVelocity = (float)joint.limit.velocity;
 #elif UNITY_2020_1
                 maxLinearVelocity = (float)joint.limit.velocity;
 #endif

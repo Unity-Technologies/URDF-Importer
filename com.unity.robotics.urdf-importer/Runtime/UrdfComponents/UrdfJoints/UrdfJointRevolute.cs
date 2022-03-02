@@ -168,7 +168,7 @@ namespace Unity.Robotics.UrdfImporter
                 drive.upperLimit = (float)(joint.limit.upper * Mathf.Rad2Deg);
                 drive.lowerLimit = (float)(joint.limit.lower * Mathf.Rad2Deg);
                 drive.forceLimit = (float)(joint.limit.effort);
-                unityJoint.maxAngularVelocity = (float)(joint.limit.velocity);
+                unityJoint.maxLinearVelocity = (float)(joint.limit.velocity);
                 drive.damping = unityJoint.xDrive.damping;
                 drive.stiffness = unityJoint.xDrive.stiffness;
                 unityJoint.xDrive = drive;
