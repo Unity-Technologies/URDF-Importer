@@ -109,7 +109,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.AreEqual(4, articulationBody.xDrive.lowerLimit);
             Assert.AreEqual(5, articulationBody.xDrive.upperLimit);
             Assert.AreEqual(6, articulationBody.xDrive.forceLimit);
-            Assert.AreEqual(7, articulationBody.maxLinearVelocity);
+            Assert.AreEqual(7, articulationBody.maxJointVelocity);
             Assert.AreEqual(8, articulationBody.linearDamping);
             Assert.AreEqual(8, articulationBody.angularDamping);
             Assert.AreEqual(9, articulationBody.jointFriction);
@@ -138,7 +138,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.AreEqual(articulationBody.xDrive.lowerLimit, joint.limit.lower);
             Assert.AreEqual(articulationBody.xDrive.upperLimit, joint.limit.upper);
             Assert.AreEqual(articulationBody.xDrive.forceLimit, joint.limit.effort);
-            Assert.AreEqual(articulationBody.maxLinearVelocity, joint.limit.velocity);
+            Assert.AreEqual(articulationBody.maxJointVelocity, joint.limit.velocity);
 
             Object.DestroyImmediate(linkObject);
         }

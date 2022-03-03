@@ -192,7 +192,7 @@ namespace Unity.Robotics.UrdfImporter
                 unityJoint.xDrive = drive;
                 unityJoint.zDrive = drive;
                 unityJoint.yDrive = drive;
-                unityJoint.maxLinearVelocity = (float)joint.limit.velocity;
+                unityJoint.maxJointVelocity = (float)joint.limit.velocity;
             }
             else
             {

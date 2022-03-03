@@ -141,7 +141,7 @@ namespace Unity.Robotics.UrdfImporter
                 drive.lowerLimit = (float)joint.limit.lower;
                 drive.forceLimit = (float)joint.limit.effort;
 #if UNITY_2020_2_OR_NEWER
-                unityJoint.maxLinearVelocity = (float)joint.limit.velocity;
+                unityJoint.maxJointVelocity = (float)joint.limit.velocity;
 #elif UNITY_2020_1
                 maxLinearVelocity = (float)joint.limit.velocity;
 #endif
@@ -186,7 +186,7 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = GetComponent<ArticulationBody>().xDrive;
 #if UNITY_2020_2_OR_NEWER
-            return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, unityJoint.maxLinearVelocity);
+            return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, unityJoint.maxJointVelocity);
 #elif UNITY_2020_1
             return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, maxLinearVelocity);
 #endif

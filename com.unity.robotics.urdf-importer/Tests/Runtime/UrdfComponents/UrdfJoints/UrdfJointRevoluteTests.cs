@@ -142,7 +142,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.AreEqual(articulationBody.xDrive.lowerLimit * Mathf.Deg2Rad, joint.limit.lower);
             Assert.AreEqual(articulationBody.xDrive.upperLimit * Mathf.Deg2Rad, joint.limit.upper);
             Assert.AreEqual(articulationBody.xDrive.forceLimit, joint.limit.effort);
-            Assert.AreEqual(articulationBody.maxAngularVelocity, joint.limit.velocity);
+            Assert.AreEqual(articulationBody.maxJointVelocity, joint.limit.velocity);
 
             Object.DestroyImmediate(linkObject);
         }

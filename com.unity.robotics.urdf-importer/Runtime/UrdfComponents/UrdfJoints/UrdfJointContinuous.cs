@@ -115,6 +115,12 @@ namespace Unity.Robotics.UrdfImporter
 #endif
             return joint;
         }
+        
+        protected override Joint.Limit ExportLimitData()
+        {
+            ArticulationDrive drive = unityJoint.xDrive;
+            return new Joint.Limit(0, 0, drive.forceLimit, unityJoint.maxJointVelocity);
+        }
 
 
         /// <summary>
@@ -138,7 +144,7 @@ namespace Unity.Robotics.UrdfImporter
             {
                 ArticulationDrive drive = unityJoint.xDrive;
                 drive.forceLimit = (float)(joint.limit.effort);
-                unityJoint.maxAngularVelocity = (float)(joint.limit.velocity);
+                unityJoint.maxJointVelocity = (float)(joint.limit.velocity);
                 drive.damping = unityJoint.xDrive.damping;
                 drive.stiffness = unityJoint.xDrive.stiffness;
                 unityJoint.xDrive = drive;
