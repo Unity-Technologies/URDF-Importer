@@ -186,7 +186,7 @@ namespace Unity.Robotics.UrdfImporter
 #if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = GetComponent<ArticulationBody>().xDrive;
 #if UNITY_2020_2_OR_NEWER
-            return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, unityJoint.maxLinearVelocity);
+            return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, unityJoint.maxJointVelocity);
 #elif UNITY_2020_1
             return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, maxLinearVelocity);
 #endif

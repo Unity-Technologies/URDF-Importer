@@ -126,7 +126,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
             Assert.AreEqual(6, articulationBody.xDrive.forceLimit);
             Assert.AreEqual(6, articulationBody.yDrive.forceLimit);
             Assert.AreEqual(6, articulationBody.zDrive.forceLimit);
-            Assert.AreEqual(7, articulationBody.maxLinearVelocity);
+            Assert.AreEqual(7, articulationBody.maxJointVelocity);
 
             Object.DestroyImmediate(baseObject);
         }

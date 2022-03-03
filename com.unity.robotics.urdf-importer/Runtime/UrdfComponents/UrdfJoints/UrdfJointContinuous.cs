@@ -115,6 +115,12 @@ namespace Unity.Robotics.UrdfImporter
 #endif
             return joint;
         }
+        
+        protected override Joint.Limit ExportLimitData()
+        {
+            ArticulationDrive drive = unityJoint.xDrive;
+            return new Joint.Limit(0, 0, drive.forceLimit, unityJoint.maxJointVelocity);
+        }
 
 
         /// <summary>

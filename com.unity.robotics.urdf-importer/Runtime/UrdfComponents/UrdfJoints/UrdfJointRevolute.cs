@@ -134,7 +134,7 @@ namespace Unity.Robotics.UrdfImporter
         {
 #if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = unityJoint.xDrive;
-            return new Joint.Limit(drive.lowerLimit * Mathf.Deg2Rad, drive.upperLimit * Mathf.Deg2Rad, drive.forceLimit, unityJoint.maxAngularVelocity);
+            return new Joint.Limit(drive.lowerLimit * Mathf.Deg2Rad, drive.upperLimit * Mathf.Deg2Rad, drive.forceLimit, unityJoint.maxJointVelocity);
 #else
             HingeJointLimitsManager hingeJointLimits = GetComponent<HingeJointLimitsManager>();
             return new Joint.Limit(
