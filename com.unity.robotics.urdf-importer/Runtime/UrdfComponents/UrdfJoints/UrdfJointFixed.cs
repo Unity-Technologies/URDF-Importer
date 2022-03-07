@@ -23,12 +23,7 @@ namespace Unity.Robotics.UrdfImporter
         public static UrdfJoint Create(GameObject linkObject)
         {
             UrdfJointFixed urdfJoint = linkObject.AddComponent<UrdfJointFixed>();
-            #if UNITY_2020_1_OR_NEWER
-                urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
-            #else
-                        urdfJoint.UnityJoint = linkObject.AddComponent<FixedJoint>();
-                        urdfJoint.UnityJoint.autoConfigureConnectedAnchor = true;
-            #endif
+            urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
 
             return urdfJoint;
         }

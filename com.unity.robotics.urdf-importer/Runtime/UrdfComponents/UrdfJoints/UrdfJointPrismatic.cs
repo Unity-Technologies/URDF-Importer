@@ -20,34 +20,14 @@ namespace Unity.Robotics.UrdfImporter
     public class UrdfJointPrismatic : UrdfJoint
     {
         private ArticulationDrive drive;
-#if UNITY_2020_1
-        private float maxLinearVelocity;
-#endif
 
         public override JointTypes JointType => JointTypes.Prismatic;
 
         public static UrdfJoint Create(GameObject linkObject)
         {
             UrdfJointPrismatic urdfJoint = linkObject.AddComponent<UrdfJointPrismatic>();
-#if UNITY_2020_1_OR_NEWER
             urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.PrismaticJoint;
-#else
-            urdfJoint.unityJoint = linkObject.AddComponent<ConfigurableJoint>();
-            urdfJoint.unityJoint.autoConfigureConnectedAnchor = true;
-
-            ConfigurableJoint configurableJoint = (ConfigurableJoint) urdfJoint.unityJoint;
-
-            // degrees of freedom:
-            configurableJoint.xMotion = ConfigurableJointMotion.Limited;
-            configurableJoint.yMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.zMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.angularXMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.angularYMotion = ConfigurableJointMotion.Locked;
-            configurableJoint.angularZMotion = ConfigurableJointMotion.Locked;
-
-            linkObject.AddComponent<PrismaticJointLimitsManager>();
-#endif
             return urdfJoint;
         }
 
@@ -59,11 +39,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns>floating point number for joint position in meters</returns>
         public override float GetPosition()
         {
-#if UNITY_2020_1_OR_NEWER
             return unityJoint.jointPosition[xAxis];
-#else
-            return Vector3.Dot(unityJoint.transform.localPosition - unityJoint.connectedAnchor, unityJoint.axis);
-#endif
         }
 
         /// <summary>
@@ -72,11 +48,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns>floating point for joint velocity in meters per second</returns>
         public override float GetVelocity()
         {
-#if UNITY_2020_1_OR_NEWER
             return unityJoint.jointVelocity[xAxis];
-#else
-            return float.NaN;
-#endif
         }
 
         /// <summary>
@@ -85,12 +57,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns>floating point in N</returns>
         public override float GetEffort()
         {
-#if UNITY_2020_1_OR_NEWER
             return unityJoint.jointForce[xAxis];
-#else
-                return float.NaN;
-#endif
-
         }
 
         /// <summary>
@@ -99,13 +66,9 @@ namespace Unity.Robotics.UrdfImporter
         /// <param name="deltaState">amount in m by which joint needs to be rotated</param>
         protected override void OnUpdateJointState(float deltaState)
         {
-#if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = unityJoint.xDrive;
             drive.target += deltaState;
             unityJoint.xDrive = drive;
-#else
-            transform.Translate(unityJoint.axis * deltaState);
-#endif
         }
 
         #endregion
@@ -140,11 +103,8 @@ namespace Unity.Robotics.UrdfImporter
                 drive.upperLimit = (float)joint.limit.upper;
                 drive.lowerLimit = (float)joint.limit.lower;
                 drive.forceLimit = (float)joint.limit.effort;
-#if UNITY_2020_2_OR_NEWER
+
                 unityJoint.maxLinearVelocity = (float)joint.limit.velocity;
-#elif UNITY_2020_1
-                maxLinearVelocity = (float)joint.limit.velocity;
-#endif
                 unityJoint.xDrive = drive;
             }
         }
@@ -156,48 +116,22 @@ namespace Unity.Robotics.UrdfImporter
 
         protected override Joint ExportSpecificJointData(Joint joint)
         {
-#if UNITY_2020_1_OR_NEWER
             joint.axis = GetAxisData(axisofMotion);
             joint.dynamics = new Joint.Dynamics(unityJoint.linearDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
-#else
-            ConfigurableJoint configurableJoint = (ConfigurableJoint)unityJoint;
-
-            joint.axis = GetAxisData(configurableJoint.axis);
-            joint.dynamics = new Joint.Dynamics(configurableJoint.xDrive.positionDamper, configurableJoint.xDrive.positionSpring);
-            joint.limit = ExportLimitData();
-#endif
             return joint;
         }
 
         public override bool AreLimitsCorrect()
         {
-#if UNITY_2020_1_OR_NEWER
             ArticulationBody joint = GetComponent<ArticulationBody>();
             return joint.linearLockX == ArticulationDofLock.LimitedMotion && joint.xDrive.lowerLimit < joint.xDrive.upperLimit;
-#else
-            PrismaticJointLimitsManager limits = GetComponent<PrismaticJointLimitsManager>();
-            return limits != null && limits.PositionLimitMin < limits.PositionLimitMax;
-#endif
         }
 
         protected override Joint.Limit ExportLimitData()
         {
-#if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = GetComponent<ArticulationBody>().xDrive;
-#if UNITY_2020_2_OR_NEWER
             return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, unityJoint.maxLinearVelocity);
-#elif UNITY_2020_1
-            return new Joint.Limit(drive.lowerLimit, drive.upperLimit, drive.forceLimit, maxLinearVelocity);
-#endif
-#else
-            PrismaticJointLimitsManager prismaticLimits = GetComponent<PrismaticJointLimitsManager>();
-            return new Joint.Limit(
-                Math.Round(prismaticLimits.PositionLimitMin, RoundDigits),
-                Math.Round(prismaticLimits.PositionLimitMax, RoundDigits),
-                EffortLimit,
-                VelocityLimit);
-#endif
         }
 
         #endregion
