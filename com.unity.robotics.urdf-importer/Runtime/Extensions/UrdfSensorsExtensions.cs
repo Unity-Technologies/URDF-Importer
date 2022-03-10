@@ -10,7 +10,7 @@ namespace Unity.Robotics.UrdfImporter
     public static class UrdfSensorsExtensions
     {
         const string k_SensorTopic = "sensor/topic";
-        const string k_SensorName = "sensor/name";
+
         public static UrdfSensors Create(Transform parent, List<Sensor> sensors = null)
         {
             GameObject sensorsObject = new GameObject("Sensors");
@@ -30,11 +30,10 @@ namespace Unity.Robotics.UrdfImporter
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError($"Failed loading `{sensor.elements[k_SensorName]}`");
+                        Debug.LogError($"Failed loading sensor '{sensor.elements.GetValueOrDefault(UrdfSensorExtension.NameKey)}'.\n{e}");
                     }
                 }
             }
-
 
             if (parent.GetComponent<ArticulationBody>() != null)
             {
@@ -47,9 +46,9 @@ namespace Unity.Robotics.UrdfImporter
 
         static GameObject AddTransformSensor(Transform parent)
         {
-            string topicName = "/"+parent.root.name + "/" + parent.name + "/TransformStamped";
+            string topicName = "/" + parent.root.name + "/" + parent.name + "/TransformStamped";
             Dictionary<string, string> settings = new Dictionary<string, string> { { k_SensorTopic, topicName } };
-            return SensorFactory.InstantiateSensor("transform",settings, out Dictionary<string,string> unusedSettings);
+            return SensorFactory.InstantiateSensor("transform",settings, out Dictionary<string,string> _);
         }
         
         public static List<Sensor> ExportSensorsData(this UrdfSensors urdfSensors)
