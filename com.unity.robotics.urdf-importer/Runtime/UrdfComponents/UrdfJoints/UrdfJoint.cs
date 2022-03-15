@@ -97,8 +97,6 @@ namespace Unity.Robotics.UrdfImporter
         public static void ChangeJointType(GameObject linkObject, JointTypes newJointType)
         {
             linkObject.transform.DestroyImmediateIfExists<UrdfJoint>();
-            linkObject.transform.DestroyImmediateIfExists<HingeJointLimitsManager>();
-            linkObject.transform.DestroyImmediateIfExists<PrismaticJointLimitsManager>();
             linkObject.transform.DestroyImmediateIfExists<UnityEngine.ArticulationBody>();
 
             AddCorrectJointType(linkObject, newJointType);
