@@ -82,21 +82,6 @@ namespace Unity.Robotics.UrdfImporter
             }
         }
 
-        private void OnDrawGizmosSelected()
-        {
-            // Do we need this? - ask Vidur; inertia tensor become a property later, and in 22.1 we have a nice viz too
-            if (displayInertiaGizmo)
-            {
-                    Debug.Log("'ArticulationBody' does not contain a definition for 'inertiaTensorRotation' and no accessible extension method 'inertiaTensorRotation'");
-               /* Gizmos.color = Color.blue;
-                Gizmos.DrawRay(transform.position, GetComponent<ArticulationBody>().inertiaTensorRotation * Vector3.forward * GetComponent<ArticulationBody>().inertiaTensor.z);
-                Gizmos.color = Color.green;
-                Gizmos.DrawRay(transform.position, GetComponent<ArticulationBody>().inertiaTensorRotation * Vector3.up * GetComponent<ArticulationBody>().inertiaTensor.y);
-                Gizmos.color = Color.red;
-                Gizmos.DrawRay(transform.position, GetComponent<ArticulationBody>().inertiaTensorRotation * Vector3.right * GetComponent<ArticulationBody>().inertiaTensor.x);*/
-            }
-        }
-
 #endregion
 
 #region Import
