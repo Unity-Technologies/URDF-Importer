@@ -94,8 +94,6 @@ namespace Unity.Robotics.UrdfImporter
 
         protected override bool IsJointAxisDefined()
         {
-            // Vidur - what is this??
-            Debug.Log("Cannot convert type 'UnityEngine.ArticulationBody' to 'UnityEngine.ConfigurableJoint'");
             return false;
         }
 
