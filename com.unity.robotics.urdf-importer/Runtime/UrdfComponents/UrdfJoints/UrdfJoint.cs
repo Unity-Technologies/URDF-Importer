@@ -241,11 +241,7 @@ namespace Unity.Robotics.UrdfImporter
 
         protected virtual bool IsJointAxisDefined()
         {
-            // hey Vidur - how can this happen??
-            if (axisofMotion == null)
-                return false;
-            else
-                return true;
+            return true;
         }
 
         public void GenerateUniqueJointName()
