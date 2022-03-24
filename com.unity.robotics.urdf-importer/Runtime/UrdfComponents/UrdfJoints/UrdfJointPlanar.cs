@@ -38,7 +38,13 @@ namespace Unity.Robotics.UrdfImporter
 
         protected override void ImportJointData(Joint joint)
         {
-            AdjustMovement(joint);
+            if (joint.axis == null || joint.axis.xyz == null)
+            {
+                joint.axis = new Joint.Axis(new double[] { 1, 0, 0 });
+            }
+            var axis = new Vector3((float)joint.axis.xyz[0], (float)joint.axis.xyz[1], (float)joint.axis.xyz[2]);
+            SetAxisData(axis);
+            SetLimits(joint);
             SetDynamics(joint.dynamics);
         }
 
@@ -71,7 +77,7 @@ namespace Unity.Robotics.UrdfImporter
 
         protected override Joint ExportSpecificJointData(Joint joint)
         {
-            joint.axis = GetAxisData(axisofMotion);
+            joint.axis = GetAxisData();
             joint.dynamics = new Joint.Dynamics(unityJoint.linearDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
             return joint;
@@ -97,16 +103,38 @@ namespace Unity.Robotics.UrdfImporter
             return false;
         }
 
-        protected override void AdjustMovement(Joint joint)
+        protected override void SetAxisData(Vector3 axis)
         {
-            if (joint.axis == null || joint.axis.xyz == null)
+            axisofMotion = axis;
+            int motionAxis = -1;
+            for (int i = 0; i < 3; i++)
             {
-                joint.axis = new Joint.Axis(new double[] { 1, 0, 0 });
+                if (axisofMotion[i] > 0)
+                {
+                    motionAxis = i;
+                    break;
+                }
             }
-            axisofMotion = new Vector3((float)joint.axis.xyz[0], (float)joint.axis.xyz[1], (float)joint.axis.xyz[2]);
-            int motionAxis = joint.axis.AxisofMotion();
+            
             Quaternion motion = unityJoint.anchorRotation;
 
+            switch (motionAxis)
+            {
+                case 0: // Axis: (1,0,0)
+                    motion.eulerAngles = new Vector3(0, -90, 0);
+                    break;
+                case 1: // Axis: (0,1,0)
+                    motion.eulerAngles = new Vector3(0, 0, 0);
+                    break;
+                case 2:// Axis: (0,0,1)
+                    motion.eulerAngles = new Vector3(0, 0, 90);
+                    break;
+            }
+            unityJoint.anchorRotation = motion;
+        }
+
+        protected override void SetLimits(Joint joint)
+        {
             unityJoint.linearLockX = ArticulationDofLock.LockedMotion;
             if (joint.limit != null)
             {
@@ -130,20 +158,13 @@ namespace Unity.Robotics.UrdfImporter
                 unityJoint.linearLockZ = ArticulationDofLock.FreeMotion;
                 unityJoint.linearLockY = ArticulationDofLock.FreeMotion;
             }
+        }
 
-            switch (motionAxis)
-            {
-                case 0:
-                    motion.eulerAngles = new Vector3(0, -90, 0);
-                    break;
-                case 1:
-                    motion.eulerAngles = new Vector3(0, 0, 0);
-                    break;
-                case 2:
-                    motion.eulerAngles = new Vector3(0, 0, 90);
-                    break;
-            }
-            unityJoint.anchorRotation = motion;
+        public override Joint.Axis GetAxisData()
+        {
+            var res = (unityJoint.anchorRotation * Vector3.left).Unity2Ros();
+            double[] rosAxis = res.ToRoundedDoubleArray();
+            return new Joint.Axis(rosAxis);
         }
 
         #endregion

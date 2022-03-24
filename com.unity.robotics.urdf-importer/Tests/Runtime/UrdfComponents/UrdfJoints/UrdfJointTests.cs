@@ -13,8 +13,12 @@ namespace Unity.Robotics.UrdfImporter.Tests
 
         public static Vector3 Axis(Joint.Axis axis) => GetAxis(axis);
         public static Vector3 DefaultAxis() => GetDefaultAxis();
-        public static Joint.Axis AxisData(Vector3 axis) => GetAxisData(axis);
         public void Dynamics(Joint.Dynamics dynamics) => SetDynamics(dynamics);
+
+        public override Joint.Axis GetAxisData()
+        {
+            return new Joint.Axis(new double[]{0,0,0});
+        }
     }
 
     public class UrdfJointTests
@@ -46,6 +50,29 @@ namespace Unity.Robotics.UrdfImporter.Tests
                 yield return new TestCaseData(UrdfJoint.JointTypes.Revolute, ArticulationJointType.RevoluteJoint);
             }
         }
+
+        [Test, TestCaseSource("AxisData")]
+        public void GetAxisData_UrdfJoint_Equal(string jointType, UrdfJoint.JointTypes urdfJointType,double[] axis)
+        {
+            GameObject linjObject = new GameObject();
+            Joint joint = new Joint("joint", "parent","child", jointType, axis: new Joint.Axis(axis));
+            var urdfJoint = UrdfJoint.Create(linjObject,urdfJointType,joint);
+            Assert.IsNotNull(urdfJoint);
+            var axisData = urdfJoint.GetAxisData();
+            Assert.AreEqual(axis,axisData.xyz);
+        }
+        
+        private static IEnumerable<TestCaseData> AxisData
+        {
+            get
+            {
+                yield return new TestCaseData("continuous", UrdfJoint.JointTypes.Continuous,new double[] {1,0,0});
+                yield return new TestCaseData("revolute", UrdfJoint.JointTypes.Revolute,new double[] {0,1,0});
+                yield return new TestCaseData("prismatic", UrdfJoint.JointTypes.Prismatic,new double[] {0,0,1});
+                yield return new TestCaseData("planar", UrdfJoint.JointTypes.Prismatic,new double[] {0,0,1});
+            }
+        }
+        
 
         [Test]
         public void Create_WithOtherTypeOfJointData_FixedArticulationBody()
@@ -229,13 +256,6 @@ namespace Unity.Robotics.UrdfImporter.Tests
 
             Object.DestroyImmediate(baseObject);
             Object.DestroyImmediate(linkObject);
-        }
-
-        [Test]
-        public void GetAxisData_ArbitraryData_Succeeds()
-        {
-            Assert.AreEqual(new double[] { 1.234568, 2.345679, 3.456789 },
-                TestUrdfJoint.AxisData(new Vector3(1.2345678f, 2.3456789f, 3.4567891f)).xyz);
         }
     }
 }
