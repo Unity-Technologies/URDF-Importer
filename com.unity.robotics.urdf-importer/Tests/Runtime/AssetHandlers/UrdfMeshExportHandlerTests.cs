@@ -24,9 +24,10 @@ namespace Unity.Robotics.UrdfImporter.Tests
                 yield return new TestCaseData(
                     new Link.Geometry(mesh: new Link.Geometry.Mesh("package://meshes/cube.obj",
                         new double[] {1, 1, 1})), "obj");
-                yield return new TestCaseData(
-                    new Link.Geometry(mesh: new Link.Geometry.Mesh("package://meshes/cube.blend",
-                        new double[] {1, 1, 1})), "blend");
+                // Requires Blender to be installed on Bokken image
+                // yield return new TestCaseData(
+                //     new Link.Geometry(mesh: new Link.Geometry.Mesh("package://meshes/cube.blend",
+                //         new double[] {1, 1, 1})), "blend");
                 yield return new TestCaseData(
                     new Link.Geometry(mesh: new Link.Geometry.Mesh("package://meshes/cube.stl",
                         new double[] {1, 1, 1})), "stl");
