@@ -99,14 +99,16 @@ namespace Unity.Robotics.UrdfImporter
 
         protected override void ImportJointData(Joint joint)
         {
-            AdjustMovement(joint);
+            var axis = (joint.axis != null && joint.axis.xyz != null) ? joint.axis.xyz.ToVector3() : new Vector3(1, 0, 0);
+            SetAxisData(axis);
+            SetLimits(joint);
             SetDynamics(joint.dynamics);
         }
 
         protected override Joint ExportSpecificJointData(Joint joint)
         {
 #if UNITY_2020_1_OR_NEWER
-            joint.axis = GetAxisData(axisofMotion);
+            joint.axis = GetAxisData();
             joint.dynamics = new Joint.Dynamics(unityJoint.angularDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
 #else
@@ -144,23 +146,33 @@ namespace Unity.Robotics.UrdfImporter
                 VelocityLimit);
 #endif
         }
+        
+        public override Joint.Axis GetAxisData()
+        {
+            var res = (unityJoint.anchorRotation * Vector3.left).Unity2Ros();
+            double[] rosAxis = res.ToRoundedDoubleArray();
+            return new Joint.Axis(rosAxis);
+        }
 
         /// <summary>
         /// Reads axis joint information and rotation to the articulation body to produce the required motion
         /// </summary>
         /// <param name="joint">Structure containing joint information</param>
-        protected override void AdjustMovement(Joint joint)
+        protected override void SetAxisData(Vector3 axis)
         {
-            axisofMotion = (joint.axis != null && joint.axis.xyz != null) ? joint.axis.xyz.ToVector3() : new Vector3(1, 0, 0);
-            unityJoint.linearLockX = ArticulationDofLock.LimitedMotion;
-            unityJoint.linearLockY = ArticulationDofLock.LockedMotion;
-            unityJoint.linearLockZ = ArticulationDofLock.LockedMotion;
-            unityJoint.twistLock = ArticulationDofLock.LimitedMotion;
-
+            axisofMotion = axis;
             Vector3 axisofMotionUnity = axisofMotion.Ros2Unity();
             Quaternion Motion = new Quaternion();
             Motion.SetFromToRotation(new Vector3(1, 0, 0), -1 * axisofMotionUnity);
             unityJoint.anchorRotation = Motion;
+        }
+
+        protected override void SetLimits(Joint joint)
+        {
+            unityJoint.linearLockX = ArticulationDofLock.LimitedMotion;
+            unityJoint.linearLockY = ArticulationDofLock.LockedMotion;
+            unityJoint.linearLockZ = ArticulationDofLock.LockedMotion;
+            unityJoint.twistLock = ArticulationDofLock.LimitedMotion;
 
             if (joint.limit != null)
             {

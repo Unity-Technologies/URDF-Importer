@@ -115,18 +115,6 @@ namespace Unity.Robotics.UrdfImporter
                     writer.WriteEndElement();
                 }
             }
-
-            public int AxisofMotion()
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    if (xyz[i] > 0)
-                    {
-                        return i;
-                    }
-                }
-                return -1;
-            }
         }
 
         public class Calibration

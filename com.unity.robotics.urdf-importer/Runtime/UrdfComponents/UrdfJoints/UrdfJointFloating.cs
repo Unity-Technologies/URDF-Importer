@@ -53,6 +53,11 @@ namespace Unity.Robotics.UrdfImporter
         {
             return true; //Axis isn't used
         }
+
+        public override Joint.Axis GetAxisData()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
 

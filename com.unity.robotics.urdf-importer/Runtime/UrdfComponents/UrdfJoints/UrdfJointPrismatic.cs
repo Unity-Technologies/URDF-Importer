@@ -114,7 +114,9 @@ namespace Unity.Robotics.UrdfImporter
 
         protected override void ImportJointData(Joint joint)
         {
-            AdjustMovement(joint);
+            var axis = (joint.axis != null && joint.axis.xyz != null) ? joint.axis.xyz.ToVector3() : new Vector3(1, 0, 0);
+            SetAxisData(axis);
+            SetLimits(joint);
             SetDynamics(joint.dynamics);
         }
 
@@ -122,18 +124,21 @@ namespace Unity.Robotics.UrdfImporter
         /// Reads axis joint information and rotation to the articulation body to produce the required motion
         /// </summary>
         /// <param name="joint">Structure containing joint information</param>
-        protected override void AdjustMovement(Joint joint) // Test this function
+        protected override void SetAxisData(Vector3 axis) // Test this function
         {
-            axisofMotion = (joint.axis != null && joint.axis.xyz != null) ? joint.axis.xyz.ToVector3() : new Vector3(1, 0, 0);
-            unityJoint.linearLockX = (joint.limit != null) ? ArticulationDofLock.LimitedMotion : ArticulationDofLock.FreeMotion;
-            unityJoint.linearLockY = ArticulationDofLock.LockedMotion;
-            unityJoint.linearLockZ = ArticulationDofLock.LockedMotion;
-
+            axisofMotion = axis;
             Vector3 axisofMotionUnity = axisofMotion.Ros2Unity();
             Quaternion Motion = new Quaternion();
             Motion.SetFromToRotation(new Vector3(1, 0, 0), axisofMotionUnity);
             unityJoint.anchorRotation = Motion;
+        }
 
+        protected override void SetLimits(Joint joint)
+        {
+            unityJoint.linearLockX = (joint.limit != null) ? ArticulationDofLock.LimitedMotion : ArticulationDofLock.FreeMotion;
+            unityJoint.linearLockY = ArticulationDofLock.LockedMotion;
+            unityJoint.linearLockZ = ArticulationDofLock.LockedMotion;
+            
             if (joint.limit != null)
             {
                 ArticulationDrive drive = unityJoint.xDrive;
@@ -148,6 +153,13 @@ namespace Unity.Robotics.UrdfImporter
                 unityJoint.xDrive = drive;
             }
         }
+        
+        public override Joint.Axis GetAxisData()
+        {
+            var res = (unityJoint.anchorRotation * Vector3.right).Unity2Ros();
+            double[] rosAxis = res.ToRoundedDoubleArray();
+            return new Joint.Axis(rosAxis);
+        }
 
         #endregion
 
@@ -157,7 +169,7 @@ namespace Unity.Robotics.UrdfImporter
         protected override Joint ExportSpecificJointData(Joint joint)
         {
 #if UNITY_2020_1_OR_NEWER
-            joint.axis = GetAxisData(axisofMotion);
+            joint.axis = GetAxisData();
             joint.dynamics = new Joint.Dynamics(unityJoint.linearDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
 #else

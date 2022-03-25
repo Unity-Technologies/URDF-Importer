@@ -127,6 +127,8 @@ namespace Unity.Robotics.UrdfImporter
             AddCorrectJointType(linkObject, newJointType);
         }
 
+        public abstract Joint.Axis GetAxisData();
+
         #region Runtime
 
         public void Start()
@@ -196,7 +198,8 @@ namespace Unity.Robotics.UrdfImporter
             return new Vector3(-1, 0, 0);
         }
 
-        protected virtual void AdjustMovement(Joint joint) { }
+        protected virtual void SetAxisData(Vector3 axisofMotion) { }
+        protected  virtual void SetLimits(Joint joint){}
 
         protected void SetDynamics(Joint.Dynamics dynamics)
         {
@@ -290,12 +293,6 @@ namespace Unity.Robotics.UrdfImporter
         public void GenerateUniqueJointName()
         {
             jointName = transform.parent.name + "_" + transform.name + "_joint";
-        }
-
-        protected static Joint.Axis GetAxisData(Vector3 axis)
-        {
-            double[] rosAxis = axis.ToRoundedDoubleArray();
-            return new Joint.Axis(rosAxis);
         }
 
         private bool IsAnchorTransformed() // TODO : Check for tolerances before implementation
