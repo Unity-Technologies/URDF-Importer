@@ -38,7 +38,7 @@ namespace Unity.Robotics.UrdfImporter.Editor
             urdfRobot = (UrdfRobot) target;
 
             GUILayout.Space(5);
-            GUILayout.Label("All Rigidbodies", EditorStyles.boldLabel);
+            GUILayout.Label("All Bodies", EditorStyles.boldLabel);
             DisplaySettingsToggle(new GUIContent("Use Gravity", "If disabled, robot is not affected by gravity."), urdfRobot.SetRigidbodiesUseGravity, UrdfRobot.useGravity);
             DisplaySettingsToggle(new GUIContent("Use Inertia from URDF", "If disabled, Unity will generate new inertia tensor values automatically."),urdfRobot.SetUseUrdfInertiaData,
                 UrdfRobot.useUrdfInertiaData);
@@ -56,9 +56,6 @@ namespace Unity.Robotics.UrdfImporter.Editor
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.PropertyField(axisType, new GUIContent("Axis Type", "Adjust this if the models that make up your robot are facing the wrong direction."));
             EditorGUI.EndDisabledGroup();
-            // Legacy code for correcting axis in the inspector
-            // serializedObject.ApplyModifiedProperties();
-            // UrdfRobotExtensions.CorrectAxis(urdfRobot.gameObject);
 
             if (urdfRobot.GetComponent<Unity.Robotics.UrdfImporter.Control.Controller>() == null || urdfRobot.GetComponent<Unity.Robotics.UrdfImporter.Control.FKRobot>() == null)
             {
