@@ -17,11 +17,7 @@ using UnityEngine;
 
 namespace Unity.Robotics.UrdfImporter
 {
-#if UNITY_2020_1_OR_NEWER
     [RequireComponent(typeof(ArticulationBody))]
-#else
-    [RequireComponent(typeof(Rigidbody))]
-#endif
     public class UrdfInertial : MonoBehaviour
     {
         public bool displayInertiaGizmo;
@@ -40,11 +36,8 @@ namespace Unity.Robotics.UrdfImporter
         {
             UrdfInertial urdfInertial = linkObject.AddComponent<UrdfInertial>();
 
-#if UNITY_2020_1_OR_NEWER
             ArticulationBody robotLink = urdfInertial.GetComponent<ArticulationBody>();
-#else
-            Rigidbody robotLink = urdfInertial.GetComponent<Rigidbody>();
-#endif
+
             if (inertial != null)
             {
                 robotLink.mass = ((float)inertial.mass > 0)?((float)inertial.mass):minMass;
@@ -74,12 +67,7 @@ namespace Unity.Robotics.UrdfImporter
         public void UpdateLinkData()
         {
 
-#if UNITY_2020_1_OR_NEWER
             ArticulationBody robotLink = GetComponent<ArticulationBody>();
-
-#else
-              Rigidbody robotLink = GetComponent<Rigidbody>();  
-#endif
 
             if (useUrdfData)
             {
@@ -94,29 +82,6 @@ namespace Unity.Robotics.UrdfImporter
             }
         }
 
-        private void OnDrawGizmosSelected()
-        {
-            if (displayInertiaGizmo)
-            {
-                #if UNITY_2020_1_OR_NEWER
-                    Debug.Log("'ArticulationBody' does not contain a definition for 'inertiaTensorRotation' and no accessible extension method 'inertiaTensorRotation'");
-               /* Gizmos.color = Color.blue;
-                Gizmos.DrawRay(transform.position, GetComponent<ArticulationBody>().inertiaTensorRotation * Vector3.forward * GetComponent<ArticulationBody>().inertiaTensor.z);
-                Gizmos.color = Color.green;
-                Gizmos.DrawRay(transform.position, GetComponent<ArticulationBody>().inertiaTensorRotation * Vector3.up * GetComponent<ArticulationBody>().inertiaTensor.y);
-                Gizmos.color = Color.red;
-                Gizmos.DrawRay(transform.position, GetComponent<ArticulationBody>().inertiaTensorRotation * Vector3.right * GetComponent<ArticulationBody>().inertiaTensor.x);*/
-                #else
-                Gizmos.color = Color.blue;
-                Gizmos.DrawRay(transform.position, GetComponent<Rigidbody>().inertiaTensorRotation * Vector3.forward * GetComponent<Rigidbody>().inertiaTensor.z);
-                Gizmos.color = Color.green;
-                Gizmos.DrawRay(transform.position, GetComponent<Rigidbody>().inertiaTensorRotation * Vector3.up * GetComponent<Rigidbody>().inertiaTensor.y);
-                Gizmos.color = Color.red;
-                Gizmos.DrawRay(transform.position, GetComponent<Rigidbody>().inertiaTensorRotation * Vector3.right * GetComponent<Rigidbody>().inertiaTensor.x);
-                #endif
-            }
-        }
-
 #endregion
 
 #region Import
@@ -127,12 +92,7 @@ namespace Unity.Robotics.UrdfImporter
             Vector3[] eigenvectors;
             Matrix3x3 rotationMatrix = ToMatrix3x3(inertial.inertia);
             rotationMatrix.DiagonalizeRealSymmetric(out eigenvalues, out eigenvectors);
-#if UNITY_2020_1_OR_NEWER
             ArticulationBody robotLink = GetComponent<ArticulationBody>();
-
-#else
-            Rigidbody robotLink = GetComponent<Rigidbody>();
-#endif
 
             Vector3 inertiaEulerAngles;
 
@@ -229,12 +189,7 @@ namespace Unity.Robotics.UrdfImporter
 #region Export
         public Link.Inertial ExportInertialData() 
         {
-#if UNITY_2020_1_OR_NEWER
             ArticulationBody robotLink = GetComponent<ArticulationBody>();
-
-#else
-            Rigidbody robotLink = GetComponent<Rigidbody>();
-#endif
 
             if (robotLink == null)
                 return null;
@@ -249,12 +204,8 @@ namespace Unity.Robotics.UrdfImporter
 
         private Link.Inertial.Inertia ExportInertiaData()
         {
-#if UNITY_2020_1_OR_NEWER
             ArticulationBody robotLink = GetComponent<ArticulationBody>();
-
-#else
-            Rigidbody robotLink = GetComponent<Rigidbody>();
-#endif
+            
             Matrix3x3 lamdaMatrix = new Matrix3x3(new[] {
                 robotLink.inertiaTensor[0],
                 robotLink.inertiaTensor[1],

@@ -23,8 +23,6 @@ namespace Unity.Robotics.UrdfImporter.Tests
 
     public class UrdfJointTests
     {
-
-#if UNITY_2020_1_OR_NEWER
         [Test, TestCaseSource("JointTypes")]
         public void Create_UrdfJoint_Succeeds(UrdfJoint.JointTypes urdfJointType, ArticulationJointType articulationJointType)
         {
@@ -129,8 +127,7 @@ namespace Unity.Robotics.UrdfImporter.Tests
 
             Object.DestroyImmediate(linkObject);
         }
-#endif
-
+        
         [Test]
         public void GetJointType_AllJointTypes_Succeeds()
         {

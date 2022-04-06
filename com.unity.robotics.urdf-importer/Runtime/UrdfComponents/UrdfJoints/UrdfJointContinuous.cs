@@ -23,13 +23,9 @@ namespace Unity.Robotics.UrdfImporter
         public static UrdfJoint Create(GameObject linkObject)
         {
             UrdfJointContinuous urdfJoint = linkObject.AddComponent<UrdfJointContinuous>();
-#if UNITY_2020_1_OR_NEWER
             urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.RevoluteJoint;
-#else
-            urdfJoint.unityJoint = linkObject.AddComponent<HingeJoint>();
-            urdfJoint.unityJoint.autoConfigureConnectedAnchor = true;
-#endif
+
             return urdfJoint;
         }
 
@@ -40,12 +36,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns>floating point number for joint position in radians</returns>
         public override float GetPosition() // Check Units
         {
-
-#if UNITY_2020_1_OR_NEWER
             return unityJoint.jointPosition[xAxis];
-#else
-                return -((HingeJoint)unityJoint).angle;
-#endif
         }
 
         /// <summary>
@@ -54,11 +45,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns>floating point for joint velocity in radians per second</returns>
         public override float GetVelocity()
         {
-#if UNITY_2020_1_OR_NEWER
             return unityJoint.jointVelocity[xAxis];
-#else
-            return -((HingeJoint)unityJoint).velocity;
-#endif
         }
 
         /// <summary>
@@ -67,11 +54,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns>floating point in Nm</returns>
         public override float GetEffort()
         {
-#if UNITY_2020_1_OR_NEWER
             return unityJoint.jointForce[xAxis];
-#else
-                return -((HingeJoint)unityJoint).motor.force;
-#endif
 
         }
 
@@ -82,14 +65,9 @@ namespace Unity.Robotics.UrdfImporter
         protected override void OnUpdateJointState(float deltaState)
         {
 
-#if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = unityJoint.xDrive;
             drive.target += deltaState;
             unityJoint.xDrive = drive;
-#else
-            Quaternion rot = Quaternion.AngleAxis(-deltaState * Mathf.Rad2Deg, unityJoint.axis);
-            transform.rotation = transform.rotation * rot;
-#endif
         }
 
         #endregion
@@ -103,17 +81,10 @@ namespace Unity.Robotics.UrdfImporter
 
         protected override Joint ExportSpecificJointData(Joint joint)
         {
-#if UNITY_2020_1_OR_NEWER
             joint.axis = GetAxisData();
             joint.dynamics = new Joint.Dynamics(unityJoint.angularDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
-#else
 
-            joint.axis = GetAxisData(unityJoint.axis);
-            joint.dynamics = new Joint.Dynamics(
-                ((HingeJoint)unityJoint).spring.damper, 
-                ((HingeJoint)unityJoint).spring.spring);
-#endif
             return joint;
         }
         

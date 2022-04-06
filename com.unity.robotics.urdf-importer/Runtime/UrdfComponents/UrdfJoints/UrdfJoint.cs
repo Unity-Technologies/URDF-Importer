@@ -17,11 +17,7 @@ using UnityEngine;
 
 namespace Unity.Robotics.UrdfImporter
 {
-#if UNITY_2020_1_OR_NEWER
     [RequireComponent(typeof(ArticulationBody))]
-#else
-        [RequireComponent(typeof(Joint))]
-#endif
     public abstract class UrdfJoint : MonoBehaviour
     {
         public enum JointTypes
@@ -36,12 +32,9 @@ namespace Unity.Robotics.UrdfImporter
 
         public int xAxis = 0;
 
-#if UNITY_2020_1_OR_NEWER
         protected ArticulationBody unityJoint;
         protected Vector3 axisofMotion;
-#else
-        protected UnityEngine.Joint unityJoint;
-#endif
+
         public string jointName;
 
         public abstract JointTypes JointType { get; } // Clear out syntax
@@ -57,11 +50,6 @@ namespace Unity.Robotics.UrdfImporter
 
         public static UrdfJoint Create(GameObject linkObject, JointTypes jointType, Joint joint = null)
         {
-#if UNITY_2020_1_OR_NEWER
-#else
-            Rigidbody parentRigidbody = linkObject.transform.parent.gameObject.GetComponent<Rigidbody>();
-            if (parentRigidbody == null) return;
-#endif
             UrdfJoint urdfJoint = AddCorrectJointType(linkObject, jointType);
 
             if (joint != null)
@@ -98,14 +86,6 @@ namespace Unity.Robotics.UrdfImporter
                     break;
             }
 
-
-#if UNITY_2020_1_OR_NEWER
-#else
-            UnityEngine.Joint unityJoint = linkObject.GetComponent<UnityEngine.Joint>();
-            unityJoint.connectedBody = linkObject.transform.parent.gameObject.GetComponent<Rigidbody>();
-            unityJoint.autoConfigureConnectedAnchor = true;
-#endif
-
             return urdfJoint;
         }
 
@@ -117,13 +97,8 @@ namespace Unity.Robotics.UrdfImporter
         public static void ChangeJointType(GameObject linkObject, JointTypes newJointType)
         {
             linkObject.transform.DestroyImmediateIfExists<UrdfJoint>();
-            linkObject.transform.DestroyImmediateIfExists<HingeJointLimitsManager>();
-            linkObject.transform.DestroyImmediateIfExists<PrismaticJointLimitsManager>();
-#if UNITY_2020_1_OR_NEWER
             linkObject.transform.DestroyImmediateIfExists<UnityEngine.ArticulationBody>();
-#else
-                        linkObject.transform.DestroyImmediateIfExists<UnityEngine.Joint>();
-#endif
+
             AddCorrectJointType(linkObject, newJointType);
         }
 
@@ -133,11 +108,7 @@ namespace Unity.Robotics.UrdfImporter
 
         public void Start()
         {
-#if UNITY_2020_1_OR_NEWER
             unityJoint = GetComponent<ArticulationBody>();
-#else
-                        unityJoint = GetComponent<Joint>();
-#endif
         }
 
         public virtual float GetPosition()
@@ -229,11 +200,7 @@ namespace Unity.Robotics.UrdfImporter
 
         public Joint ExportJointData()
         {
-#if UNITY_2020_1_OR_NEWER
             unityJoint = GetComponent<UnityEngine.ArticulationBody>();
-#else
-                        unityJoint = GetComponent<UnityEngine.Joint>();
-#endif
             CheckForUrdfCompatibility();
 
             //Data common to all joints
@@ -277,17 +244,7 @@ namespace Unity.Robotics.UrdfImporter
 
         protected virtual bool IsJointAxisDefined()
         {
-#if UNITY_2020_1_OR_NEWER
-            if (axisofMotion == null)
-                return false;
-            else
-                return true;
-#else
-                        UnityEngine.Joint joint = GetComponent<UnityEngine.Joint>();
-                        return !(Math.Abs(joint.axis.x) < Tolerance &&
-                                 Math.Abs(joint.axis.y) < Tolerance &&
-                                 Math.Abs(joint.axis.z) < Tolerance);
-#endif
+            return true;
         }
 
         public void GenerateUniqueJointName()
@@ -315,15 +272,6 @@ namespace Unity.Robotics.UrdfImporter
                 Debug.LogWarning("Axis for joint " + jointName + " is undefined. Axis will not be written to URDF, " +
                                  "and the default axis will be used instead.",
                                  gameObject);
-#if UNITY_2020_1_OR_NEWER
-
-#else
-            if (IsAnchorTransformed())
-                Debug.LogWarning("The anchor position defined in the joint connected to " + name + " will be" +
-                                 " ignored in URDF. Instead of modifying anchor, change the position of the link.", 
-                                 gameObject);
-#endif
-
         }
 
         #endregion

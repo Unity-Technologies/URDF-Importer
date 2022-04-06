@@ -23,16 +23,8 @@ namespace Unity.Robotics.UrdfImporter
         public static UrdfJoint Create(GameObject linkObject)
         {
             UrdfJointRevolute urdfJoint = linkObject.AddComponent<UrdfJointRevolute>();
-#if UNITY_2020_1_OR_NEWER
             urdfJoint.unityJoint = linkObject.GetComponent<ArticulationBody>();
             urdfJoint.unityJoint.jointType = ArticulationJointType.RevoluteJoint;
-
-#else
-                        urdfJoint.unityJoint = linkObject.AddComponent<HingeJoint>();
-                        urdfJoint.unityJoint.autoConfigureConnectedAnchor = true;
-                        ((HingeJoint)urdfJoint.unityJoint).useLimits = true;
-                        linkObject.AddComponent<HingeJointLimitsManager>();
-#endif
 
             return urdfJoint;
         }
@@ -45,11 +37,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns>floating point number for joint position in radians</returns>
         public override float GetPosition()
         {
-#if UNITY_2020_1_OR_NEWER
             return ((ArticulationBody)unityJoint).jointPosition[xAxis];
-#else
-                        return -((HingeJoint)unityJoint).angle * Mathf.Deg2Rad;
-#endif
         }
 
         /// <summary>
@@ -58,11 +46,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns>floating point for joint velocity in radians per second</returns>
         public override float GetVelocity()
         {
-#if UNITY_2020_1_OR_NEWER
             return ((ArticulationBody)unityJoint).jointVelocity[xAxis];
-#else
-                        return -((HingeJoint)unityJoint).velocity * Mathf.Deg2Rad;
-#endif
         }
 
         /// <summary>
@@ -71,11 +55,7 @@ namespace Unity.Robotics.UrdfImporter
         /// <returns>floating point in Nm</returns>
         public override float GetEffort()
         {
-#if UNITY_2020_1_OR_NEWER
             return unityJoint.jointForce[xAxis];
-#else
-                        return -((HingeJoint)unityJoint).motor.force;
-#endif
         }
 
 
@@ -85,14 +65,9 @@ namespace Unity.Robotics.UrdfImporter
         /// <param name="deltaState">amount in radians by which joint needs to be rotated</param>
         protected override void OnUpdateJointState(float deltaState)
         {
-#if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = unityJoint.xDrive;
             drive.target += deltaState * Mathf.Rad2Deg;
             unityJoint.xDrive = drive;
-#else
-                        Quaternion rot = Quaternion.AngleAxis(-deltaState * Mathf.Rad2Deg, unityJoint.axis);
-                        transform.rotation = transform.rotation * rot;
-#endif
         }
 
         #endregion
@@ -107,44 +82,23 @@ namespace Unity.Robotics.UrdfImporter
 
         protected override Joint ExportSpecificJointData(Joint joint)
         {
-#if UNITY_2020_1_OR_NEWER
             joint.axis = GetAxisData();
             joint.dynamics = new Joint.Dynamics(unityJoint.angularDamping, unityJoint.jointFriction);
             joint.limit = ExportLimitData();
-#else
-            joint.axis = GetAxisData(unityJoint.axis);
-            joint.dynamics = new Joint.Dynamics(((HingeJoint)unityJoint).spring.damper, ((HingeJoint)unityJoint).spring.spring);
-
-            joint.limit = ExportLimitData();
-#endif
 
             return joint;
         }
 
         public override bool AreLimitsCorrect()
         {
-#if UNITY_2020_1_OR_NEWER
             ArticulationBody drive = GetComponent<ArticulationBody>();
             return drive.linearLockX == ArticulationDofLock.LimitedMotion && drive.xDrive.lowerLimit < drive.xDrive.upperLimit;
-#else
-            HingeJointLimitsManager limits = GetComponent<HingeJointLimitsManager>();
-            return limits != null && limits.LargeAngleLimitMin < limits.LargeAngleLimitMax;
-#endif
         }
 
         protected override Joint.Limit ExportLimitData()
         {
-#if UNITY_2020_1_OR_NEWER
             ArticulationDrive drive = unityJoint.xDrive;
             return new Joint.Limit(drive.lowerLimit * Mathf.Deg2Rad, drive.upperLimit * Mathf.Deg2Rad, drive.forceLimit, unityJoint.maxAngularVelocity);
-#else
-            HingeJointLimitsManager hingeJointLimits = GetComponent<HingeJointLimitsManager>();
-            return new Joint.Limit(
-                Math.Round(hingeJointLimits.LargeAngleLimitMin * Mathf.Deg2Rad, RoundDigits),
-                Math.Round(hingeJointLimits.LargeAngleLimitMax * Mathf.Deg2Rad, RoundDigits),
-                EffortLimit,
-                VelocityLimit);
-#endif
         }
         
         public override Joint.Axis GetAxisData()
