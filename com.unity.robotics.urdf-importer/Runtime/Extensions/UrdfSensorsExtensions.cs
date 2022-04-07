@@ -35,12 +35,6 @@ namespace Unity.Robotics.UrdfImporter
                 }
             }
 
-            if (parent.GetComponent<ArticulationBody>() != null)
-            {
-                GameObject transformSensor = AddTransformSensor(parent);
-                transformSensor.transform.SetParentAndAlign(sensorsObject.transform);
-            }
-
             return urdfSensors;
         }
 
