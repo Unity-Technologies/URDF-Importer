@@ -44,15 +44,18 @@ namespace Unity.Robotics.UrdfImporter
             {
                 inertialUrdf.m_OriginalValues = inertialLink;
                 inertialUrdf.useUrdfData = true;
-                inertialUrdf.UpdateLinkData();
             }
             else if (inertialUrdf.TryGetComponent<ArticulationBody>(out var robotLink))
             {
+                //robotLink.inertiaTensor = FixMinInertia(robotLink.inertiaTensor);
+                robotLink.mass = Mathf.Max(robotLink.mass, k_MinMass);
+
                 inertialUrdf.m_Overrides = inertialUrdf.ToLinkInertial(robotLink);
                 // NOTE: The first time this is set to true, we'll save the current state of m_Overrides as the default,
                 //       since there is no actual URDF data to default to
                 inertialUrdf.useUrdfData = false;
             }
+            inertialUrdf.UpdateLinkData();
         }
 
         public void ResetInertial()
@@ -63,7 +66,7 @@ namespace Unity.Robotics.UrdfImporter
 
 #region Runtime
 
-        void OnEnable()
+        void Start()
         {
             UpdateLinkData();
         }
@@ -100,7 +103,7 @@ namespace Unity.Robotics.UrdfImporter
             else
             {
                 robotLink.centerOfMass = centerOfMass;
-                robotLink.inertiaTensor = inertiaTensor;
+                robotLink.inertiaTensor = FixMinInertia(inertiaTensor);
                 robotLink.inertiaTensorRotation = inertiaTensorRotation * inertialAxisRotation;
             }
         }
@@ -166,9 +169,9 @@ namespace Unity.Robotics.UrdfImporter
                                                                  (float)inertia.izz });
         }
 
-        private static Vector3 FixMinInertia(Vector3 vector3)
+        static Vector3 FixMinInertia(Vector3 vector3)
         {
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
                 if (vector3[i] < k_MinInertia)
                     vector3[i] = k_MinInertia;

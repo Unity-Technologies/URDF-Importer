@@ -97,6 +97,13 @@ namespace Unity.Robotics.UrdfImporter
                 this.inertia = inertia;
             }
 
+            public Inertial(Inertial other)
+            {
+                mass = other.mass;
+                origin = other.origin;
+                inertia = other.inertia;
+            }
+
             public void WriteToUrdf(XmlWriter writer)
             {
                 writer.WriteStartElement("inertial");
