@@ -73,8 +73,8 @@ namespace Unity.Robotics.UrdfImporter
 
         public void UpdateLinkData(bool copyOverrides = false)
         {
-            var robotLink = GetComponent<ArticulationBody>();
-            if (robotLink == null)
+            var articulationBody = GetComponent<ArticulationBody>();
+            if (articulationBody == null)
             {
                 return;
             }
@@ -86,26 +86,28 @@ namespace Unity.Robotics.UrdfImporter
                     Debug.LogWarning(
                         "This instance doesn't have any urdf data stored - " +
                         "creating some using the current inertial values.");
-                    m_OriginalValues = ToLinkInertial(robotLink);
+                    m_OriginalValues = ToLinkInertial(articulationBody);
                 }
                 Assert.IsNotNull(m_OriginalValues);
                 if (copyOverrides)
                 {
-                    m_Overrides = ToLinkInertial(robotLink);
+                    m_Overrides = ToLinkInertial(articulationBody);
                 }
                 AssignUrdfInertiaData(m_OriginalValues);
+                return;
             }
-            else if (copyOverrides)
+            
+            if (copyOverrides)
             {
-                m_Overrides ??= m_OriginalValues;
-                AssignUrdfInertiaData(m_Overrides);
+                m_Overrides ??= new Link.Inertial(m_OriginalValues);
             }
-            else
+            // Ensure that when this script is hot-loaded for the first time that this previously non-existent variable
+            // gets some sensible values (by copying them from the current state of the ArticulationBody)
+            else if (m_Overrides == null)
             {
-                robotLink.centerOfMass = centerOfMass;
-                robotLink.inertiaTensor = FixMinInertia(inertiaTensor);
-                robotLink.inertiaTensorRotation = inertiaTensorRotation * inertialAxisRotation;
+                m_Overrides = ToLinkInertial(articulationBody);
             }
+            AssignUrdfInertiaData(m_Overrides);
         }
 
 #endregion
