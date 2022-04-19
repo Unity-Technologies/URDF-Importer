@@ -47,7 +47,6 @@ namespace Unity.Robotics.UrdfImporter
             }
             else if (inertialUrdf.TryGetComponent<ArticulationBody>(out var robotLink))
             {
-                //robotLink.inertiaTensor = FixMinInertia(robotLink.inertiaTensor);
                 robotLink.mass = Mathf.Max(robotLink.mass, k_MinMass);
 
                 inertialUrdf.m_Overrides = inertialUrdf.ToLinkInertial(robotLink);
