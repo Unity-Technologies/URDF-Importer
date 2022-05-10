@@ -76,7 +76,6 @@ namespace Unity.Robotics.UrdfImporter
             return visuals.ToList();
         }
 
-        [System.Serializable]
         public class Inertial
         {
             public double mass;
@@ -97,13 +96,6 @@ namespace Unity.Robotics.UrdfImporter
                 this.inertia = inertia;
             }
 
-            public Inertial(Inertial other)
-            {
-                mass = other.mass;
-                origin = other.origin;
-                inertia = other.inertia;
-            }
-
             public void WriteToUrdf(XmlWriter writer)
             {
                 writer.WriteStartElement("inertial");
@@ -119,7 +111,6 @@ namespace Unity.Robotics.UrdfImporter
                 writer.WriteEndElement();
             }
 
-            [System.Serializable]
             public class Inertia
             {
                 public double ixx;

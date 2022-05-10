@@ -14,127 +14,91 @@ limitations under the License.
 
 using System;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Unity.Robotics.UrdfImporter
 {
     [RequireComponent(typeof(ArticulationBody))]
     public class UrdfInertial : MonoBehaviour
     {
-        const int k_RoundDigits = 10;
-        const float k_MinInertia = 1e-6f;
-        const float k_MinMass = 0.1f;
-        
+        public bool displayInertiaGizmo;
+
         public bool useUrdfData;
         public Vector3 centerOfMass;
         public Vector3 inertiaTensor;
         public Quaternion inertiaTensorRotation;
         public Quaternion inertialAxisRotation;
 
-        [SerializeField, HideInInspector]
-        Link.Inertial m_OriginalValues;
-        
-        [SerializeField, HideInInspector]
-        Link.Inertial m_Overrides;
+        private const int RoundDigits = 10;
+        private const float MinInertia = 1e-6f;
+        private const float minMass = 0.1f;
 
-        public static void Create(GameObject linkObject, Link.Inertial inertialLink = null)
+        public static void Create(GameObject linkObject, Link.Inertial inertial = null)
         {
-            var inertialUrdf = linkObject.AddComponent<UrdfInertial>();
-            if (inertialLink != null)
-            {
-                inertialUrdf.m_OriginalValues = inertialLink;
-                inertialUrdf.useUrdfData = true;
-            }
-            else if (inertialUrdf.TryGetComponent<ArticulationBody>(out var robotLink))
-            {
-                robotLink.mass = Mathf.Max(robotLink.mass, k_MinMass);
+            UrdfInertial urdfInertial = linkObject.AddComponent<UrdfInertial>();
 
-                inertialUrdf.m_Overrides = inertialUrdf.ToLinkInertial(robotLink);
-                // NOTE: The first time this is set to true, we'll save the current state of m_Overrides as the default,
-                //       since there is no actual URDF data to default to
-                inertialUrdf.useUrdfData = false;
-            }
-            inertialUrdf.UpdateLinkData();
-        }
+            ArticulationBody robotLink = urdfInertial.GetComponent<ArticulationBody>();
 
-        public void ResetInertial()
-        {
-            m_Overrides = m_OriginalValues;
-            AssignUrdfInertiaData(m_Overrides);
+            if (inertial != null)
+            {
+                robotLink.mass = ((float)inertial.mass > 0)?((float)inertial.mass):minMass;
+                if (inertial.origin != null) {
+                    
+                    robotLink.centerOfMass = UrdfOrigin.GetPositionFromUrdf(inertial.origin);
+                }
+                else
+                {
+                    robotLink.centerOfMass = Vector3.zero;
+                }
+                urdfInertial.ImportInertiaData(inertial);
+                 
+                urdfInertial.useUrdfData = true;
+            }
+
+            urdfInertial.displayInertiaGizmo = false;
         }
 
 #region Runtime
 
-        void Start()
+        private void Start()
         {
             UpdateLinkData();
         }
 
-        public void UpdateLinkData(bool copyOverrides = false)
+        public void UpdateLinkData()
         {
-            var articulationBody = GetComponent<ArticulationBody>();
-            if (articulationBody == null)
-            {
-                return;
-            }
-            
+
+            ArticulationBody robotLink = GetComponent<ArticulationBody>();
+
             if (useUrdfData)
             {
-                if (m_OriginalValues == null)
-                {
-                    Debug.LogWarning(
-                        "This instance doesn't have any urdf data stored - " +
-                        "creating some using the current inertial values.");
-                    m_OriginalValues = ToLinkInertial(articulationBody);
-                }
-                Assert.IsNotNull(m_OriginalValues);
-                if (copyOverrides)
-                {
-                    m_Overrides = ToLinkInertial(articulationBody);
-                }
-                AssignUrdfInertiaData(m_OriginalValues);
-                return;
+                robotLink.centerOfMass = centerOfMass;
+                robotLink.inertiaTensor = inertiaTensor;
+                robotLink.inertiaTensorRotation = inertiaTensorRotation * inertialAxisRotation;
             }
-            
-            if (copyOverrides)
+            else
             {
-                m_Overrides ??= new Link.Inertial(m_OriginalValues);
+                robotLink.ResetCenterOfMass();
+                robotLink.ResetInertiaTensor();
             }
-            // Ensure that when this script is hot-loaded for the first time that this previously non-existent variable
-            // gets some sensible values (by copying them from the current state of the ArticulationBody)
-            else if (m_Overrides == null)
-            {
-                m_Overrides = ToLinkInertial(articulationBody);
-            }
-            AssignUrdfInertiaData(m_Overrides);
         }
 
 #endregion
 
 #region Import
 
-        void AssignUrdfInertiaData(Link.Inertial linkInertial)
+        private void ImportInertiaData(Link.Inertial inertial)
         {
-            Assert.IsNotNull(linkInertial);
-            var robotLink = GetComponent<ArticulationBody>();
-            robotLink.mass = (float)linkInertial.mass > 0 
-                ? (float)linkInertial.mass 
-                : k_MinMass;
-            
-            robotLink.centerOfMass = linkInertial.origin != null 
-                ? UrdfOrigin.GetPositionFromUrdf(linkInertial.origin) 
-                : Vector3.zero;
-            
             Vector3 eigenvalues;
             Vector3[] eigenvectors;
-            Matrix3x3 rotationMatrix = ToMatrix3x3(linkInertial.inertia);
+            Matrix3x3 rotationMatrix = ToMatrix3x3(inertial.inertia);
             rotationMatrix.DiagonalizeRealSymmetric(out eigenvalues, out eigenvectors);
+            ArticulationBody robotLink = GetComponent<ArticulationBody>();
 
             Vector3 inertiaEulerAngles;
 
-            if (linkInertial.origin != null)
+            if (inertial.origin != null)
             {
-                inertiaEulerAngles = UrdfOrigin.GetRotationFromUrdf(linkInertial.origin);
+                inertiaEulerAngles = UrdfOrigin.GetRotationFromUrdf(inertial.origin);
             }
             else
             {
@@ -170,12 +134,12 @@ namespace Unity.Robotics.UrdfImporter
                                                                  (float)inertia.izz });
         }
 
-        static Vector3 FixMinInertia(Vector3 vector3)
+        private static Vector3 FixMinInertia(Vector3 vector3)
         {
-            for (var i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
-                if (vector3[i] < k_MinInertia)
-                    vector3[i] = k_MinInertia;
+                if (vector3[i] < MinInertia)
+                    vector3[i] = MinInertia;
             }
             return vector3;
         }
@@ -223,34 +187,24 @@ namespace Unity.Robotics.UrdfImporter
 #endregion
 
 #region Export
-        public Link.Inertial ExportInertialData()
+        public Link.Inertial ExportInertialData() 
         {
-            var robotLink = GetComponent<ArticulationBody>();
+            ArticulationBody robotLink = GetComponent<ArticulationBody>();
 
             if (robotLink == null)
-            {
-                Debug.LogWarning("No data to export.");
                 return null;
-            }
 
             UpdateLinkData();
-            return ToLinkInertial(robotLink);
-        }
+            Vector3 originAngles = inertialAxisRotation.eulerAngles;
+            Origin inertialOrigin = new Origin(robotLink.centerOfMass.Unity2Ros().ToRoundedDoubleArray(), new double[] { (double)originAngles.x, (double)originAngles.y, (double)originAngles.z });
+            Link.Inertial.Inertia inertia = ExportInertiaData();
 
-        Link.Inertial ToLinkInertial(ArticulationBody robotLink)
-        {
-            var originAngles = inertialAxisRotation.eulerAngles;
-            var inertialOrigin = new Origin(
-                robotLink.centerOfMass.Unity2Ros().ToRoundedDoubleArray(), 
-                new double[] { (double)originAngles.x, (double)originAngles.y, (double)originAngles.z });
-            var inertia = ExportInertiaData();
-
-            return new Link.Inertial(Math.Round(robotLink.mass, k_RoundDigits), inertialOrigin, inertia);
+            return new Link.Inertial(Math.Round(robotLink.mass, RoundDigits), inertialOrigin, inertia);
         }
 
         private Link.Inertial.Inertia ExportInertiaData()
         {
-            var robotLink = GetComponent<ArticulationBody>();
+            ArticulationBody robotLink = GetComponent<ArticulationBody>();
             
             Matrix3x3 lamdaMatrix = new Matrix3x3(new[] {
                 robotLink.inertiaTensor[0],
