@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Added mesh filetype export support for .dae, .obj, .fbx, .ma, .max, .jas, .dxf, .c4d, .blend, .lxo, .3ds
 
 ### Changed
+- Changed "Use URDF Values" to "Override URDF Values" in URDF Inertial scripts and updated behavior to match expectation
 
 ### Deprecated
 
