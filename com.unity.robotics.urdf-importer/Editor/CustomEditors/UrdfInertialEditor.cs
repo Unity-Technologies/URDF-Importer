@@ -80,7 +80,7 @@ namespace Unity.Robotics.UrdfImporter.Editor
                 return;
             }
             
-            urdfInertial.UpdateLinkData(toggleOccured);
+            urdfInertial.UpdateLinkData(toggleOccured, inertialChanged || anglesChanged);
         }
     }
 }
