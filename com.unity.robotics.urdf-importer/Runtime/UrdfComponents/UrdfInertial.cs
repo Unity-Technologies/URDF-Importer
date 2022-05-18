@@ -44,14 +44,6 @@ namespace Unity.Robotics.UrdfImporter
             if (inertialLink != null)
             {
                 inertialUrdf.m_OriginalValues = inertialLink;
-                if (inertialLink.origin == null)
-                {
-                    inertialUrdf.m_OriginalValues.origin = inertialUrdf.ToLinkInertial(robotLink).origin;
-                }
-                else
-                {
-                    Debug.Log($"origin is {string.Join(",", inertialUrdf.m_OriginalValues.origin.Xyz)}");
-                }
                 // Initialize overrides to URDF values
                 inertialUrdf.m_Overrides = inertialLink;
                 inertialUrdf.useUrdfData = true;
@@ -89,11 +81,6 @@ namespace Unity.Robotics.UrdfImporter
                 return;
             }
             
-            if (Application.isPlaying)
-            {
-                Debug.Log("playing"); 
-            }
-            
             if (useUrdfData)
             {
                 if (m_OriginalValues == null)
@@ -104,9 +91,6 @@ namespace Unity.Robotics.UrdfImporter
                     m_OriginalValues = ToLinkInertial(articulationBody);
                 }
                 
-                // TODO: Where is origin getting reset to zero? 
-                m_OriginalValues.origin ??= ToLinkInertial(articulationBody).origin;
-                m_Overrides.origin ??= m_OriginalValues.origin;
                 Assert.IsNotNull(m_OriginalValues);
                 if (copyOverrides)
                 {
@@ -145,7 +129,6 @@ namespace Unity.Robotics.UrdfImporter
                 ? (float)linkInertial.mass 
                 : k_MinMass;
             
-            // TODO: why it null
             robotLink.centerOfMass = linkInertial.origin != null 
                 ? UrdfOrigin.GetPositionFromUrdf(linkInertial.origin) 
                 : Vector3.zero;
