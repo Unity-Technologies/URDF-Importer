@@ -14,6 +14,7 @@ limitations under the License.
 
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Unity.Robotics.UrdfImporter.Editor
 {
@@ -22,27 +23,64 @@ namespace Unity.Robotics.UrdfImporter.Editor
     {
         private Vector3 testVector;
 
+        bool ResetInertialsButton()
+        {
+            return GUILayout.Button("Reset Overrides");
+        }
+
         public override void OnInspectorGUI()
         {
             UrdfInertial urdfInertial = (UrdfInertial) target;
-
+            
             GUILayout.Space(5);
-            urdfInertial.displayInertiaGizmo =
-                EditorGUILayout.ToggleLeft("Display Inertia Gizmo", urdfInertial.displayInertiaGizmo);
-            GUILayout.Space(5);
-
-            bool newValue = EditorGUILayout.BeginToggleGroup("Use URDF Data", urdfInertial.useUrdfData);
-            EditorGUILayout.Vector3Field("URDF Center of Mass", urdfInertial.centerOfMass);
-            EditorGUILayout.Vector3Field("URDF Inertia Tensor", urdfInertial.inertiaTensor);
-            EditorGUILayout.Vector3Field("URDF Inertia Tensor Rotation",
-                urdfInertial.inertiaTensorRotation.eulerAngles);
+            var shouldOverride = 
+                EditorGUILayout.BeginToggleGroup("Override URDF Data", !urdfInertial.useUrdfData);
+            EditorGUI.BeginChangeCheck();
+            var centerOfMass = 
+                EditorGUILayout.Vector3Field("URDF Center of Mass", urdfInertial.centerOfMass);
+            var inertiaTensor = 
+                EditorGUILayout.Vector3Field("URDF Inertia Tensor", urdfInertial.inertiaTensor);
+            var inertialChanged = EditorGUI.EndChangeCheck();
+            EditorGUI.BeginChangeCheck();
+            var eulerAngles = 
+                EditorGUILayout.Vector3Field("URDF Inertia Tensor Rotation",
+                    urdfInertial.inertiaTensorRotation.eulerAngles);
+            var anglesChanged = EditorGUI.EndChangeCheck();
+            
+            var shouldReset = ResetInertialsButton();
             EditorGUILayout.EndToggleGroup();
 
-            if (newValue != urdfInertial.useUrdfData)
+            var toggleOccured = urdfInertial.useUrdfData == shouldOverride;
+            
+            // Leaving a bunch of asserts in here because I'm pretty sure multiple change checks can't be true at the
+            // same time, but not positive...
+            if (toggleOccured) 
             {
-                urdfInertial.useUrdfData = newValue;
-                urdfInertial.UpdateLinkData();
+                Assert.IsFalse(inertialChanged || anglesChanged || shouldReset);
+                Undo.RecordObject(urdfInertial, "Toggle URDF Overrides");
+                urdfInertial.useUrdfData = !shouldOverride;
             }
+            else if (inertialChanged)
+            {
+                Assert.IsFalse(anglesChanged || shouldReset);
+                Undo.RecordObject(urdfInertial, "Change URDF Inertial Values");
+                urdfInertial.centerOfMass = centerOfMass;
+                urdfInertial.inertiaTensor = inertiaTensor;
+            }
+            else if (anglesChanged)
+            {
+                Assert.IsFalse(shouldReset);
+                Undo.RecordObject(urdfInertial, "Change URDF Inertial tensor rotation");
+                urdfInertial.inertiaTensorRotation.eulerAngles = eulerAngles;
+            }
+            else if (shouldReset)
+            {
+                Undo.RecordObject(urdfInertial, "Reset URDF Inertial Values");
+                urdfInertial.ResetInertial();
+                return;
+            }
+            
+            urdfInertial.UpdateLinkData(toggleOccured, inertialChanged || anglesChanged);
         }
     }
 }
