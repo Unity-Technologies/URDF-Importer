@@ -38,7 +38,7 @@ URDF Importer allows you to import a robot defined in [URDF](http://wiki.ros.org
 
 3. A window will appear with the Import settings for the Robot. First setting mentions the orientation of the mesh files. The second setting is used to select the algorithm to be used in Collision mesh Decomposition. For more information click [here](https://github.com/Unity-Technologies/Unity-Robotics-Hub/blob/main/tutorials/urdf_importer/urdf_appendix.md#convex-mesh-collider)
 
-<img src = "images~/URDF%20Menu.png" width = 40% height = 40%>
+<img src = "images~/URDF%20Import%20Menu.png" width = 80% height = 80%>
 
 4. Click `Import URDF`
 
