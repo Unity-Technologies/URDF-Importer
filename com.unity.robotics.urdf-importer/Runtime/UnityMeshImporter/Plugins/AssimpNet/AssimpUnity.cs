@@ -156,6 +156,7 @@ namespace Assimp
                         override64LibName = "assimp.dll";
                         override32LibName = "assimp.dll";
                     }
+		    break;
                 //TODO: Add more platforms if you have binaries that can run on it, examples:
             }
 
